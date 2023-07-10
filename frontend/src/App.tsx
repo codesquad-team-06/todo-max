@@ -1,6 +1,6 @@
 import React from "react";
 import styled, { ThemeProvider } from "styled-components";
-import designSystem from "./styles/design-system.ts";
+import designSystem from "./styles/designSystem.ts";
 import GlobalStyles from "./styles/GlobalStyles.ts";
 import "./App.css";
 import logo from "./logo.svg";
