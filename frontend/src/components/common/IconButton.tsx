@@ -1,9 +1,17 @@
 import React from "react";
 import { styled } from "styled-components";
 
-export default function IconButton({ src, alt }: { src: string; alt: string }) {
+export default function IconButton({
+  className,
+  src,
+  alt,
+}: {
+  className: string;
+  src: string;
+  alt: string;
+}) {
   return (
-    <StyledIconButton>
+    <StyledIconButton className={className}>
       <img {...{ src, alt }} />
     </StyledIconButton>
   );
@@ -20,5 +28,13 @@ const StyledIconButton = styled.button`
   img {
     width: inherit;
     height: inherit;
+  }
+
+  &.add-button:hover {
+    filter: ${({ theme: { filter } }) => filter.blue};
+  }
+
+  &.delete-button:hover {
+    filter: ${({ theme: { filter } }) => filter.red};
   }
 `;
