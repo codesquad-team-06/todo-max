@@ -3,6 +3,7 @@ import styled, { ThemeProvider } from "styled-components";
 import designSystem from "./styles/designSystem.ts";
 import GlobalStyles from "./styles/GlobalStyles.ts";
 import Header from "./components/Header.tsx";
+import MainContent from "./components/MainContent.tsx";
 
 export default function App() {
   return (
@@ -10,9 +11,10 @@ export default function App() {
       <GlobalStyles />
 
       <StyledApp>
-        <AppWrapper>
+        <MainWrapper>
           <Header />
-        </AppWrapper>
+          <MainContent />
+        </MainWrapper>
       </StyledApp>
     </ThemeProvider>
   );
@@ -24,9 +26,12 @@ const StyledApp = styled.div`
   background-color: ${({ theme: { colors } }) => colors.grey100};
 `;
 
-const AppWrapper = styled.div`
+const MainWrapper = styled.div`
   width: 100%;
-  max-width: 1200px;
+  max-width: 1440px;
   height: 100%;
   margin: auto;
+  padding-inline: 80px;
+  display: flex;
+  flex-direction: column;
 `;
