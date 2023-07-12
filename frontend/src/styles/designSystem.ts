@@ -33,7 +33,7 @@ const designSystem = {
   },
   objectStyles: {
     radius: {
-      s: "6px",
+      s: "8px",
       m: "16px",
       l: "50%",
     },
