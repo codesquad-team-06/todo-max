@@ -16,6 +16,7 @@ export default function Modal({ children }: { children: any }) {
 }
 
 const Dim = styled.div`
+  display: none;
   position: fixed;
   z-index: 5;
   top: 0;
