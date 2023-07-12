@@ -1,7 +1,7 @@
 import React from "react";
 import { styled } from "styled-components";
 
-export default function ActionHistoryList() {
+export default function ActivityHistory() {
   return (
     <Layer>
       <TitleArea>
@@ -13,6 +13,7 @@ export default function ActionHistoryList() {
 }
 
 const Layer = styled.div`
+  display: none;
   position: absolute;
   top: 64px;
   right: 60px;

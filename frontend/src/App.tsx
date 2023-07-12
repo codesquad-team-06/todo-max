@@ -1,23 +1,21 @@
 import React from "react";
-import { ThemeProvider } from "styled-components";
+import { styled, ThemeProvider } from "styled-components";
 import designSystem from "./styles/designSystem.ts";
 import GlobalStyles from "./styles/GlobalStyles.ts";
 import Header from "./components/Header.tsx";
 import MainContent from "./components/MainContent.tsx";
-import ActionHistoryList from "./ActionHistoryList.tsx";
-import Modal from "./Modal.tsx";
+import ActivityHistory from "./components/ActivityHistory.tsx";
+import Modal from "./components/Modal.tsx";
 
 export default function App() {
   return (
     <ThemeProvider theme={designSystem}>
       <GlobalStyles />
-
       <StyledApp>
         <MainWrapper>
           <Header />
           <MainContent />
-          
-          <ActionHistoryList />
+          <ActivityHistory />
           <Modal>
             <h2>모든 사용자 활동기록을 삭제할까요?</h2>
           </Modal>

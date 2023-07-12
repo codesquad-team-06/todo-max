@@ -1,22 +1,22 @@
 import React from "react";
 import { styled } from "styled-components";
+import ActionButton from "./common/ActionButton.tsx";
 
-export default function Modal({ children }: { children: any }) {
+export default function Modal({ children }: { children: React.ReactElement }) {
   return (
     <Dim>
       <ContentBox>
         {children}
-        <BtnWrapper>
-          <DefaultBtn>취소</DefaultBtn>
-          <DeleteBtn>삭제</DeleteBtn>
-        </BtnWrapper>
+        <ButtonWrapper>
+          <ActionButton className="cancel-button" content="취소" />
+          <ActionButton className="delete-button" content="삭제" />
+        </ButtonWrapper>
       </ContentBox>
     </Dim>
   );
 }
 
 const Dim = styled.div`
-  display: none;
   position: fixed;
   z-index: 5;
   top: 0;
@@ -46,24 +46,7 @@ const ContentBox = styled.div`
   color: ${({ theme: { colors } }) => colors.grey600};
 `;
 
-const BtnWrapper = styled.div`
+const ButtonWrapper = styled.div`
   display: flex;
   gap: 8px;
-`;
-
-const DefaultBtn = styled.button`
-  width: 132px;
-  height: 32px;
-
-  border: none;
-  border-radius: ${({ theme: { objectStyles } }) => objectStyles.radius.s};
-
-  background-color: ${({ theme: { colors } }) => colors.grey100};
-  font: ${({ theme: { font } }) => font.displayBold14};
-  color: ${({ theme: { colors } }) => colors.grey600};
-`;
-
-const DeleteBtn = styled(DefaultBtn)`
-  background-color: ${({ theme: { colors } }) => colors.red};
-  color: ${({ theme: { colors } }) => colors.grey50};
 `;
