@@ -1,9 +1,11 @@
 import React from "react";
-import styled, { ThemeProvider } from "styled-components";
+import { ThemeProvider } from "styled-components";
 import designSystem from "./styles/designSystem.ts";
 import GlobalStyles from "./styles/GlobalStyles.ts";
 import Header from "./components/Header.tsx";
 import MainContent from "./components/MainContent.tsx";
+import ActionHistoryList from "./ActionHistoryList.tsx";
+import Modal from "./Modal.tsx";
 
 export default function App() {
   return (
@@ -14,6 +16,11 @@ export default function App() {
         <MainWrapper>
           <Header />
           <MainContent />
+          
+          <ActionHistoryList />
+          <Modal>
+            <h2>모든 사용자 활동기록을 삭제할까요?</h2>
+          </Modal>
         </MainWrapper>
       </StyledApp>
     </ThemeProvider>
