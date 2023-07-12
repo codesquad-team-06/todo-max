@@ -1,14 +1,14 @@
 import React from "react";
 import { styled } from "styled-components";
-import IconButton from "./common/IconButton.tsx";
-import deleteButtonIcon from "../assets/closed.svg";
-import editButtonIcon from "../assets/edit.svg";
+import IconButton from "../common/IconButton.tsx";
+import deleteButtonIcon from "../../assets/closed.svg";
+import editButtonIcon from "../../assets/edit.svg";
 
-export default function ColumnCard() {
+export default function ColumnCardDisplay() {
   return (
-    <StyledColumnCard>
+    <StyledColumnCardDisplay>
       <div className="card-info-container">
-        <h3>Card title</h3>
+        <h3 className="card-title">Card title</h3>
         <p className="card-content">Card content</p>
         <p className="card-author">author by web</p>
       </div>
@@ -25,34 +25,31 @@ export default function ColumnCard() {
           alt="카드 수정"
         />
       </div>
-    </StyledColumnCard>
+    </StyledColumnCardDisplay>
   );
 }
 
-const StyledColumnCard = styled.li`
+const StyledColumnCardDisplay = styled.div`
   width: 100%;
-  padding: 16px;
+  height: 100%;
   display: flex;
-  justify-content: space-between;
   gap: 16px;
-  background-color: ${({ theme: { colors } }) => colors.grey50};
-  border-radius: ${({ theme: { objectStyles } }) => objectStyles.radius.s};
-  box-shadow: ${({ theme: { objectStyles } }) =>
-    objectStyles.dropShadow.normal};
 
   .card-info-container {
     flex-grow: 1;
 
-    h3 {
+    .card-title {
       margin-bottom: 8px;
       font: ${({ theme: { font } }) => font.displayBold14};
       color: ${({ theme: { colors } }) => colors.grey900};
+      overflow-wrap: anywhere;
     }
 
     .card-content {
       margin-bottom: 16px;
       font: ${({ theme: { font } }) => font.displayMD14};
       color: ${({ theme: { colors } }) => colors.grey600};
+      overflow-wrap: anywhere;
     }
 
     .card-author {
