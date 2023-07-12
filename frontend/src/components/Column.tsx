@@ -1,6 +1,7 @@
 import React from "react";
 import { styled } from "styled-components";
-import ColumnCard from "./ColumnCard.tsx";
+import ColumnCard from "./ColumnCard/ColumnCard.tsx";
+import NewColumnCard from "./ColumnCard/NewColumnCard.tsx";
 import IconButton from "./common/IconButton.tsx";
 import addButtonIcon from "../assets/plus.svg";
 import deleteButtonIcon from "../assets/closed.svg";
@@ -28,6 +29,7 @@ export default function Column() {
       </Header>
 
       <ul className="cards-list">
+        <NewColumnCard />
         <ColumnCard />
         <ColumnCard />
       </ul>
