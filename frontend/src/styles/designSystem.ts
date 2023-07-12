@@ -14,6 +14,10 @@ const designSystem = {
     navy: "#0025E6",
     red: "#FF3B30",
   },
+  filter: {
+    red: "brightness(0) saturate(100%) invert(30%) sepia(38%) saturate(3720%) hue-rotate(341deg) brightness(107%) contrast(104%)",
+    blue: "brightness(0) saturate(100%) invert(34%) sepia(80%) saturate(4075%) hue-rotate(201deg) brightness(103%) contrast(104%)",
+  },
   opacity: {
     hover: 0.8,
     disabled: 0.3,
