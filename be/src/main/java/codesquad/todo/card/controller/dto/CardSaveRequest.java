@@ -1,9 +1,6 @@
 package codesquad.todo.card.controller.dto;
 
-import java.util.Locale;
-
 import codesquad.todo.card.entity.Card;
-
 public class CardSaveRequest {
 	String title;
 	String content;
@@ -33,6 +30,5 @@ public class CardSaveRequest {
 				.content(content)
 				.columnId(columnId)
 				.build();
-
 	}
 }
