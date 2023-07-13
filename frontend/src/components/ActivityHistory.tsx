@@ -6,23 +6,23 @@ import closeButtonIcon from "../assets/closed.svg";
 export default function ActivityHistory() {
   return (
     <Layer>
-      <TitleArea>
+      <TitleContainer>
         <h3>사용자 활동 기록</h3>
         <CloseBtn>
           <img src={closeButtonIcon} alt="닫기 버튼" />
           <span>닫기</span>
         </CloseBtn>
-      </TitleArea>
-      <ListArea>
+      </TitleContainer>
+      <ListContainer>
         <ActivityHistoryItem />
         <ActivityHistoryItem />
         <ActivityHistoryItem />
         <ActivityHistoryItem />
         <ActivityHistoryItem />
-      </ListArea>
-      <ButtonArea>
+      </ListContainer>
+      <ButtonContainer>
         <button type="submit">기록 전체 삭제</button>
-      </ButtonArea>
+      </ButtonContainer>
     </Layer>
   );
 }
@@ -41,7 +41,7 @@ const Layer = styled.div`
     objectStyles.dropShadow.floating};
 `;
 
-const TitleArea = styled.div`
+const TitleContainer = styled.div`
   width: 350px;
   padding: 8px 8px 8px 16px;
   display: flex;
@@ -66,13 +66,13 @@ const CloseBtn = styled.button`
   cursor: pointer;
 `;
 
-const ListArea = styled.ul`
+const ListContainer = styled.ul`
   display: flex;
   flex-direction: column;
   align-items: center;
 `;
 
-const ButtonArea = styled.div`
+const ButtonContainer = styled.div`
   width: 350px;
   padding: 4px 8px;
   display: flex;
