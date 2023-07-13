@@ -1,4 +1,4 @@
-import React, { useState, FormEvent, MouseEvent } from "react";
+import React, { useState, SyntheticEvent } from "react";
 import { styled } from "styled-components";
 import ActionButton from "../common/ActionButton.tsx";
 
@@ -12,18 +12,31 @@ export default function ColumnCardMode({
   newCardToggleHandler,
 }: {
   mode: "add" | "edit";
-  newCardToggleHandler: (evt: MouseEvent) => void;
+  newCardToggleHandler: (evt: SyntheticEvent) => void;
 }) {
   const [cardTitle, setCardTitle] = useState("");
   const [cardContent, setCardContent] = useState("");
-  // TODO: `.card-title` input state
-  // TODO: `.card-content` input state
 
-  const submitHandler = (evt: FormEvent) => {
+  async function submitHandler(evt: SyntheticEvent) {
     evt.preventDefault();
-  };
+    const response = await fetch("/cards", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        title: cardTitle,
+        content: cardContent,
+        column_id: 1,
+      }),
+    });
 
-  const calcHeight = (value) => {
+    const data = await response.json();
+    // console.log(data);
+    newCardToggleHandler(evt);
+  }
+
+  const calcHeight = (value: string) => {
     const numberOfLineBreaks = (value.match(/\n/g) || []).length;
     // min-height + lines x line-height + padding + border
     const newHeight = 14 + numberOfLineBreaks * 20 + 12 + 2;
@@ -31,7 +44,10 @@ export default function ColumnCardMode({
   };
 
   return (
-    <StyledColumnCardMode onSubmit={submitHandler}>
+    <StyledColumnCardMode
+      onSubmit={(evt: React.FormEvent<Element>) => {
+        submitHandler(evt);
+      }}>
       <div className="card-info-container">
         <input
           className="card-title"
