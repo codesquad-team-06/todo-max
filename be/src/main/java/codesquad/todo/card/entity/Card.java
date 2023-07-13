@@ -60,7 +60,7 @@ public class Card {
 			'}';
 	}
 
-	static class Builder {
+	public static class Builder {
 		private Long id; // 카드 아이디
 		private String title; // 제목
 		private String content; // 내용
