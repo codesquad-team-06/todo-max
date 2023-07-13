@@ -1,3 +1,4 @@
+/* eslint-disable no-alert */
 import React, { useState, ChangeEvent, FormEvent } from "react";
 import { styled } from "styled-components";
 import ActionButton from "../common/ActionButton.tsx";
@@ -33,13 +34,50 @@ export default function ColumnCardMode({
     setNewCardContent(evt.target.value);
   };
 
-  const handleSubmit = (evt: FormEvent) => {
+  // TODO: "POST" to "/cards". Request payload: {title, content, column_id}
+  // const createCardRequest = () => {};
+
+  const editCardRequest = async () => {
+    const res = await fetch(`/cards/${cardId}`, {
+      method: "PUT",
+      headers: {
+        "content-type": "application/json",
+      },
+      body: JSON.stringify({
+        id: cardId,
+        title: cardTitle,
+        content: cardContent,
+      }),
+    });
+    const data = await res.json();
+
+    if (data.success) {
+      return data.card;
+    }
+
+    const {
+      errorCode: { status, code, message },
+    } = data;
+    throw Error(`${status} ${code}: ${message}`);
+  };
+
+  const handleSubmit = async (evt: FormEvent) => {
     evt.preventDefault();
 
-    // TODO (common operation for both "add" and "edit" modes)
-    // If "add" mode, POST to /cards. (title, content, column_id)
-    // If "edit" mode, PUT to /cards/{id}. (id, title, content)
-    // If request was successfully handled, use the received card details in the response object to update the cards context.
+    try {
+      if (mode === "add") {
+        // TODO: createCardRequest()
+        // TODO: Update cards context
+      } else if (mode === "edit") {
+        const { id, title, content } = await editCardRequest();
+
+        // TODO: Update cards context
+      }
+
+      toggleEditMode();
+    } catch (error) {
+      alert(error);
+    }
   };
 
   return (
