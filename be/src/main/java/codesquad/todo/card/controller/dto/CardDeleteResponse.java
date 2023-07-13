@@ -3,16 +3,16 @@ package codesquad.todo.card.controller.dto;
 import codesquad.todo.card.entity.Card;
 
 public class CardDeleteResponse {
-	private CardDeleteDTO cardDeleteDTO;
+	private CardDeleteDTO card;
 	private boolean success;
 
-	public CardDeleteResponse(CardDeleteDTO cardDeleteDTO, boolean success) {
-		this.cardDeleteDTO = cardDeleteDTO;
+	public CardDeleteResponse(CardDeleteDTO card, boolean success) {
+		this.card = card;
 		this.success = success;
 	}
 
-	public CardDeleteDTO getCardDeleteDTO() {
-		return cardDeleteDTO;
+	public CardDeleteDTO getCard() {
+		return card;
 	}
 
 	public boolean isSuccess() {

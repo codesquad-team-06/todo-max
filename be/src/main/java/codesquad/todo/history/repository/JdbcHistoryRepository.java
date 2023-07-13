@@ -9,7 +9,6 @@ import codesquad.todo.history.entity.History;
 
 @Repository
 public class JdbcHistoryRepository implements HistoryRepository {
-
 	@Override
 	public List<History> findAll() {
 		return null;

@@ -29,5 +29,4 @@ public class CardService {
 	public CardDeleteResponse deleteCard(Long cardId) {
 		return CardDeleteResponse.from(cardRepository.deleteById(cardId));
 	}
-
 }

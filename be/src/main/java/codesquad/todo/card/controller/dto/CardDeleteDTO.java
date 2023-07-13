@@ -15,7 +15,7 @@ public class CardDeleteDTO {
 		return id;
 	}
 
-	public boolean isDeleted() {
+	public boolean getIsDeleted() {
 		return isDeleted;
 	}
 

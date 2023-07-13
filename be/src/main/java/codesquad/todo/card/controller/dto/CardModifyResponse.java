@@ -3,16 +3,16 @@ package codesquad.todo.card.controller.dto;
 import codesquad.todo.card.entity.Card;
 
 public class CardModifyResponse {
-	private CardModifyDTO cardModifyDTO;
+	private CardModifyDTO card;
 	private boolean success;
 
 	public CardModifyResponse(CardModifyDTO cardModifyDTO, boolean success) {
-		this.cardModifyDTO = cardModifyDTO;
+		this.card = cardModifyDTO;
 		this.success = success;
 	}
 
-	public CardModifyDTO getCardModifyDTO() {
-		return cardModifyDTO;
+	public CardModifyDTO getCard() {
+		return card;
 	}
 
 	public boolean isSuccess() {
