@@ -48,7 +48,7 @@ public class JdbcHistoryRepository implements HistoryRepository {
 	}
 
 	@Override
-	public int countByIds(List<Long> ids) {
+	public int countIds(List<Long> ids) {
 		String sql = "SELECT COUNT(*) FROM history WHERE id IN (:ids) AND is_deleted = false";
 		MapSqlParameterSource parameters = new MapSqlParameterSource();
 		parameters.addValue("ids", ids);

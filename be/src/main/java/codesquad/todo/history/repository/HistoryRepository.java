@@ -15,7 +15,7 @@ public interface HistoryRepository {
 
 	int deleteByIds(List<Long> ids);
 
-	int countByIds(List<Long> ids);
+	int countIds(List<Long> ids);
 
 	Optional<History> findById(Long id);
 }

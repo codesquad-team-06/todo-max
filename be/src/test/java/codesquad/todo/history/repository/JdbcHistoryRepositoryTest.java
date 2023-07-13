@@ -44,7 +44,7 @@ class JdbcHistoryRepositoryTest {
 		List<Long> ids = new ArrayList<>(Arrays.asList(4L, 5L, 6L));
 
 		//when
-		int validIds = historyRepository.countByIds(ids);
+		int validIds = historyRepository.countIds(ids);
 
 		//then
 		SoftAssertions.assertSoftly(softAssertions -> {

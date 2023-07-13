@@ -29,7 +29,7 @@ public class HistoryService {
 	}
 
 	@Transactional
-	public boolean delete(HistoryDeleteRequest request) {
+	public boolean deleteByIds(HistoryDeleteRequest request) {
 		validate(request);
 		int deletedRows = historyRepository.deleteByIds(request.getHistoryId());
 		return deletedRows > 0;
@@ -37,7 +37,7 @@ public class HistoryService {
 
 	// todo: 추후 Custom Exception으로 변경
 	public void validate(HistoryDeleteRequest request) {
-		int count = historyRepository.countByIds(request.getHistoryId());
+		int count = historyRepository.countIds(request.getHistoryId());
 		if (count != request.getHistoryId().size()) {
 			throw new RuntimeException("유효하지 않은 히스토리입니다.");
 		}

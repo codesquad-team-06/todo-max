@@ -30,6 +30,6 @@ public class HistoryRestController {
 
 	@DeleteMapping
 	public ResponseEntity<?> deleteAndFetch(@RequestBody HistoryDeleteRequest historyDeleteRequest) {
-		return ResponseEntity.ok(Collections.singletonMap("success", historyService.delete(historyDeleteRequest)));
+		return ResponseEntity.ok(Collections.singletonMap("success", historyService.deleteByIds(historyDeleteRequest)));
 	}
 }
