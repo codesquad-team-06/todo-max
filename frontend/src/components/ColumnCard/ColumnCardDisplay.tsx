@@ -1,10 +1,13 @@
-import React from "react";
+import React, { useContext } from "react";
 import { styled } from "styled-components";
 import IconButton from "../common/IconButton.tsx";
 import deleteButtonIcon from "../../assets/closed.svg";
 import editButtonIcon from "../../assets/edit.svg";
+import { ModalContext } from "../../context/ModalContext.tsx";
 
 export default function ColumnCardDisplay() {
+  const { openModal } = useContext(ModalContext);
+
   return (
     <StyledColumnCardDisplay>
       <div className="card-info-container">
@@ -18,6 +21,7 @@ export default function ColumnCardDisplay() {
           className="delete-button"
           src={deleteButtonIcon}
           alt="카드 삭제"
+          onClick={() => openModal("선택한 카드를 삭제할까요?")}
         />
         <IconButton
           className="edit-button"

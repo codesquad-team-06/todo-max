@@ -1,34 +1,36 @@
-import React from "react";
+import React, { useContext } from "react";
+import ReactDOM from "react-dom";
 import { styled } from "styled-components";
 import ActionButton from "./common/ActionButton.tsx";
+import { ModalContext } from "../context/ModalContext.tsx";
 
-export default function Modal({ target }: { target: string }) {
-  let modalTitle = "";
+export default function Modal() {
+  const { isModalActive, modalContent, closeModal } = useContext(ModalContext);
 
-  if (target === "history") {
-    modalTitle = "모든 사용자 활동기록을 삭제할까요?";
-  } else if (target === "card") {
-    modalTitle = "선택한 카드를 삭제할까요?";
-  }
-
-  return (
-    <Dim>
-      <ContentBox>
-        <h3>{modalTitle}</h3>
-        <ButtonWrapper>
-          <ActionButton
-            className="cancel-button"
-            content="취소"
-            type="button"
-          />
-          <ActionButton
-            className="delete-button"
-            content="삭제"
-            type="submit"
-          />
-        </ButtonWrapper>
-      </ContentBox>
-    </Dim>
+  return ReactDOM.createPortal(
+    isModalActive && (
+      <Dim onClick={closeModal}>
+        <ContentBox>
+          <form>
+            <h3>{modalContent}</h3>
+            <ButtonWrapper>
+              <ActionButton
+                className="cancel-button"
+                content="취소"
+                type="button"
+                onClick={closeModal}
+              />
+              <ActionButton
+                className="delete-button"
+                content="삭제"
+                type="submit"
+              />
+            </ButtonWrapper>
+          </form>
+        </ContentBox>
+      </Dim>
+    ),
+    document.querySelector("#modal-portal")!
   );
 }
 
@@ -49,17 +51,21 @@ const ContentBox = styled.div`
   left: 50%;
   transform: translate(-50%, -50%);
 
-  display: flex;
-  flex-direction: column;
-  justify-content: space-evenly;
-  align-items: center;
-
   width: 320px;
   height: 126px;
   background-color: ${({ theme: { colors } }) => colors.grey50};
   border-radius: ${({ theme: { objectStyles } }) => objectStyles.radius.s};
   font: ${({ theme: { font } }) => font.displayMD16};
   color: ${({ theme: { colors } }) => colors.grey600};
+
+  form {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    align-items: center;
+  }
 `;
 
 const ButtonWrapper = styled.div`

@@ -1,21 +1,27 @@
-import React from "react";
+import React, { MouseEvent } from "react";
 import { styled } from "styled-components";
 
 export default function IconButton({
   className,
   src,
   alt,
+  onClick,
 }: {
   className: string;
   src: string;
   alt: string;
+  onClick?: (evt: MouseEvent) => void;
 }) {
   return (
-    <StyledIconButton className={className}>
+    <StyledIconButton {...{ className, onClick }}>
       <img {...{ src, alt }} />
     </StyledIconButton>
   );
 }
+
+IconButton.defaultProps = {
+  onClick: undefined,
+};
 
 const StyledIconButton = styled.button`
   width: 24px;

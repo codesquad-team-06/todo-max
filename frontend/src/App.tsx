@@ -4,20 +4,21 @@ import designSystem from "./styles/designSystem.ts";
 import GlobalStyles from "./styles/GlobalStyles.ts";
 import Header from "./components/Header.tsx";
 import MainContent from "./components/MainContent.tsx";
-// import ActivityHistory from "./components/ActivityHistory.tsx";
-// import Modal from "./components/Modal.tsx";
+import ActivityHistory from "./components/ActivityHistory.tsx";
+import { ModalProvider } from "./context/ModalContext.tsx";
 
 export default function App() {
   return (
     <ThemeProvider theme={designSystem}>
       <GlobalStyles />
       <StyledApp>
-        <MainWrapper>
-          <Header />
-          <MainContent />
-          {/* <ActivityHistory /> */}
-          {/* <Modal target="card" /> */}
-        </MainWrapper>
+        <ModalProvider>
+          <MainWrapper>
+            <Header />
+            <MainContent />
+            <ActivityHistory />
+          </MainWrapper>
+        </ModalProvider>
       </StyledApp>
     </ThemeProvider>
   );

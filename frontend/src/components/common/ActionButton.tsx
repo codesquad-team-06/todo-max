@@ -1,4 +1,4 @@
-import React from "react";
+import React, { MouseEvent } from "react";
 import { styled } from "styled-components";
 
 export default function ActionButton({
@@ -6,14 +6,16 @@ export default function ActionButton({
   content,
   type,
   disabled,
+  onClick,
 }: {
   className: string;
   content: string;
   type: "button" | "submit" | "reset";
   disabled?: boolean;
+  onClick?: (evt: MouseEvent) => void;
 }) {
   return (
-    <StyledActionButton {...{ className, type, disabled }}>
+    <StyledActionButton {...{ className, type, disabled, onClick }}>
       {content}
     </StyledActionButton>
   );
@@ -21,6 +23,7 @@ export default function ActionButton({
 
 ActionButton.defaultProps = {
   disabled: false,
+  onClick: undefined,
 };
 
 const StyledActionButton = styled.button`
