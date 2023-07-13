@@ -1,11 +1,15 @@
-import React from "react";
+import React, { MouseEvent } from "react";
 import { styled } from "styled-components";
 import ColumnCardMode from "./ColumnCardMode.tsx";
 
-export default function NewColumnCard() {
+export default function NewColumnCard({
+  newCardToggleHandler,
+}: {
+  newCardToggleHandler: (evt: MouseEvent) => void;
+}) {
   return (
     <StyledNewColumnCard>
-      <ColumnCardMode mode="add" />
+      <ColumnCardMode mode="add" newCardToggleHandler={newCardToggleHandler} />
     </StyledNewColumnCard>
   );
 }

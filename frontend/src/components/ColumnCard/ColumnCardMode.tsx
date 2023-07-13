@@ -1,4 +1,4 @@
-import React, { FormEvent } from "react";
+import React, { FormEvent, MouseEvent } from "react";
 import { styled } from "styled-components";
 import ActionButton from "../common/ActionButton.tsx";
 
@@ -7,7 +7,13 @@ const ModeKR = {
   edit: "저장",
 };
 
-export default function ColumnCardMode({ mode }: { mode: "add" | "edit" }) {
+export default function ColumnCardMode({
+  mode,
+  newCardToggleHandler,
+}: {
+  mode: "add" | "edit";
+  newCardToggleHandler: (evt: MouseEvent) => void;
+}) {
   // TODO: `.card-title` input state
   // TODO: `.card-content` input state
 
@@ -31,7 +37,14 @@ export default function ColumnCardMode({ mode }: { mode: "add" | "edit" }) {
       </div>
 
       <div className="buttons-container">
-        <ActionButton className="cancel-button" content="취소" type="button" />
+        <ActionButton
+          className="cancel-button"
+          content="취소"
+          type="button"
+          onClick={(evt) => {
+            newCardToggleHandler(evt);
+          }}
+        />
         <ActionButton
           className={`${mode}-button`}
           content={ModeKR[mode]}
