@@ -1,4 +1,4 @@
-import React, { FormEvent, MouseEvent } from "react";
+import React, { useState, FormEvent, MouseEvent } from "react";
 import { styled } from "styled-components";
 import ActionButton from "../common/ActionButton.tsx";
 
@@ -14,6 +14,8 @@ export default function ColumnCardMode({
   mode: "add" | "edit";
   newCardToggleHandler: (evt: MouseEvent) => void;
 }) {
+  const [cardTitle, setCardTitle] = useState("");
+  const [cardContent, setCardContent] = useState("");
   // TODO: `.card-title` input state
   // TODO: `.card-content` input state
 
@@ -28,11 +30,16 @@ export default function ColumnCardMode({
           className="card-title"
           type="text"
           placeholder="제목을 입력하세요"
+          onChange={(evt) => {
+            setCardTitle(evt.target.value);
+          }}
         />
         <textarea
           className="card-content"
           placeholder="내용을 입력하세요"
-          rows={1}
+          onChange={(evt) => {
+            setCardContent(evt.target.value);
+          }}
         />
       </div>
 
@@ -49,7 +56,7 @@ export default function ColumnCardMode({
           className={`${mode}-button`}
           content={ModeKR[mode]}
           type="submit"
-          disabled={"" == ""} // TODO: if `.card-title` or `.card-content` is empty, `disabled`.
+          disabled={!cardTitle || !cardContent} // TODO: if `.card-title` or `.card-content` is empty, `disabled`.
         />
       </div>
     </StyledColumnCardMode>
