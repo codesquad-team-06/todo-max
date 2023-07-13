@@ -17,5 +17,6 @@ module.exports = {
     "no-shadow": "off",
     "quotes": ["error", "double"],
   },
+  ignorePatterns: ["mocks/"],
   root: true,
 };
