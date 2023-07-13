@@ -10,7 +10,6 @@ import codesquad.todo.history.controller.dto.HistoryDeleteRequest;
 import codesquad.todo.history.controller.dto.HistoryFindAllResponse;
 import codesquad.todo.history.repository.HistoryRepository;
 
-
 @Service
 public class HistoryService {
 
@@ -30,16 +29,17 @@ public class HistoryService {
 
 	@Transactional
 	public boolean deleteByIds(HistoryDeleteRequest request) {
-		validate(request);
+		if (validate(request)) {
+			throw new RuntimeException("유효하지 않은 히스토리입니다.");
+		}
 		int deletedRows = historyRepository.deleteByIds(request.getHistoryId());
 		return deletedRows > 0;
 	}
 
 	// todo: 추후 Custom Exception으로 변경
-	public void validate(HistoryDeleteRequest request) {
+	@Transactional(readOnly = true)
+	public boolean validate(HistoryDeleteRequest request) {
 		int count = historyRepository.countIds(request.getHistoryId());
-		if (count != request.getHistoryId().size()) {
-			throw new RuntimeException("유효하지 않은 히스토리입니다.");
-		}
+		return count == request.getHistoryId().size();
 	}
 }
