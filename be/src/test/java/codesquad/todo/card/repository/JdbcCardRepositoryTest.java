@@ -87,4 +87,24 @@ class JdbcCardRepositoryTest {
 			() -> assertThat(deletedCard.getId()).isEqualTo(cardId)
 		);
 	}
+
+	@Test
+	@DisplayName("카드 id로 카드를 조회하여 반환한다.")
+	public void findByIdTest() {
+		//given
+		Long cardId = 2L;
+
+		//when
+		Card card = cardRepository.findById(cardId).get();
+
+		//then
+		assertAll(
+			() -> assertThat(card.getId()).isEqualTo(cardId),
+			() -> assertThat(card.getTitle()).isEqualTo("제목2"),
+			() -> assertThat(card.getContent()).isEqualTo("내용2"),
+			() -> assertThat(card.getColumnId()).isEqualTo(1),
+			() -> assertThat(card.getPosition()).isEqualTo(2048),
+			() -> assertThat(card.isDeleted()).isFalse()
+		);
+	}
 }
