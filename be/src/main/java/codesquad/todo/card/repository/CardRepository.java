@@ -15,4 +15,6 @@ public interface CardRepository {
 	Card deleteById(Long id);
 
 	Optional<Card> findById(Long id);
+
+	List<Card> findAllByColumnId(Long columnId);
 }
