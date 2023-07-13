@@ -1,4 +1,4 @@
-import React, { FormEvent } from "react";
+import React, { useState, ChangeEvent, FormEvent } from "react";
 import { styled } from "styled-components";
 import ActionButton from "../common/ActionButton.tsx";
 
@@ -7,36 +7,72 @@ const ModeKR = {
   edit: "저장",
 };
 
-export default function ColumnCardMode({ mode }: { mode: "add" | "edit" }) {
-  // TODO: `.card-title` input state
-  // TODO: `.card-content` input state
+export default function ColumnCardMode({
+  mode,
+  cardId,
+  cardTitle,
+  cardContent,
+  toggleEditMode,
+}: {
+  mode: "add" | "edit";
+  cardId: number;
+  cardTitle: string;
+  cardContent: string;
+  toggleEditMode: () => void;
+}) {
+  const [newCardTitle, setNewCardTitle] = useState(cardTitle);
+  const [newCardContent, setNewCardContent] = useState(cardContent);
 
-  const submitHandler = (evt: FormEvent) => {
+  const handleNewCardTitleChange = (evt: ChangeEvent<HTMLInputElement>) => {
+    setNewCardTitle(evt.target.value);
+  };
+
+  const handleNewCardContentChange = (
+    evt: ChangeEvent<HTMLTextAreaElement>
+  ) => {
+    setNewCardContent(evt.target.value);
+  };
+
+  const handleSubmit = (evt: FormEvent) => {
     evt.preventDefault();
+
+    // TODO (common operation for both "add" and "edit" modes)
+    // If "add" mode, POST to /cards. (title, content, column_id)
+    // If "edit" mode, PUT to /cards/{id}. (id, title, content)
+    // If request was successfully handled, use the received card details in the response object to update the cards context.
   };
 
   return (
-    <StyledColumnCardMode onSubmit={submitHandler}>
+    <StyledColumnCardMode onSubmit={handleSubmit}>
       <div className="card-info-container">
         <input
           className="card-title"
           type="text"
           placeholder="제목을 입력하세요"
+          value={newCardTitle}
+          onChange={handleNewCardTitleChange}
         />
         <textarea
           className="card-content"
           placeholder="내용을 입력하세요"
           rows={1}
+          value={newCardContent}
+          onChange={handleNewCardContentChange}
         />
       </div>
 
       <div className="buttons-container">
-        <ActionButton className="cancel-button" content="취소" type="button" />
+        <ActionButton
+          className="cancel-button"
+          content="취소"
+          type="button"
+          onClick={toggleEditMode}
+        />
         <ActionButton
           className={`${mode}-button`}
           content={ModeKR[mode]}
           type="submit"
-          disabled={"" == ""} // TODO: if `.card-title` or `.card-content` is empty, `disabled`.
+          disabled={newCardTitle === "" || newCardContent === ""}
         />
       </div>
     </StyledColumnCardMode>
@@ -52,6 +88,7 @@ const StyledColumnCardMode = styled.form`
 
     .card-title {
       width: 100%;
+      height: 16px;
       margin-bottom: 8px;
       background: transparent;
       border: none;
