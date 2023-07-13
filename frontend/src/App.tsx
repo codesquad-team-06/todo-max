@@ -15,10 +15,8 @@ export default function App() {
         <MainWrapper>
           <Header />
           <MainContent />
-          <ActivityHistory />
-          <Modal>
-            <h2>모든 사용자 활동기록을 삭제할까요?</h2>
-          </Modal>
+          {/* <ActivityHistory /> */}
+          {/* <Modal target="card" /> */}
         </MainWrapper>
       </StyledApp>
     </ThemeProvider>
@@ -39,4 +37,5 @@ const MainWrapper = styled.div`
   padding-inline: 80px;
   display: flex;
   flex-direction: column;
+  position: relative;
 `;

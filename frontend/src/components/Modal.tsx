@@ -2,11 +2,19 @@ import React from "react";
 import { styled } from "styled-components";
 import ActionButton from "./common/ActionButton.tsx";
 
-export default function Modal({ children }: { children: React.ReactElement }) {
+export default function Modal({ target }: { target: string }) {
+  let modalTitle = "";
+
+  if (target === "history") {
+    modalTitle = "모든 사용자 활동기록을 삭제할까요?";
+  } else if (target === "card") {
+    modalTitle = "선택한 카드를 삭제할까요?";
+  }
+
   return (
     <Dim>
       <ContentBox>
-        {children}
+        <h3>{modalTitle}</h3>
         <ButtonWrapper>
           <ActionButton className="cancel-button" content="취소" />
           <ActionButton className="delete-button" content="삭제" />
