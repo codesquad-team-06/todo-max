@@ -4,8 +4,6 @@ import designSystem from "./styles/designSystem.ts";
 import GlobalStyles from "./styles/GlobalStyles.ts";
 import Header from "./components/Header.tsx";
 import MainContent from "./components/MainContent.tsx";
-import ActivityHistory from "./components/ActivityHistory.tsx";
-import Modal from "./components/Modal.tsx";
 
 export default function App() {
   return (
@@ -15,10 +13,8 @@ export default function App() {
         <MainWrapper>
           <Header />
           <MainContent />
-          <ActivityHistory />
-          <Modal>
-            <h2>모든 사용자 활동기록을 삭제할까요?</h2>
-          </Modal>
+          {/* <ActivityHistory /> */}
+          {/* <Modal target="card" /> */}
         </MainWrapper>
       </StyledApp>
     </ThemeProvider>
@@ -39,4 +35,5 @@ const MainWrapper = styled.div`
   padding-inline: 80px;
   display: flex;
   flex-direction: column;
+  position: relative;
 `;
