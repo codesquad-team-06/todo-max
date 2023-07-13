@@ -12,7 +12,7 @@ export default function ColumnCardMode({
   newCardToggleHandler,
 }: {
   mode: "add" | "edit";
-  newCardToggleHandler: (evt: SyntheticEvent) => void;
+  newCardToggleHandler: () => void;
 }) {
   const [cardTitle, setCardTitle] = useState("");
   const [cardContent, setCardContent] = useState("");
@@ -33,7 +33,7 @@ export default function ColumnCardMode({
 
     const data = await response.json();
     // console.log(data);
-    newCardToggleHandler(evt);
+    newCardToggleHandler();
   }
 
   const calcHeight = (value: string) => {
@@ -77,9 +77,7 @@ export default function ColumnCardMode({
           className="cancel-button"
           content="취소"
           type="button"
-          onClick={(evt) => {
-            newCardToggleHandler(evt);
-          }}
+          onClick={newCardToggleHandler}
         />
         <ActionButton
           className={`${mode}-button`}

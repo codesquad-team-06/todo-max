@@ -1,4 +1,4 @@
-import React, { useState, MouseEvent } from "react";
+import React, { useState } from "react";
 import { styled } from "styled-components";
 import ColumnCard from "./ColumnCard/ColumnCard.tsx";
 import NewColumnCard from "./ColumnCard/NewColumnCard.tsx";
@@ -9,8 +9,7 @@ import deleteButtonIcon from "../assets/closed.svg";
 export default function Column() {
   const [isNewCardActive, setIsNewCardActive] = useState(false);
 
-  const newCardToggleHandler = (evt: MouseEvent) => {
-    evt.preventDefault();
+  const newCardToggleHandler = () => {
     setIsNewCardActive(!isNewCardActive);
   };
 
@@ -26,7 +25,7 @@ export default function Column() {
             className="add-button"
             src={addButtonIcon}
             alt="카드 추가"
-            onClick={(evt) => newCardToggleHandler(evt)}
+            onClick={newCardToggleHandler}
           />
           <IconButton
             className="delete-button"
@@ -37,9 +36,7 @@ export default function Column() {
       </Header>
 
       <ul className="cards-list">
-        {isNewCardActive && (
-          <NewColumnCard newCardToggleHandler={newCardToggleHandler} />
-        )}
+        {isNewCardActive && <NewColumnCard {...{ newCardToggleHandler }} />}
         <ColumnCard />
         <ColumnCard />
       </ul>
