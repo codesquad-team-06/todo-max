@@ -16,8 +16,16 @@ export default function Modal({ target }: { target: string }) {
       <ContentBox>
         <h3>{modalTitle}</h3>
         <ButtonWrapper>
-          <ActionButton className="cancel-button" content="취소" />
-          <ActionButton className="delete-button" content="삭제" />
+          <ActionButton
+            className="cancel-button"
+            content="취소"
+            type="button"
+          />
+          <ActionButton
+            className="delete-button"
+            content="삭제"
+            type="submit"
+          />
         </ButtonWrapper>
       </ContentBox>
     </Dim>

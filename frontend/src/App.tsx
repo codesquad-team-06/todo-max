@@ -4,6 +4,8 @@ import designSystem from "./styles/designSystem.ts";
 import GlobalStyles from "./styles/GlobalStyles.ts";
 import Header from "./components/Header.tsx";
 import MainContent from "./components/MainContent.tsx";
+// import ActivityHistory from "./components/ActivityHistory.tsx";
+// import Modal from "./components/Modal.tsx";
 
 export default function App() {
   return (
