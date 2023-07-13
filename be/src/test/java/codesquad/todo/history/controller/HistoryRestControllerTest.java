@@ -5,29 +5,36 @@ import static org.mockito.BDDMockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentMatchers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import codesquad.todo.history.controller.dto.HistoryDeleteRequest;
 import codesquad.todo.history.controller.dto.HistoryFindAllResponse;
 import codesquad.todo.history.service.HistoryService;
 
 @WebMvcTest(HistoryRestController.class)
 class HistoryRestControllerTest {
 	@Autowired
+	ObjectMapper objectMapper;
+	@Autowired
 	private MockMvc mockMvc;
-
 	@MockBean
 	private HistoryService historyService;
 
 	@Test
-	@DisplayName("활동 기록 목록을 불러오고 Json 형태로 데이터를 반환한다.")
+	@DisplayName("활동 기록 목록을 불러오고 Json 타입으로 데이터를 반환한다.")
 	public void shouldReturnAllHistories() throws Exception {
 		//given
 		HistoryFindAllResponse history1 = new HistoryFindAllResponse("Card Title 5", "3", "3", "5일 전", "수정");
@@ -50,4 +57,22 @@ class HistoryRestControllerTest {
 			.andExpect(jsonPath("$[*].actionName").value(
 				hasItems(histories.stream().map(HistoryFindAllResponse::getActionName).toArray())));
 	}
+
+	@Test
+	@DisplayName("유효한 활동 기록 id를 전달 받으면 해당 기록의 is_deleted 값을 바꾸고 성공 메세지를 Json 타입으로 반환한다.")
+	public void shouldDeleteHistories() throws Exception {
+		//given
+		List<Long> ids = new ArrayList<>(Arrays.asList(4L, 5L, 6L));
+		HistoryDeleteRequest request = new HistoryDeleteRequest(ids);
+		when(historyService.deleteByIds(ArgumentMatchers.any(HistoryDeleteRequest.class))).thenReturn(true);
+
+		//when & then
+		mockMvc.perform(delete("/histories")
+				.content(objectMapper.writeValueAsString(request))
+				.contentType(MediaType.APPLICATION_JSON))
+			.andExpect(status().isOk())
+			.andExpect(jsonPath("$.success", is(true)));
+	}
+
+	// todo: 추후 예외 발생 테스트 코드 작성
 }
