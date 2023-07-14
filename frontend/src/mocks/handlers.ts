@@ -146,7 +146,7 @@ const successCardUpdate = {
     title: "ERD 및 API 설계하기",
     content: "팀원들과 협업하여 ERD 및 API 설계 완성하기",
   },
-  sucess: true,
+  success: true,
 };
 // 수정 요청 실패
 const failedCardUpdate = {
@@ -163,7 +163,7 @@ const successCardDelete = {
     id: 1,
     is_deleted: true,
   },
-  sucess: true,
+  success: true,
 };
 // 삭제 요청 실패
 const failedCardDelete = {

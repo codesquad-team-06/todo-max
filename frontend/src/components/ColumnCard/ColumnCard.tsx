@@ -3,8 +3,13 @@ import { styled } from "styled-components";
 import ColumnCardDisplay from "./ColumnCardDisplay.tsx";
 import ColumnCardMode from "./ColumnCardMode.tsx";
 
+// TODO: Receive card `id, title, content` as props from `Column`.
 export default function ColumnCard() {
   const [isEditMode, setIsEditMode] = useState<boolean>(false);
+
+  const toggleEditMode = () => {
+    setIsEditMode(!isEditMode);
+  };
 
   return (
     <StyledColumnCard>
@@ -15,6 +20,7 @@ export default function ColumnCard() {
             cardId: 1,
             cardTitle: "I am card title",
             cardContent: "I am card content",
+            toggleEditMode,
           }}
         />
       ) : (
@@ -22,6 +28,7 @@ export default function ColumnCard() {
           {...{
             cardTitle: "I am card title",
             cardContent: "I am card content",
+            toggleEditMode,
           }}
         />
       )}

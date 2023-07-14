@@ -1,4 +1,5 @@
-import React, { useState, SyntheticEvent } from "react";
+/* eslint-disable no-alert */
+import React, { useState, ChangeEvent, FormEvent } from "react";
 import { styled } from "styled-components";
 import ActionButton from "../common/ActionButton.tsx";
 
@@ -9,14 +10,34 @@ const ModeKR = {
 
 export default function ColumnCardMode({
   mode,
+  cardId,
+  cardTitle,
+  cardContent,
+  toggleEditMode,
   newCardToggleHandler,
 }: {
   mode: "add" | "edit";
+  cardId: number;
+  cardTitle: string;
+  cardContent: string;
+  toggleEditMode: () => void;
   newCardToggleHandler: () => void;
 }) {
-  const [cardTitle, setCardTitle] = useState("");
-  const [cardContent, setCardContent] = useState("");
+  const [newCardTitle, setNewCardTitle] = useState(cardTitle);
+  const [newCardContent, setNewCardContent] = useState(cardContent);
 
+  const handleNewCardTitleChange = (evt: ChangeEvent<HTMLInputElement>) => {
+    setNewCardTitle(evt.target.value);
+  };
+
+  const handleNewCardContentChange = (
+    evt: ChangeEvent<HTMLTextAreaElement>
+  ) => {
+    setNewCardContent(evt.target.value);
+  };
+
+  // TODO: "POST" to "/cards". Request payload: {title, content, column_id}
+  // const createCardRequest = () => {};
   const addNewCardRequest = async () => {
     const response = await fetch("/cards", {
       method: "POST",
@@ -31,6 +52,31 @@ export default function ColumnCardMode({
     });
 
     const data = await response.json();
+    
+    if (data.success) {
+      return data.card;
+    }
+
+    const {
+      errorCode: { status, code, message },
+    } = data;
+    throw Error(`${status} ${code}: ${message}`);
+  }
+
+  const editCardRequest = async () => {
+    const res = await fetch(`/cards/${cardId}`, {
+      method: "PUT",
+      headers: {
+        "content-type": "application/json",
+      },
+      body: JSON.stringify({
+        id: cardId,
+        title: cardTitle,
+        content: cardContent,
+      }),
+    });
+    const data = await res.json();
+    
     if (data.success) {
       return data.card;
     }
@@ -41,7 +87,7 @@ export default function ColumnCardMode({
     throw Error(`${status} ${code}: ${message}`);
   };
 
-  async function submitHandler(evt: SyntheticEvent) {
+  const handleSubmit = async (evt: FormEvent) => {
     evt.preventDefault();
 
     try {
@@ -72,28 +118,41 @@ export default function ColumnCardMode({
       onSubmit={(evt: React.FormEvent<Element>) => {
         submitHandler(evt);
       }}>
+      } else if (mode === "edit") {
+        const { id, title, content } = await editCardRequest();
+
+        // TODO: Update cards context
+      }
+
+      toggleEditMode();
+    } catch (error) {
+      alert(error);
+    }
+  };
+
+  return (
+    <StyledColumnCardMode onSubmit={handleSubmit}>
       <div className="card-info-container">
         <input
           className="card-title"
           type="text"
           placeholder="제목을 입력하세요"
-          onChange={(evt) => {
-            setCardTitle(evt.target.value);
-          }}
+          value={newCardTitle}
+          onChange={handleNewCardTitleChange}
         />
         <textarea
           className="card-content"
           placeholder="내용을 입력하세요"
           maxLength={500}
-          onChange={(evt) => {
-            setCardContent(evt.target.value);
-          }}
           onKeyUp={(evt) => {
             // eslint-disable-next-line no-param-reassign
             const target = evt.target as HTMLTextAreaElement;
             target.style.height = `${calcHeight(target.value)}px`;
             target.style.maxHeight = "128px";
           }}
+          rows={1}
+          value={newCardContent}
+          onChange={handleNewCardContentChange}
         />
       </div>
 
@@ -102,7 +161,7 @@ export default function ColumnCardMode({
           className="cancel-button"
           content="취소"
           type="button"
-          onClick={newCardToggleHandler}
+          onClick={mode === "add" ? newCardToggleHandler : toggleEditMode}
         />
         <ActionButton
           className={`${mode}-button`}
@@ -124,6 +183,7 @@ const StyledColumnCardMode = styled.form`
 
     .card-title {
       width: 100%;
+      height: 16px;
       margin-bottom: 8px;
       background: transparent;
       border: none;

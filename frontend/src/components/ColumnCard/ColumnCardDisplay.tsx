@@ -8,9 +8,11 @@ import { ModalContext } from "../../context/ModalContext.tsx";
 export default function ColumnCardDisplay({
   cardTitle,
   cardContent,
+  toggleEditMode,
 }: {
   cardTitle: string;
   cardContent: string;
+  toggleEditMode: () => void;
 }) {
   const { openModal } = useContext(ModalContext);
 
@@ -33,6 +35,7 @@ export default function ColumnCardDisplay({
           className="edit-button"
           src={editButtonIcon}
           alt="카드 수정"
+          onClick={toggleEditMode}
         />
       </div>
     </StyledColumnCardDisplay>
