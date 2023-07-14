@@ -3,7 +3,7 @@ import { rest } from "msw";
 export const handlers = [
   // TODO: 카드 목록 불러오기
   rest.get("/cards", (req, res, ctx) => {
-    return res(ctx.status(200), ctx.json(allData));
+    return res(ctx.status(200), ctx.json(board));
   }),
   // 새로운 카드 추가
   rest.post("/cards", async (req, res, ctx) => {
@@ -36,9 +36,9 @@ export const handlers = [
 ];
 
 // 초기 데이터
-const allData = [
+const board = [
   {
-    column_id: 1,
+    columnId: 1,
     name: "해야할 일",
     cards: [
       {
@@ -46,26 +46,26 @@ const allData = [
         title: "ERD 설계하기",
         content: "팀원들과 회의를 통해 ERD 설계를 완성하기",
         position: 1024,
-        column_id: 1,
+        columnId: 1,
       },
       {
         id: 2,
         title: "ERD 설계하기",
         content: "팀원들과 회의를 통해 ERD 설계를 완성하기",
         position: 2048,
-        column_id: 1,
+        columnId: 1,
       },
       {
         id: 3,
         title: "ERD 설계하기",
         content: "팀원들과 회의를 통해 ERD 설계를 완성하기",
         position: 4096,
-        column_id: 1,
+        columnId: 1,
       },
     ],
   },
   {
-    column_id: 2,
+    columnId: 2,
     name: "하고있는 일",
     cards: [
       {
@@ -73,26 +73,26 @@ const allData = [
         title: "ERD 설계하기",
         content: "팀원들과 회의를 통해 ERD 설계를 완성하기",
         position: 1024,
-        column_id: 2,
+        columnId: 2,
       },
       {
         id: 5,
         title: "ERD 설계하기",
         content: "팀원들과 회의를 통해 ERD 설계를 완성하기",
         position: 2048,
-        column_id: 2,
+        columnId: 2,
       },
       {
         id: 6,
         title: "ERD 설계하기",
         content: "팀원들과 회의를 통해 ERD 설계를 완성하기",
         position: 4096,
-        column_id: 2,
+        columnId: 2,
       },
     ],
   },
   {
-    column_id: 3,
+    columnId: 3,
     name: "완료한 일",
     cards: [
       {
@@ -100,21 +100,21 @@ const allData = [
         title: "ERD 설계하기",
         content: "팀원들과 회의를 통해 ERD 설계를 완성하기",
         position: 1024,
-        column_id: 3,
+        columnId: 3,
       },
       {
         id: 8,
         title: "ERD 설계하기",
         content: "팀원들과 회의를 통해 ERD 설계를 완성하기",
         position: 2048,
-        column_id: 3,
+        columnId: 3,
       },
       {
         id: 9,
         title: "ERD 설계하기",
         content: "팀원들과 회의를 통해 ERD 설계를 완성하기",
         position: 4096,
-        column_id: 3,
+        columnId: 3,
       },
     ],
   },
@@ -126,7 +126,7 @@ const successCardAdd = {
     title: "ERD 설계하기",
     content: "팀원들과 협업하여 ERD 설계 완성하기",
     position: 1024,
-    column_id: 1,
+    columnId: 1,
   },
   success: true,
 };
@@ -159,10 +159,7 @@ const failedCardUpdate = {
 };
 // 삭제 요청 성공
 const successCardDelete = {
-  card: {
-    id: 1,
-    is_deleted: true,
-  },
+  cardId: 1,
   success: true,
 };
 // 삭제 요청 실패
@@ -179,7 +176,7 @@ const successSameColumnMove = {
   card: {
     id: 1,
     position: 2560,
-    column_id: 1,
+    columnId: 1,
   },
   success: true,
 };
@@ -188,7 +185,7 @@ const successDiffColumnMove = {
   card: {
     id: 3,
     position: 1536,
-    column_id: 2,
+    columnId: 2,
   },
   success: true,
 };
@@ -205,35 +202,35 @@ const failedMove = {
 const historyData = [
   {
     id: 4,
-    card_title: "ERD 및 API 설계하기",
-    prev_column: "하고있는 일",
-    next_column: "하고있는 일",
+    cardTitle: "ERD 및 API 설계하기",
+    prevColumn: "하고있는 일",
+    nextColumn: "하고있는 일",
     timestamp: "1분 전",
-    action_name: "삭제",
+    actionName: "삭제",
   },
   {
     id: 3,
-    card_title: "ERD 설계하기",
-    prev_column: "하고있는 일",
-    next_column: "하고있는 일",
+    cardTitle: "ERD 설계하기",
+    prevColumn: "하고있는 일",
+    nextColumn: "하고있는 일",
     timestamp: "3분 전",
-    action_name: "수정",
+    actionName: "수정",
   },
   {
     id: 2,
-    card_title: "ERD 설계하기",
-    prev_column: "해야할 일",
-    next_column: "하고있는 일",
+    cardTitle: "ERD 설계하기",
+    prevColumn: "해야할 일",
+    nextColumn: "하고있는 일",
     timestamp: "5분 전",
-    action_name: "이동",
+    actionName: "이동",
   },
   {
     id: 1,
-    card_title: "ERD 설계하기",
-    prev_column: "해야할 일",
-    next_column: "해야할 일",
+    cardTitle: "ERD 설계하기",
+    prevColumn: "해야할 일",
+    nextColumn: "해야할 일",
     timestamp: "10분 전",
-    action_name: "등록",
+    actionName: "등록",
   },
 ];
 // Activity History 삭제
