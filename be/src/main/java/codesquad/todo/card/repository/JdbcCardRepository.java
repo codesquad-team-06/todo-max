@@ -22,7 +22,8 @@ public class JdbcCardRepository implements CardRepository {
 
 	@Override
 	public List<Card> findAll() {
-		return template.query("SELECT c.id, c.title, c.content, c.position, c.is_deleted, c.column_id FROM card c",
+		return template.query(
+			"SELECT c.id, c.title, c.content, c.position, c.is_deleted, c.column_id FROM card c WHERE c.is_deleted = FALSE",
 			getCardRowMapper());
 	}
 
@@ -51,7 +52,7 @@ public class JdbcCardRepository implements CardRepository {
 		SqlParameterSource param = new MapSqlParameterSource("column_id", columnId);
 
 		return template.query(
-			"SELECT c.id, c.title, c.content, c.position, c.is_deleted, c.column_id FROM card c WHERE c.column_id = :column_id",
+			"SELECT c.id, c.title, c.content, c.position, c.is_deleted, c.column_id FROM card c WHERE c.column_id = :column_id AND c.is_deleted = FALSE",
 			param, getCardRowMapper());
 	}
 
