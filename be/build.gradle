@@ -17,11 +17,23 @@ repositories {
 
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
-    implementation 'org.springframework.boot:spring-boot-starter-jdbc'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jdbc'
     runtimeOnly 'com.mysql:mysql-connector-j'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
 
 tasks.named('test') {
     useJUnitPlatform()
+}
+
+// 어노테이션 프로세서 활성화
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+}
+
+// plain jar 생성 방지
+jar {
+    enabled = false
 }

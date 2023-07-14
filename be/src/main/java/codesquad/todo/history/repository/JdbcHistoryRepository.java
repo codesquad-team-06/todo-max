@@ -14,6 +14,7 @@ import codesquad.todo.history.entity.History;
 
 @Repository
 public class JdbcHistoryRepository implements HistoryRepository {
+
 	private final NamedParameterJdbcTemplate jdbcTemplate;
 	private final RowMapper<History> historyRowMapper = ((rs, rowNum) -> History.builder()
 		.cardTitle(rs.getString("card_title"))
