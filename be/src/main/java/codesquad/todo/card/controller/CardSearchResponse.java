@@ -1,7 +1,5 @@
 package codesquad.todo.card.controller;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-
 import codesquad.todo.card.entity.Card;
 
 public class CardSearchResponse {
@@ -9,7 +7,6 @@ public class CardSearchResponse {
 	private String title;
 	private String content;
 	private int position;
-	@JsonProperty("column_id")
 	private Long columnId;
 
 	public CardSearchResponse(Long id, String title, String content, int position, Long columnId) {
