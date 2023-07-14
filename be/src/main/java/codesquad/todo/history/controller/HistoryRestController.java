@@ -24,8 +24,8 @@ public class HistoryRestController {
 	}
 
 	@GetMapping
-	public ResponseEntity<List<HistoryFindAllResponse>> getHistories() {
-		return ResponseEntity.ok().body(historyService.getAll());
+	public List<HistoryFindAllResponse> getHistories() {
+		return historyService.getAll();
 	}
 
 	@DeleteMapping
