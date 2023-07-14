@@ -9,7 +9,7 @@ import deleteButtonIcon from "../assets/closed.svg";
 export default function Column() {
   const [isNewCardActive, setIsNewCardActive] = useState(false);
 
-  const newCardToggleHandler = () => {
+  const toggleNewCard = () => {
     setIsNewCardActive(!isNewCardActive);
   };
 
@@ -25,7 +25,7 @@ export default function Column() {
             className="add-button"
             src={addButtonIcon}
             alt="카드 추가"
-            onClick={newCardToggleHandler}
+            onClick={toggleNewCard}
           />
           <IconButton
             className="delete-button"
@@ -36,7 +36,7 @@ export default function Column() {
       </Header>
 
       <ul className="cards-list">
-        {isNewCardActive && <NewColumnCard {...{ newCardToggleHandler }} />}
+        {isNewCardActive && <NewColumnCard {...{ toggleNewCard }} />}
         <ColumnCard />
         <ColumnCard />
       </ul>

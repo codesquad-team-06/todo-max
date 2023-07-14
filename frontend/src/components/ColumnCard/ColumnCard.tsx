@@ -17,9 +17,11 @@ export default function ColumnCard() {
         <ColumnCardMode
           {...{
             mode: "edit",
-            cardId: 1,
-            cardTitle: "I am card title",
-            cardContent: "I am card content",
+            cardDetails: {
+              cardId: 1,
+              cardTitle: "I am card title",
+              cardContent: "I am card content",
+            },
             toggleEditMode,
           }}
         />

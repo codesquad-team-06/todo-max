@@ -8,23 +8,33 @@ const ModeKR = {
   edit: "저장",
 };
 
+ColumnCardMode.defaultProps = {
+  toggleEditMode: undefined,
+  toggleNewCard: undefined,
+  cardDetails: {},
+};
+
 export default function ColumnCardMode({
   mode,
-  cardId,
-  cardTitle,
-  cardContent,
+  cardDetails,
   toggleEditMode,
-  newCardToggleHandler,
+  toggleNewCard,
 }: {
   mode: "add" | "edit";
-  cardId: number;
-  cardTitle: string;
-  cardContent: string;
-  toggleEditMode: () => void;
-  newCardToggleHandler: () => void;
+  cardDetails?: {
+    cardId: number;
+    cardTitle: string;
+    cardContent: string;
+  };
+  toggleEditMode?: () => void;
+  toggleNewCard?: () => void;
 }) {
-  const [newCardTitle, setNewCardTitle] = useState(cardTitle);
-  const [newCardContent, setNewCardContent] = useState(cardContent);
+  const [newCardTitle, setNewCardTitle] = useState(
+    mode === "add" ? "" : cardDetails?.cardTitle
+  );
+  const [newCardContent, setNewCardContent] = useState(
+    mode === "add" ? "" : cardDetails?.cardContent
+  );
 
   const handleNewCardTitleChange = (evt: ChangeEvent<HTMLInputElement>) => {
     setNewCardTitle(evt.target.value);
@@ -37,7 +47,6 @@ export default function ColumnCardMode({
   };
 
   // TODO: "POST" to "/cards". Request payload: {title, content, column_id}
-  // const createCardRequest = () => {};
   const addNewCardRequest = async () => {
     const response = await fetch("/cards", {
       method: "POST",
@@ -45,14 +54,14 @@ export default function ColumnCardMode({
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        title: cardTitle,
-        content: cardContent,
+        title: newCardTitle,
+        content: newCardContent,
         column_id: 1,
       }),
     });
 
     const data = await response.json();
-    
+
     if (data.success) {
       return data.card;
     }
@@ -61,9 +70,11 @@ export default function ColumnCardMode({
       errorCode: { status, code, message },
     } = data;
     throw Error(`${status} ${code}: ${message}`);
-  }
+  };
 
   const editCardRequest = async () => {
+    const { cardId, cardTitle, cardContent } = cardDetails!;
+
     const res = await fetch(`/cards/${cardId}`, {
       method: "PUT",
       headers: {
@@ -76,7 +87,7 @@ export default function ColumnCardMode({
       }),
     });
     const data = await res.json();
-    
+
     if (data.success) {
       return data.card;
     }
@@ -92,42 +103,25 @@ export default function ColumnCardMode({
 
     try {
       if (mode === "add") {
-        const { id, title, content } = await addNewCardRequest();
+        const { id, title, content, position, columnId } =
+          await addNewCardRequest();
         // TODO: Update cards context
+        toggleNewCard && toggleNewCard();
       } else if (mode === "edit") {
-        // edit card request
+        const { id, title, content } = await editCardRequest();
         // TODO: Update cards context
+        toggleEditMode && toggleEditMode();
       }
-      newCardToggleHandler();
     } catch (error) {
       alert(error);
     }
-
-    newCardToggleHandler();
-  }
+  };
 
   const calcHeight = (value: string) => {
     const numberOfLineBreaks = (value.match(/\n/g) || []).length;
     // min-height + lines x line-height + padding + border
     const newHeight = 14 + numberOfLineBreaks * 20 + 12 + 2;
     return newHeight;
-  };
-
-  return (
-    <StyledColumnCardMode
-      onSubmit={(evt: React.FormEvent<Element>) => {
-        submitHandler(evt);
-      }}>
-      } else if (mode === "edit") {
-        const { id, title, content } = await editCardRequest();
-
-        // TODO: Update cards context
-      }
-
-      toggleEditMode();
-    } catch (error) {
-      alert(error);
-    }
   };
 
   return (
@@ -144,14 +138,13 @@ export default function ColumnCardMode({
           className="card-content"
           placeholder="내용을 입력하세요"
           maxLength={500}
+          value={newCardContent}
           onKeyUp={(evt) => {
             // eslint-disable-next-line no-param-reassign
             const target = evt.target as HTMLTextAreaElement;
             target.style.height = `${calcHeight(target.value)}px`;
             target.style.maxHeight = "128px";
           }}
-          rows={1}
-          value={newCardContent}
           onChange={handleNewCardContentChange}
         />
       </div>
@@ -161,13 +154,13 @@ export default function ColumnCardMode({
           className="cancel-button"
           content="취소"
           type="button"
-          onClick={mode === "add" ? newCardToggleHandler : toggleEditMode}
+          onClick={mode === "add" ? toggleNewCard : toggleEditMode}
         />
         <ActionButton
           className={`${mode}-button`}
           content={ModeKR[mode]}
           type="submit"
-          disabled={!cardTitle || !cardContent}
+          disabled={!newCardTitle || !newCardContent}
         />
       </div>
     </StyledColumnCardMode>

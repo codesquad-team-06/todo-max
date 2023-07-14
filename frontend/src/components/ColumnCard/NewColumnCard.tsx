@@ -3,13 +3,13 @@ import { styled } from "styled-components";
 import ColumnCardMode from "./ColumnCardMode.tsx";
 
 export default function NewColumnCard({
-  newCardToggleHandler,
+  toggleNewCard,
 }: {
-  newCardToggleHandler: () => void;
+  toggleNewCard: () => void;
 }) {
   return (
     <StyledNewColumnCard>
-      <ColumnCardMode {...{ mode: "add", newCardToggleHandler }} />
+      <ColumnCardMode {...{ mode: "add", toggleNewCard }} />
     </StyledNewColumnCard>
   );
 }

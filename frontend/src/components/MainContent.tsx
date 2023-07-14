@@ -3,6 +3,8 @@ import { styled } from "styled-components";
 import Column from "./Column.tsx";
 
 export default function MainContent() {
+  // cards context
+
   return (
     <StyledMainContent>
       <Column />
