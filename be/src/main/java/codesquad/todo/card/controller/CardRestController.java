@@ -1,6 +1,5 @@
 package codesquad.todo.card.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -21,7 +20,6 @@ import codesquad.todo.card.service.CardService;
 public class CardRestController {
 	private final CardService cardService;
 
-	@Autowired
 	public CardRestController(CardService cardService) {
 		this.cardService = cardService;
 	}
