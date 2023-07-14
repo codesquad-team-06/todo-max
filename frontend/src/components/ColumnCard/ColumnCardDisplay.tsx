@@ -1,4 +1,5 @@
-import React, { useContext } from "react";
+/* eslint-disable no-alert */
+import React, { FormEvent, useContext } from "react";
 import { styled } from "styled-components";
 import IconButton from "../common/IconButton.tsx";
 import deleteButtonIcon from "../../assets/closed.svg";
@@ -6,15 +7,48 @@ import editButtonIcon from "../../assets/edit.svg";
 import { ModalContext } from "../../context/ModalContext.tsx";
 
 export default function ColumnCardDisplay({
+  cardId,
   cardTitle,
   cardContent,
   toggleEditMode,
 }: {
+  cardId: number;
   cardTitle: string;
   cardContent: string;
   toggleEditMode: () => void;
 }) {
   const { openModal } = useContext(ModalContext);
+
+  const deleteCardRequest = async () => {
+    const response = await fetch(`/cards/${cardId}`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    const data = await response.json();
+
+    if (data.success) {
+      return { cardId: data.cardId };
+    }
+
+    const {
+      errorCode: { status, code, message },
+    } = data;
+    throw Error(`${status} ${code}: ${message}`);
+  };
+
+  const handleSubmit = async (evt: FormEvent) => {
+    evt.preventDefault();
+
+    try {
+      const { cardId } = await deleteCardRequest();
+      // TODO: Update cards context
+    } catch (error) {
+      alert(error);
+    }
+  };
 
   return (
     <StyledColumnCardDisplay>
@@ -29,7 +63,7 @@ export default function ColumnCardDisplay({
           className="delete-button"
           src={deleteButtonIcon}
           alt="카드 삭제"
-          onClick={() => openModal("선택한 카드를 삭제할까요?")}
+          onClick={() => openModal("선택한 카드를 삭제할까요?", handleSubmit)}
         />
         <IconButton
           className="edit-button"

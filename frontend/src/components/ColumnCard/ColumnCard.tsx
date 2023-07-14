@@ -28,6 +28,7 @@ export default function ColumnCard() {
       ) : (
         <ColumnCardDisplay
           {...{
+            cardId: 1,
             cardTitle: "I am card title",
             cardContent: "I am card content",
             toggleEditMode,
