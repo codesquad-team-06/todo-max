@@ -32,7 +32,7 @@ public class JdbcCardRepository implements CardRepository {
 	@Override
 	public Card save(Card card) {
 		String sql = "INSERT INTO card(title, content, position, column_id) "
-			+ "VALUES (:title, :content, (SELECT MAX(position) FROM card a WHERE column_id = :columnId) + "
+			+ "VALUES (:title, :content, (SELECT IFNULL(MAX(position), 0) FROM card a WHERE column_id = :columnId AND is_deleted = FALSE) + "
 			+ POSITION_OFFSET + ", :columnId);";
 		GeneratedKeyHolder keyHolder = new GeneratedKeyHolder();
 		template.update(sql, new MapSqlParameterSource()
