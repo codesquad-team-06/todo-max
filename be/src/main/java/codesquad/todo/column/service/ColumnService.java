@@ -12,4 +12,5 @@ public class ColumnService {
 	public ColumnService(ColumnRepository columnRepository) {
 		this.columnRepository = columnRepository;
 	}
+
 }

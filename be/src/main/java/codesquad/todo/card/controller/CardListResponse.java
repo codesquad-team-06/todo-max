@@ -2,6 +2,7 @@ package codesquad.todo.card.controller;
 
 import java.util.List;
 
+
 public class CardListResponse {
 	private Long columnId; // 컬럼의 아이디 번호
 
