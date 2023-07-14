@@ -35,6 +35,7 @@ export default function ActivityHistory() {
 }
 
 const Layer = styled.div`
+  display: none;
   position: absolute;
   top: 64px;
   right: 60px;
