@@ -15,7 +15,6 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import codesquad.todo.card.controller.dto.CardDeleteDTO;
 import codesquad.todo.card.controller.dto.CardDeleteResponse;
 import codesquad.todo.card.controller.dto.CardModifyDTO;
 import codesquad.todo.card.controller.dto.CardModifyRequest;
@@ -76,8 +75,7 @@ class CardRestControllerTest {
 		//then
 		mockMvc.perform(put("/cards")
 				.content(objectMapper.writeValueAsString(cardModifyRequest))
-				.contentType(MediaType.APPLICATION_JSON_VALUE)
-				.accept(MediaType.APPLICATION_JSON))
+				.contentType(MediaType.APPLICATION_JSON_VALUE))
 			.andExpect(status().isOk())
 			.andExpect(jsonPath("card.id").value(1L))
 			.andExpect(jsonPath("card.title").value("제목수정"))
@@ -91,17 +89,13 @@ class CardRestControllerTest {
 	void deleteCard() throws Exception {
 		//given
 		Long cardId = 3L;
-		CardDeleteResponse deletedResponse = new CardDeleteResponse(new CardDeleteDTO(3L, true), true);
-
-		//when
+		CardDeleteResponse deletedResponse = new CardDeleteResponse(3L, true);
 		given(cardService.deleteCard(cardId)).willReturn(deletedResponse);
 
-		//then
-		mockMvc.perform(delete("/cards/" + cardId)
-				.accept(MediaType.APPLICATION_JSON))
+		//when then
+		mockMvc.perform(delete("/cards/" + cardId))
 			.andExpect(status().isOk())
-			.andExpect(jsonPath("card.id").value(3L))
-			.andExpect(jsonPath("card.isDeleted").value(true))
+			.andExpect(jsonPath("cardId").value(3L))
 			.andExpect(jsonPath("success").value(true))
 			.andDo(print());
 	}
