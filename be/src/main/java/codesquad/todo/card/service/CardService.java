@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import codesquad.todo.card.controller.CardListResponse;
 import codesquad.todo.card.controller.CardSearchResponse;
@@ -25,6 +26,7 @@ public class CardService {
 		this.columnRepository = columnRepository;
 	}
 
+	@Transactional(readOnly = true)
 	public List<CardListResponse> getAllCard() {
 		List<CardListResponse> cardListResponses = new ArrayList<>();
 		// 1. 모든 카드 조회

@@ -50,15 +50,15 @@ class CardRestControllerTest {
 	@DisplayName("/cards를 요청할때 컬럼별 카드들을 조회한다")
 	public void testCardList() throws Exception {
 		// given
-		String expectByColumnName = "$[%s].name";
-		String expectByColumnId = "$[%s].column_id";
-		String expectByCards = "$[%s].cards";
+		String expectedColumnName = "$[%s].name";
+		String expectedColumnId = "$[%s].columnId";
+		String expectedCards = "$[%s].cards";
 		// when
 		mockMvc.perform(get("/cards"))
 			.andDo(print())
 			.andExpect(status().isOk())
-			.andExpect(jsonPath(expectByColumnName, 0).value(equalTo("해야할 일")))
-			.andExpect(jsonPath(expectByColumnId, 0).value(equalTo(1)))
-			.andExpect(jsonPath(expectByCards, 0).isArray());
+			.andExpect(jsonPath(expectedColumnName, 0).value(equalTo("해야할 일")))
+			.andExpect(jsonPath(expectedColumnId, 0).value(equalTo(1)))
+			.andExpect(jsonPath(expectedCards, 0).isArray());
 	}
 }
