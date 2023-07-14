@@ -17,8 +17,7 @@ export default function ColumnCardMode({
   const [cardTitle, setCardTitle] = useState("");
   const [cardContent, setCardContent] = useState("");
 
-  async function submitHandler(evt: SyntheticEvent) {
-    evt.preventDefault();
+  const addNewCardRequest = async () => {
     const response = await fetch("/cards", {
       method: "POST",
       headers: {
@@ -32,7 +31,32 @@ export default function ColumnCardMode({
     });
 
     const data = await response.json();
-    // console.log(data);
+    if (data.success) {
+      return data.card;
+    }
+
+    const {
+      errorCode: { status, code, message },
+    } = data;
+    throw Error(`${status} ${code}: ${message}`);
+  };
+
+  async function submitHandler(evt: SyntheticEvent) {
+    evt.preventDefault();
+
+    try {
+      if (mode === "add") {
+        const { id, title, content } = await addNewCardRequest();
+        // TODO: Update cards context
+      } else if (mode === "edit") {
+        // edit card request
+        // TODO: Update cards context
+      }
+      newCardToggleHandler();
+    } catch (error) {
+      alert(error);
+    }
+
     newCardToggleHandler();
   }
 
@@ -68,6 +92,7 @@ export default function ColumnCardMode({
             // eslint-disable-next-line no-param-reassign
             const target = evt.target as HTMLTextAreaElement;
             target.style.height = `${calcHeight(target.value)}px`;
+            target.style.maxHeight = "128px";
           }}
         />
       </div>
