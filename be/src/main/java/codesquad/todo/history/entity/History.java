@@ -65,19 +65,19 @@ public class History {
 
 	@Override
 	public String toString() {
-		return "History{" +
-			"id=" + id +
-			", cardTitle='" + cardTitle + '\'' +
-			", prevColumn='" + prevColumn + '\'' +
-			", nextColumn='" + nextColumn + '\'' +
-			", createdAt=" + createdAt +
-			", isDeleted=" + isDeleted +
-			", action=" + action +
-			", cardId=" + cardId +
-			'}';
+		return "History{"
+			+ "id=" + id
+			+ ", cardTitle='" + cardTitle + '\''
+			+ ", prevColumn='" + prevColumn + '\''
+			+ ", nextColumn='" + nextColumn + '\''
+			+ ", createdAt=" + createdAt
+			+ ", isDeleted=" + isDeleted
+			+ ", action=" + action
+			+ ", cardId=" + cardId
+			+ '}';
 	}
 
-	static class Builder {
+	public static class Builder {
 		private Long id;
 		private String cardTitle;
 		private String prevColumn;
@@ -117,7 +117,7 @@ public class History {
 			return this;
 		}
 
-		public Builder actionId(Action action) {
+		public Builder action(Action action) {
 			this.action = action;
 			return this;
 		}

@@ -26,13 +26,13 @@ public class Action {
 
 	@Override
 	public String toString() {
-		return "Action{" +
-			"id=" + id +
-			", name='" + name + '\'' +
-			'}';
+		return "Action{"
+			+ "id=" + id
+			+ ", name='" + name + '\''
+			+ '}';
 	}
 
-	static class Builder {
+	public static class Builder {
 		private Long id;
 		private String name;
 
