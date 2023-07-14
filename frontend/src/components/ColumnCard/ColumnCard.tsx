@@ -8,7 +8,23 @@ export default function ColumnCard() {
 
   return (
     <StyledColumnCard>
-      {isEditMode ? <ColumnCardMode mode="edit" /> : <ColumnCardDisplay />}
+      {isEditMode ? (
+        <ColumnCardMode
+          {...{
+            mode: "edit",
+            cardId: 1,
+            cardTitle: "I am card title",
+            cardContent: "I am card content",
+          }}
+        />
+      ) : (
+        <ColumnCardDisplay
+          {...{
+            cardTitle: "I am card title",
+            cardContent: "I am card content",
+          }}
+        />
+      )}
     </StyledColumnCard>
   );
 }

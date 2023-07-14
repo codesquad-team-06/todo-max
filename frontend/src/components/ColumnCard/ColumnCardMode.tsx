@@ -83,7 +83,7 @@ export default function ColumnCardMode({
           className={`${mode}-button`}
           content={ModeKR[mode]}
           type="submit"
-          disabled={!cardTitle || !cardContent} // TODO: if `.card-title` or `.card-content` is empty, `disabled`.
+          disabled={!cardTitle || !cardContent}
         />
       </div>
     </StyledColumnCardMode>

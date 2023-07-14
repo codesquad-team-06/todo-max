@@ -5,14 +5,20 @@ import deleteButtonIcon from "../../assets/closed.svg";
 import editButtonIcon from "../../assets/edit.svg";
 import { ModalContext } from "../../context/ModalContext.tsx";
 
-export default function ColumnCardDisplay() {
+export default function ColumnCardDisplay({
+  cardTitle,
+  cardContent,
+}: {
+  cardTitle: string;
+  cardContent: string;
+}) {
   const { openModal } = useContext(ModalContext);
 
   return (
     <StyledColumnCardDisplay>
       <div className="card-info-container">
-        <h3 className="card-title">Card title</h3>
-        <p className="card-content">Card content</p>
+        <h3 className="card-title">{cardTitle}</h3>
+        <p className="card-content">{cardContent}</p>
         <p className="card-author">author by web</p>
       </div>
 
