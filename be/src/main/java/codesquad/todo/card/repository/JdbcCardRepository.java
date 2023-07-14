@@ -9,6 +9,7 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.stereotype.Repository;
 
 import codesquad.todo.card.entity.Card;
@@ -26,7 +27,9 @@ public class JdbcCardRepository implements CardRepository {
 
 	@Override
 	public List<Card> findAll() {
-		return null;
+		return template.query(
+			"SELECT c.id, c.title, c.content, c.position, c.is_deleted, c.column_id FROM card c WHERE c.is_deleted = FALSE",
+			getCardRowMapper());
 	}
 
 	@Override
@@ -70,6 +73,7 @@ public class JdbcCardRepository implements CardRepository {
 		return Optional.ofNullable(template.queryForObject(sql, Map.of("id", id), cardRowMapper));
 	}
 
+
 	private final RowMapper<Card> cardRowMapper = ((rs, rowNum) -> Card.builder()
 		.id(rs.getLong("id"))
 		.title(rs.getString("title"))
@@ -78,4 +82,25 @@ public class JdbcCardRepository implements CardRepository {
 		.isDeleted(rs.getBoolean("is_deleted"))
 		.columnId(rs.getLong("column_id"))
 		.build());
+
+	@Override
+	public List<Card> findAllByColumnId(Long columnId) {
+		SqlParameterSource param = new MapSqlParameterSource("column_id", columnId);
+
+		return template.query(
+			"SELECT c.id, c.title, c.content, c.position, c.is_deleted, c.column_id FROM card c WHERE c.column_id = :column_id AND c.is_deleted = FALSE",
+			param, getCardRowMapper());
+	}
+
+	private RowMapper<Card> getCardRowMapper() {
+		return (rs, rowNum) -> Card.builder()
+			.id(rs.getLong("id"))
+			.title(rs.getString("title"))
+			.content(rs.getString("content"))
+			.position(rs.getInt("position"))
+			.isDeleted(rs.getBoolean("is_deleted"))
+			.columnId(rs.getLong("column_id"))
+			.build();
+	}
+
 }

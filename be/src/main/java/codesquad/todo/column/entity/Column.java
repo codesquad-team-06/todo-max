@@ -32,7 +32,7 @@ public class Column {
 			'}';
 	}
 
-	static class Builder {
+	public static class Builder {
 		private Long id;
 		private String name;
 
