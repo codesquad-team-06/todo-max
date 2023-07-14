@@ -51,7 +51,7 @@ class CardRestControllerTest {
 	public void testCardList() throws Exception {
 		// given
 		String expectedColumnName = "$[%s].name";
-		String expectedColumnId = "$[%s].column_id";
+		String expectedColumnId = "$[%s].columnId";
 		String expectedCards = "$[%s].cards";
 		// when
 		mockMvc.perform(get("/cards"))
