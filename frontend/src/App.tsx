@@ -3,8 +3,7 @@ import { styled, ThemeProvider } from "styled-components";
 import designSystem from "./styles/designSystem.ts";
 import GlobalStyles from "./styles/GlobalStyles.ts";
 import Header from "./components/Header.tsx";
-import MainContent from "./components/MainContent.tsx";
-import ActivityHistory from "./components/ActivityHistory.tsx";
+import Board from "./components/Board.tsx";
 import { ModalProvider } from "./context/ModalContext.tsx";
 
 export default function App() {
@@ -15,8 +14,7 @@ export default function App() {
         <ModalProvider>
           <MainWrapper>
             <Header />
-            <MainContent />
-            <ActivityHistory />
+            <Board />
           </MainWrapper>
         </ModalProvider>
       </StyledApp>
