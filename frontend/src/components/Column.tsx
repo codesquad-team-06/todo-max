@@ -6,7 +6,21 @@ import IconButton from "./common/IconButton.tsx";
 import addButtonIcon from "../assets/plus.svg";
 import deleteButtonIcon from "../assets/closed.svg";
 
-export default function Column() {
+export type CardType = {
+  id: number;
+  title: string;
+  content: string;
+  position: number;
+  columnId: number;
+};
+
+export default function Column({
+  name,
+  cards,
+}: {
+  name: string;
+  cards: CardType[];
+}) {
   const [isNewCardActive, setIsNewCardActive] = useState(false);
 
   const toggleNewCard = () => {
@@ -17,8 +31,8 @@ export default function Column() {
     <StyledColumn>
       <Header>
         <div className="column-info-container">
-          <h2>해야할 일</h2>
-          <span>2</span>
+          <h2>{name}</h2>
+          <span>{cards.length}</span>
         </div>
         <div className="buttons-container">
           <IconButton
@@ -37,14 +51,19 @@ export default function Column() {
 
       <ul className="cards-list">
         {isNewCardActive && <NewColumnCard {...{ toggleNewCard }} />}
-        <ColumnCard />
-        <ColumnCard />
+
+        {cards.map(({ id, title, content }) => (
+          <ColumnCard {...{ key: id, id, title, content }} />
+        ))}
+
+        {/* <ColumnCard />
+        <ColumnCard /> */}
       </ul>
     </StyledColumn>
   );
 }
 
-const StyledColumn = styled.main`
+const StyledColumn = styled.div`
   width: 300px;
   display: flex;
   flex-direction: column;

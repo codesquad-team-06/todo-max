@@ -7,20 +7,16 @@ import editButtonIcon from "../../assets/edit.svg";
 import { ModalContext } from "../../context/ModalContext.tsx";
 
 export default function ColumnCardDisplay({
-  cardId,
-  cardTitle,
-  cardContent,
+  cardDetails,
   toggleEditMode,
 }: {
-  cardId: number;
-  cardTitle: string;
-  cardContent: string;
+  cardDetails: { id: number; title: string; content: string };
   toggleEditMode: () => void;
 }) {
   const { openModal } = useContext(ModalContext);
 
   const deleteCardRequest = async () => {
-    const response = await fetch(`/cards/${cardId}`, {
+    const response = await fetch(`/cards/${cardDetails.id}`, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
@@ -30,7 +26,7 @@ export default function ColumnCardDisplay({
     const data = await response.json();
 
     if (data.success) {
-      return { cardId: data.cardId };
+      return { id: data.id };
     }
 
     const {
@@ -43,8 +39,8 @@ export default function ColumnCardDisplay({
     evt.preventDefault();
 
     try {
-      const { cardId } = await deleteCardRequest();
-      // TODO: Update cards context
+      const { id } = await deleteCardRequest();
+      // TODO: Update board state
     } catch (error) {
       alert(error);
     }
@@ -53,8 +49,8 @@ export default function ColumnCardDisplay({
   return (
     <StyledColumnCardDisplay>
       <div className="card-info-container">
-        <h3 className="card-title">{cardTitle}</h3>
-        <p className="card-content">{cardContent}</p>
+        <h3 className="card-title">{cardDetails.title}</h3>
+        <p className="card-content">{cardDetails.content}</p>
         <p className="card-author">author by web</p>
       </div>
 

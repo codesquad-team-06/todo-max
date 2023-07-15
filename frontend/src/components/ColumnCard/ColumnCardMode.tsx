@@ -22,18 +22,18 @@ export default function ColumnCardMode({
 }: {
   mode: "add" | "edit";
   cardDetails?: {
-    cardId: number;
-    cardTitle: string;
-    cardContent: string;
+    id: number;
+    title: string;
+    content: string;
   };
   toggleEditMode?: () => void;
   toggleNewCard?: () => void;
 }) {
   const [newCardTitle, setNewCardTitle] = useState(
-    mode === "add" ? "" : cardDetails?.cardTitle
+    mode === "add" ? "" : cardDetails?.title
   );
   const [newCardContent, setNewCardContent] = useState(
-    mode === "add" ? "" : cardDetails?.cardContent
+    mode === "add" ? "" : cardDetails?.content
   );
 
   const handleNewCardTitleChange = (evt: ChangeEvent<HTMLInputElement>) => {
@@ -73,17 +73,17 @@ export default function ColumnCardMode({
   };
 
   const editCardRequest = async () => {
-    const { cardId, cardTitle, cardContent } = cardDetails!;
+    const { id, title, content } = cardDetails!;
 
-    const res = await fetch(`/cards/${cardId}`, {
+    const res = await fetch(`/cards/${id}`, {
       method: "PUT",
       headers: {
         "content-type": "application/json",
       },
       body: JSON.stringify({
-        id: cardId,
-        title: cardTitle,
-        content: cardContent,
+        id,
+        title,
+        content,
       }),
     });
     const data = await res.json();
@@ -105,11 +105,11 @@ export default function ColumnCardMode({
       if (mode === "add") {
         const { id, title, content, position, columnId } =
           await addNewCardRequest();
-        // TODO: Update cards context
+        // TODO: Update board state
         toggleNewCard && toggleNewCard();
       } else if (mode === "edit") {
         const { id, title, content } = await editCardRequest();
-        // TODO: Update cards context
+        // TODO: Update board state
         toggleEditMode && toggleEditMode();
       }
     } catch (error) {

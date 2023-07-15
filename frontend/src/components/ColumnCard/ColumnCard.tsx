@@ -4,7 +4,11 @@ import ColumnCardDisplay from "./ColumnCardDisplay.tsx";
 import ColumnCardMode from "./ColumnCardMode.tsx";
 
 // TODO: Receive card `id, title, content` as props from `Column`.
-export default function ColumnCard() {
+export default function ColumnCard(cardDetails: {
+  id: number;
+  title: string;
+  content: string;
+}) {
   const [isEditMode, setIsEditMode] = useState<boolean>(false);
 
   const toggleEditMode = () => {
@@ -17,20 +21,14 @@ export default function ColumnCard() {
         <ColumnCardMode
           {...{
             mode: "edit",
-            cardDetails: {
-              cardId: 1,
-              cardTitle: "I am card title",
-              cardContent: "I am card content",
-            },
+            cardDetails,
             toggleEditMode,
           }}
         />
       ) : (
         <ColumnCardDisplay
           {...{
-            cardId: 1,
-            cardTitle: "I am card title",
-            cardContent: "I am card content",
+            cardDetails,
             toggleEditMode,
           }}
         />
