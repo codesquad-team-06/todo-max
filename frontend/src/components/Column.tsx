@@ -6,7 +6,7 @@ import IconButton from "./common/IconButton.tsx";
 import addButtonIcon from "../assets/plus.svg";
 import deleteButtonIcon from "../assets/closed.svg";
 
-export type CardType = {
+export type Card = {
   id: number;
   title: string;
   content: string;
@@ -19,7 +19,7 @@ export default function Column({
   cards,
 }: {
   name: string;
-  cards: CardType[];
+  cards: Card[];
 }) {
   const [isNewCardActive, setIsNewCardActive] = useState(false);
 
@@ -55,9 +55,6 @@ export default function Column({
         {cards.map(({ id, title, content }) => (
           <ColumnCard {...{ key: id, id, title, content }} />
         ))}
-
-        {/* <ColumnCard />
-        <ColumnCard /> */}
       </ul>
     </StyledColumn>
   );

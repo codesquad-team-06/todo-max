@@ -1,7 +1,7 @@
 /* eslint-disable no-alert */
 import React, { useState, useEffect } from "react";
 import { styled } from "styled-components";
-import Column, { CardType } from "./Column.tsx";
+import Column, { Card } from "./Column.tsx";
 
 export default function Board() {
   const [board, setBoard] = useState([]);
@@ -12,7 +12,7 @@ export default function Board() {
         const response = await fetch("/cards");
         const boardData = await response.json();
 
-        if (boardData) {
+        if (response.status === 200) {
           setBoard(boardData);
           return;
         }
@@ -36,7 +36,7 @@ export default function Board() {
         }: {
           columnId: number;
           name: string;
-          cards: CardType[];
+          cards: Card[];
         }) => (
           <Column {...{ key: columnId, name, cards }} />
         )

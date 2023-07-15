@@ -1,11 +1,75 @@
-import React, { useContext } from "react";
+/* eslint-disable no-alert */
+import React, { useEffect, useState, useContext, FormEvent } from "react";
 import { styled } from "styled-components";
 import ActivityHistoryItem from "./ActivityHistoryItem.tsx";
 import closeButtonIcon from "../assets/closed.svg";
 import { ModalContext } from "../context/ModalContext.tsx";
 
+type History = {
+  id: number;
+  cardTitle: string;
+  prevColumn: string;
+  nextColumn: string;
+  timestamp: string;
+  actionName: string;
+};
+
 export default function ActivityHistory() {
   const { openModal, closeModal } = useContext(ModalContext);
+  const [history, setHistory] = useState<History[]>([]);
+
+  useEffect(() => {
+    const fetchHistory = async () => {
+      try {
+        const response = await fetch("/histories");
+        const historyData = await response.json();
+
+        if (response.status === 200) {
+          setHistory(historyData);
+          return;
+        }
+
+        throw Error("데이터를 불러올 수 없습니다.");
+      } catch (error) {
+        alert(error);
+      }
+    };
+
+    fetchHistory();
+  }, []);
+
+  const deleteHistoryRequest = async () => {
+    const response = await fetch("/histories", {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        historyId: [1, 2, 3, 4, 5],
+      }),
+    });
+
+    const data = await response.json();
+
+    if (data.success) {
+      return [];
+    }
+
+    const {
+      errorCode: { status, code, message },
+    } = data;
+    throw Error(`${status} ${code}: ${message}`);
+  };
+
+  const handleSubmit = async (evt: FormEvent) => {
+    evt.preventDefault();
+    try {
+      const data = await deleteHistoryRequest();
+      setHistory(data);
+    } catch (error) {
+      alert(error);
+    }
+  };
 
   return (
     <Layer>
@@ -17,16 +81,34 @@ export default function ActivityHistory() {
         </CloseBtn>
       </TitleContainer>
       <ListContainer>
-        <ActivityHistoryItem />
-        <ActivityHistoryItem />
-        <ActivityHistoryItem />
-        <ActivityHistoryItem />
-        <ActivityHistoryItem />
+        {history.map(
+          ({
+            id,
+            cardTitle,
+            prevColumn,
+            nextColumn,
+            timestamp,
+            actionName,
+          }) => (
+            <ActivityHistoryItem
+              {...{
+                key: id,
+                cardTitle,
+                prevColumn,
+                nextColumn,
+                timestamp,
+                actionName,
+              }}
+            />
+          )
+        )}
       </ListContainer>
       <ButtonContainer>
         <button
           type="submit"
-          onClick={() => openModal("모든 사용자 활동 기록을 삭제할까요?")}>
+          onClick={() =>
+            openModal("모든 사용자 활동 기록을 삭제할까요?", handleSubmit)
+          }>
           기록 전체 삭제
         </button>
       </ButtonContainer>
@@ -35,7 +117,6 @@ export default function ActivityHistory() {
 }
 
 const Layer = styled.div`
-  display: none;
   position: absolute;
   top: 64px;
   right: 60px;
