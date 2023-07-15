@@ -3,7 +3,6 @@ import { styled } from "styled-components";
 import ColumnCardDisplay from "./ColumnCardDisplay.tsx";
 import ColumnCardMode from "./ColumnCardMode.tsx";
 
-// TODO: Receive card `id, title, content` as props from `Column`.
 export default function ColumnCard(cardDetails: {
   id: number;
   title: string;
