@@ -114,13 +114,11 @@ export default function ActivityHistory({
 }
 
 const Layer = styled.div`
+  width: 366px;
+  padding: 8px;
   position: absolute;
   top: 50px;
   right: 50px;
-
-  width: 366px;
-  padding: 8px;
-
   background-color: ${({ theme: { colors } }) => colors.grey50};
   border-radius: ${({ theme: { objectStyles } }) => objectStyles.radius.m};
   box-shadow: ${({ theme: { objectStyles } }) =>
@@ -153,9 +151,11 @@ const CloseBtn = styled.button`
 `;
 
 const ListContainer = styled.ul`
+  max-height: 554px;
   display: flex;
   flex-direction: column;
   align-items: center;
+  overflow-y: auto;
 `;
 
 const ButtonContainer = styled.div`

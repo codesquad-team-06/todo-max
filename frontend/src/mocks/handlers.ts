@@ -213,6 +213,30 @@ const failedMove = {
 // History 불러오기
 const historyData = [
   {
+    id: 7,
+    cardTitle: "ERD 및 API 설계하기",
+    prevColumn: "하고있는 일",
+    nextColumn: "하고있는 일",
+    timestamp: "방금 전",
+    actionName: "삭제",
+  },
+  {
+    id: 6,
+    cardTitle: "ERD 및 API 설계하기",
+    prevColumn: "하고있는 일",
+    nextColumn: "하고있는 일",
+    timestamp: "1분 전",
+    actionName: "삭제",
+  },
+  {
+    id: 5,
+    cardTitle: "ERD 및 API 설계하기",
+    prevColumn: "하고있는 일",
+    nextColumn: "하고있는 일",
+    timestamp: "1분 전",
+    actionName: "삭제",
+  },
+  {
     id: 4,
     cardTitle: "ERD 및 API 설계하기",
     prevColumn: "하고있는 일",
