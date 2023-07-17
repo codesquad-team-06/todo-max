@@ -33,24 +33,10 @@ export default function Board() {
     fetchBoard();
   }, []);
 
-  const addNewCardHandler = ({
-    id,
-    title,
-    content,
-    position,
-    columnId,
-  }: Card) => {
+  const addNewCardHandler = (newCard: Card) => {
     setBoard((prevBoard: ColumnData[]) => {
-      const newCard = {
-        id,
-        title,
-        content,
-        position,
-        columnId,
-      };
-
-      const newBoard: ColumnData[] = [...prevBoard].map((column) => {
-        if (column.columnId === columnId) {
+      const newBoard: ColumnData[] = prevBoard.map((column) => {
+        if (column.columnId === newCard.columnId) {
           return {
             ...column,
             cards: [newCard, ...column.cards],
