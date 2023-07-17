@@ -1,10 +1,16 @@
-import React from "react";
+import React, { useState } from "react";
 import { styled } from "styled-components";
 import ActivityHistory from "./ActivityHistory.tsx";
 import IconButton from "./common/IconButton.tsx";
 import historyButtonIcon from "../assets/history.svg";
 
 export default function Header() {
+  const [isHistoryActive, setIsHistoryActive] = useState(false);
+
+  const toggleHistory = () => {
+    setIsHistoryActive(!isHistoryActive);
+  };
+
   return (
     <>
       <StyledHeader>
@@ -13,9 +19,10 @@ export default function Header() {
           className="history-button"
           src={historyButtonIcon}
           alt="사용자 활동 기록 조회"
+          onClick={toggleHistory}
         />
       </StyledHeader>
-      <ActivityHistory />
+      {isHistoryActive && <ActivityHistory {...{ toggleHistory }} />}
     </>
   );
 }
