@@ -8,14 +8,14 @@ import codesquad.todo.errors.errorcode.ErrorCode;
 
 public class ErrorResponse {
 	private final boolean success;
-	private final ErrorDto errorDto;
+	private final ErrorDto errorCode;
 
 	@JsonInclude(value = JsonInclude.Include.NON_NULL)
 	private final List<ValidationError> errors;
 
 	public ErrorResponse(ErrorCode errorCode, List<ValidationError> errors) {
 		this.success = false;
-		this.errorDto = new ErrorDto(errorCode.getHttpStatus().value(), errorCode.getHttpStatus().getReasonPhrase(),
+		this.errorCode = new ErrorDto(errorCode.getHttpStatus().value(), errorCode.getHttpStatus().getReasonPhrase(),
 			errorCode.getMessage());
 		this.errors = errors;
 	}
@@ -24,8 +24,8 @@ public class ErrorResponse {
 		return success;
 	}
 
-	public ErrorDto getErrorDto() {
-		return errorDto;
+	public ErrorDto getErrorCode() {
+		return errorCode;
 	}
 
 	public List<ValidationError> getErrors() {
