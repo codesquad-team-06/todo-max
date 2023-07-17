@@ -3,8 +3,6 @@ package codesquad.todo.card.repository;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.*;
-
-
 import java.util.List;
 
 import org.assertj.core.api.SoftAssertions;
@@ -23,7 +21,6 @@ import codesquad.todo.card.entity.Card;
 @DataJpaTest(includeFilters = @ComponentScan.Filter(type = FilterType.ANNOTATION, classes = Repository.class))
 // Replace.NONE으로 설정하면 @ActiveProfiles에 설정한 프로파일 환경값에 따라 데이터소스가 적용된다.
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-
 class JdbcCardRepositoryTest {
 
 	@Autowired
