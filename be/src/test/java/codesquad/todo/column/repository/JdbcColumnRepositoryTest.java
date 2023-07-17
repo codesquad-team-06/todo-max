@@ -53,4 +53,19 @@ class JdbcColumnRepositoryTest {
 			softAssertions.assertAll();
 		});
 	}
+
+	@Test
+	@DisplayName("컬럼 아이디번호가 주어지고 컬럼 삭제 요청시 컬럼이 삭제됩니다.")
+	public void testDeleteById() {
+		// given
+		Column saveColumn = columnRepository.save(new Column(null, "보류한 일"));
+		// when
+		Column delColumn = columnRepository.deleteById(saveColumn.getId());
+		// then
+		SoftAssertions.assertSoftly(softAssertions -> {
+			softAssertions.assertThat(saveColumn.getId()).isEqualTo(delColumn.getId());
+			softAssertions.assertThat(saveColumn.getName()).isEqualTo(delColumn.getName());
+			softAssertions.assertAll();
+		});
+	}
 }

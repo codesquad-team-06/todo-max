@@ -1,6 +1,7 @@
 package codesquad.todo.column.controller;
 
 import static org.hamcrest.Matchers.*;
+import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.*;
 import static org.springframework.http.MediaType.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -114,6 +115,44 @@ class ColumnRestControllerTest {
 				.andExpect(jsonPath("errorCode.code").value(equalTo("Bad Request")))
 				.andExpect(jsonPath("errorCode.message").value(equalTo("컬럼의 제목은 최대 100글자 이내여야 합니다.")))
 				.andExpect(jsonPath("success").value(equalTo(false)));
+		}
+	}
+
+	@Nested
+	@DisplayName("컬럼 추가")
+	@WebMvcTest(ColumnRestController.class)
+	class DeleteColumnTest {
+		private MockMvc mockMvc;
+
+		@Autowired
+		private ColumnRestController columnRestController;
+
+		@MockBean
+		private ColumnService columnService;
+
+		@BeforeEach
+		public void beforeEach() {
+			mockMvc = MockMvcBuilders.standaloneSetup(columnRestController)
+				.addFilter(new CharacterEncodingFilter("UTF-8", true))
+				.alwaysDo(print())
+				.build();
+		}
+
+		@Test
+		@DisplayName("컬럼 아이디번호가 주어지고 컬럼 삭제를 요청할때 컬럼을 삭제하고 응답합니다")
+		public void testDeleteColumn_givenColumnId_whenRequestDeleteColumn_thenDeleteColumn() throws Exception {
+			// given
+			String columnId = "1";
+			ColumnSaveDto columnSaveDto = new ColumnSaveDto(1L, "해야할 일");
+			// mocking
+			when(columnService.deleteColumn(any())).thenReturn(columnSaveDto);
+			// when
+			mockMvc.perform(delete("/column/" + columnId))
+				.andExpect(status().isOk())
+				.andExpect(jsonPath("column.id").value(equalTo(1)))
+				.andExpect(jsonPath("column.name").value(equalTo("해야할 일")))
+				.andExpect(jsonPath("success").value(equalTo(true)));
+			// then
 		}
 	}
 
