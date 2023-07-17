@@ -31,7 +31,7 @@ class ColumnServiceTest {
 		// given
 		ColumnSaveRequest columnSaveRequest = new ColumnSaveRequest("보류한 일");
 		// mocking
-		Mockito.when(columnRepository.save(any())).thenReturn(new Column(1L, "보류한 일"));
+		Mockito.when(columnRepository.save(any(Column.class))).thenReturn(new Column(1L, "보류한 일"));
 		// when
 		ColumnSaveDto response = columnService.saveColumn(columnSaveRequest);
 		// then
