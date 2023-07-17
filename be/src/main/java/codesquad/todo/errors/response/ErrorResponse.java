@@ -2,37 +2,30 @@ package codesquad.todo.errors.response;
 
 import java.util.List;
 
-import org.springframework.http.HttpStatus;
-
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 import codesquad.todo.errors.errorcode.ErrorCode;
 
 public class ErrorResponse {
-	private final String name;
-	private final HttpStatus httpStatus;
-	private final String errorMessage;
+	private final boolean success;
+	private final ErrorDto errorDto;
 
 	@JsonInclude(value = JsonInclude.Include.NON_NULL)
 	private final List<ValidationError> errors;
 
 	public ErrorResponse(ErrorCode errorCode, List<ValidationError> errors) {
-		this.name = errorCode.getName();
-		this.httpStatus = errorCode.getHttpStatus();
-		this.errorMessage = errorCode.getMessage();
+		this.success = false;
+		this.errorDto = new ErrorDto(errorCode.getHttpStatus().value(), errorCode.getHttpStatus().getReasonPhrase(),
+			errorCode.getMessage());
 		this.errors = errors;
 	}
 
-	public String getName() {
-		return name;
+	public boolean isSuccess() {
+		return success;
 	}
 
-	public HttpStatus getHttpStatus() {
-		return httpStatus;
-	}
-
-	public String getErrorMessage() {
-		return errorMessage;
+	public ErrorDto getErrorDto() {
+		return errorDto;
 	}
 
 	public List<ValidationError> getErrors() {
