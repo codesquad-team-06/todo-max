@@ -1,6 +1,6 @@
 /* eslint-disable no-alert */
 import React, { useEffect, useState, useContext, FormEvent } from "react";
-import { styled } from "styled-components";
+import { styled, keyframes, css } from "styled-components";
 import ActivityHistoryItem from "./ActivityHistoryItem.tsx";
 import closeButtonIcon from "../assets/closed.svg";
 import { ModalContext } from "../context/ModalContext.tsx";
@@ -15,8 +15,10 @@ type History = {
 };
 
 export default function ActivityHistory({
+  isHistoryActive,
   toggleHistory,
 }: {
+  isHistoryActive: boolean;
   toggleHistory: () => void;
 }) {
   const { openModal, closeModal } = useContext(ModalContext);
@@ -76,7 +78,7 @@ export default function ActivityHistory({
   };
 
   return (
-    <Layer>
+    <Layer isHistoryActive={isHistoryActive}>
       <TitleContainer>
         <h3>사용자 활동 기록</h3>
         <CloseBtn onClick={toggleHistory}>
@@ -113,16 +115,32 @@ export default function ActivityHistory({
   );
 }
 
-const Layer = styled.div`
+const slideIn = keyframes`
+  0% {
+    top: -300px;
+    opacity: 0;
+  }
+  100% {
+    top: 60px;
+    opacity: 1;
+  }
+`;
+
+const Layer = styled.div<{ isHistoryActive: boolean }>`
   width: 366px;
   padding: 8px;
   position: absolute;
-  top: 50px;
+  top: 60px;
   right: 50px;
   background-color: ${({ theme: { colors } }) => colors.grey50};
   border-radius: ${({ theme: { objectStyles } }) => objectStyles.radius.m};
   box-shadow: ${({ theme: { objectStyles } }) =>
     objectStyles.dropShadow.floating};
+  ${(isHistoryActive) =>
+    isHistoryActive &&
+    css`
+      animation: ${slideIn} 0.5s ease-in;
+    `}
 `;
 
 const TitleContainer = styled.div`

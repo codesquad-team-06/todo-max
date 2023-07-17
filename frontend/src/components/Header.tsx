@@ -22,7 +22,9 @@ export default function Header() {
           onClick={toggleHistory}
         />
       </StyledHeader>
-      {isHistoryActive && <ActivityHistory {...{ toggleHistory }} />}
+      {isHistoryActive && (
+        <ActivityHistory {...{ isHistoryActive, toggleHistory }} />
+      )}
     </>
   );
 }
