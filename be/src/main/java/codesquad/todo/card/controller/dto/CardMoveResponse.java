@@ -2,11 +2,11 @@ package codesquad.todo.card.controller.dto;
 
 import codesquad.todo.card.entity.Card;
 
-public class CardSaveResponse {
+public class CardMoveResponse {
 	private CardResponseDTO card;
 	private boolean success;
 
-	public CardSaveResponse(CardResponseDTO card, boolean success) {
+	public CardMoveResponse(CardResponseDTO card, boolean success) {
 		this.card = card;
 		this.success = success;
 	}
@@ -19,8 +19,7 @@ public class CardSaveResponse {
 		return success;
 	}
 
-	public static CardSaveResponse from(Card card) {
-		return new CardSaveResponse(CardResponseDTO.from(card), true);
+	public static CardMoveResponse from(Card card){
+		return new CardMoveResponse(CardResponseDTO.from(card), true);
 	}
-
 }

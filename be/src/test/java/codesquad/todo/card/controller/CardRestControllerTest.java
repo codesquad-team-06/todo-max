@@ -25,10 +25,9 @@ import org.springframework.web.filter.CharacterEncodingFilter;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import codesquad.todo.card.controller.dto.CardDeleteResponse;
-import codesquad.todo.card.controller.dto.CardModifyDTO;
 import codesquad.todo.card.controller.dto.CardModifyRequest;
 import codesquad.todo.card.controller.dto.CardModifyResponse;
-import codesquad.todo.card.controller.dto.CardSaveDTO;
+import codesquad.todo.card.controller.dto.CardResponseDTO;
 import codesquad.todo.card.controller.dto.CardSaveRequest;
 import codesquad.todo.card.controller.dto.CardSaveResponse;
 import codesquad.todo.card.entity.Card;
@@ -51,7 +50,7 @@ class CardRestControllerTest {
 		//given
 		CardSaveRequest cardSaveRequest = new CardSaveRequest("new제목", "new내용", 1);
 		CardSaveResponse cardSaveResponse = new CardSaveResponse(
-			new CardSaveDTO(1L, "new제목", "new내용", 1024, 1L), true);
+			new CardResponseDTO(1L, "new제목", "new내용", 1024, 1L), true);
 		String body = objectMapper.writeValueAsString(cardSaveRequest);
 		//when
 		given(cardService.saveCard(any())).willReturn(cardSaveResponse);
@@ -76,7 +75,7 @@ class CardRestControllerTest {
 	void modifyCard() throws Exception {
 		//given
 		CardModifyRequest cardModifyRequest = new CardModifyRequest(1L, "제목수정", "내용수정");
-		CardModifyResponse cardModifyResponse = new CardModifyResponse(new CardModifyDTO(1L, "제목수정", "내용수정"), true);
+		CardModifyResponse cardModifyResponse = new CardModifyResponse(new CardResponseDTO(1L, "제목수정", "내용수정", 1024, 1L), true);
 
 		// when
 		given(cardService.modifyCard(any())).willReturn(cardModifyResponse);
