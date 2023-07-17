@@ -7,7 +7,9 @@ import historyButtonIcon from "../assets/history.svg";
 export default function Header() {
   const [isHistoryActive, setIsHistoryActive] = useState(false);
 
-  const toggleHistory = () => {
+  const toggleHistory = async () => {
+    // eslint-disable-next-line no-promise-executor-return
+    await new Promise((r) => setTimeout(r, 300));
     setIsHistoryActive(!isHistoryActive);
   };
 
@@ -22,9 +24,7 @@ export default function Header() {
           onClick={toggleHistory}
         />
       </StyledHeader>
-      {isHistoryActive && (
-        <ActivityHistory {...{ isHistoryActive, toggleHistory }} />
-      )}
+      <ActivityHistory {...{ isHistoryActive, toggleHistory }} />
     </>
   );
 }

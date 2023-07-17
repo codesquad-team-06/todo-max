@@ -117,7 +117,7 @@ export default function ActivityHistory({
 
 const slideIn = keyframes`
   0% {
-    top: -300px;
+    top: -500px;
     opacity: 0;
   }
   100% {
@@ -126,21 +126,39 @@ const slideIn = keyframes`
   }
 `;
 
+const slideOut = keyframes`
+  0% {
+    top: 60px;
+    opacity: 1;
+  }
+  100% {
+    top: -500px;
+    opacity: 0;
+  }
+`;
+
 const Layer = styled.div<{ isHistoryActive: boolean }>`
   width: 366px;
   padding: 8px;
   position: absolute;
-  top: 60px;
+  top: ${({ isHistoryActive }) => (isHistoryActive ? "60px" : "-500px")};
   right: 50px;
   background-color: ${({ theme: { colors } }) => colors.grey50};
   border-radius: ${({ theme: { objectStyles } }) => objectStyles.radius.m};
   box-shadow: ${({ theme: { objectStyles } }) =>
     objectStyles.dropShadow.floating};
-  ${(isHistoryActive) =>
-    isHistoryActive &&
-    css`
-      animation: ${slideIn} 0.5s ease-in;
-    `}
+  opacity: ${({ isHistoryActive }) => (isHistoryActive ? 1 : 0)};
+  animation: ${({ isHistoryActive }) =>
+    isHistoryActive
+      ? css`
+          ${slideIn} 0.5s ease-in
+        `
+      : css`
+          ${slideOut} 0.5s ease-out
+        `};
+  visibility: ${({ isHistoryActive }) =>
+    isHistoryActive ? "visible" : "hidden"};
+  transition: visibility 1s linear;
 `;
 
 const TitleContainer = styled.div`
