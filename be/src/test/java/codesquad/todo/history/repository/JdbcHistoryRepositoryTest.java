@@ -33,7 +33,7 @@ class JdbcHistoryRepositoryTest {
 
 		//then
 		SoftAssertions.assertSoftly(softAssertions -> {
-			softAssertions.assertThat(historyList.size()).isEqualTo(7);
+			softAssertions.assertThat(historyList.size()).isEqualTo(9);
 		});
 	}
 

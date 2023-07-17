@@ -1,9 +1,7 @@
 package codesquad.todo.card.repository;
 
-
 import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.*;
-
 
 import java.util.List;
 
@@ -17,23 +15,18 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
 import org.springframework.stereotype.Repository;
 
-import org.springframework.transaction.annotation.Transactional;
-
-
 import codesquad.todo.card.entity.Card;
 
 // Repository 애노테이션이 붙은 클래스만 빈으로 등록
 @DataJpaTest(includeFilters = @ComponentScan.Filter(type = FilterType.ANNOTATION, classes = Repository.class))
 // Replace.NONE으로 설정하면 @ActiveProfiles에 설정한 프로파일 환경값에 따라 데이터소스가 적용된다.
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-
 class JdbcCardRepositoryTest {
 
 	@Autowired
 	private CardRepository cardRepository;
 
 	@Test
-
 	@DisplayName("새로운 카드를 저장하고 저장한 카드를 반환한다.")
 	public void saveTest() {
 		//given
@@ -51,7 +44,7 @@ class JdbcCardRepositoryTest {
 			() -> assertThat(saveCard.getTitle()).isEqualTo(card.getTitle()),
 			() -> assertThat(saveCard.getContent()).isEqualTo(card.getContent()),
 			() -> assertThat(saveCard.getColumnId()).isEqualTo(card.getColumnId()),
-			() -> assertThat(saveCard.getPosition()).isEqualTo(4096),
+			() -> assertThat(saveCard.getPosition()).isEqualTo(1024),
 			() -> assertThat(saveCard.isDeleted()).isFalse()
 		);
 	}
@@ -112,7 +105,8 @@ class JdbcCardRepositoryTest {
 			() -> assertThat(card.getPosition()).isEqualTo(2048),
 			() -> assertThat(card.isDeleted()).isFalse()
 		);
-    
+	}
+
 	@DisplayName("모든 카드 데이터를 요청합니다.")
 	public void testFindAll() {
 		// given
