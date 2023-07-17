@@ -5,21 +5,16 @@ import NewColumnCard from "./ColumnCard/NewColumnCard.tsx";
 import IconButton from "./common/IconButton.tsx";
 import addButtonIcon from "../assets/plus.svg";
 import deleteButtonIcon from "../assets/closed.svg";
-
-export type Card = {
-  id: number;
-  title: string;
-  content: string;
-  position: number;
-  columnId: number;
-};
+import { Card } from "../types.ts";
 
 export default function Column({
   name,
   cards,
+  addNewCardHandler,
 }: {
   name: string;
   cards: Card[];
+  addNewCardHandler: (card: Card) => void;
 }) {
   const [isNewCardActive, setIsNewCardActive] = useState(false);
 
@@ -50,7 +45,9 @@ export default function Column({
       </Header>
 
       <ul className="cards-list">
-        {isNewCardActive && <NewColumnCard {...{ toggleNewCard }} />}
+        {isNewCardActive && (
+          <NewColumnCard {...{ toggleNewCard, addNewCardHandler }} />
+        )}
 
         {cards.map(({ id, title, content }) => (
           <ColumnCard {...{ key: id, id, title, content }} />

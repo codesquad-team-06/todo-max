@@ -1,10 +1,17 @@
 /* eslint-disable no-alert */
 import React, { useState, useEffect } from "react";
 import { styled } from "styled-components";
-import Column, { Card } from "./Column.tsx";
+import Column from "./Column.tsx";
+import { Card } from "../types.ts";
+
+type ColumnData = {
+  columnId: number;
+  name: string;
+  cards: Card[];
+};
 
 export default function Board() {
-  const [board, setBoard] = useState([]);
+  const [board, setBoard] = useState<ColumnData[]>([]);
 
   useEffect(() => {
     const fetchBoard = async () => {
@@ -26,6 +33,27 @@ export default function Board() {
     fetchBoard();
   }, []);
 
+  const addNewCardHandler = ({
+    id,
+    title,
+    content,
+    position,
+    columnId,
+  }: Card) => {
+    setBoard((prevBoard: ColumnData[]) => {
+      const newBoard: ColumnData[] = [...prevBoard];
+      const newCard = {
+        id,
+        title,
+        content,
+        position,
+        columnId,
+      };
+      newBoard[columnId - 1].cards.push(newCard);
+      return newBoard;
+    });
+  };
+
   return (
     <StyledBoard>
       {board.map(
@@ -38,7 +66,7 @@ export default function Board() {
           name: string;
           cards: Card[];
         }) => (
-          <Column {...{ key: columnId, name, cards }} />
+          <Column {...{ key: columnId, name, cards, addNewCardHandler }} />
         )
       )}
     </StyledBoard>
