@@ -31,7 +31,7 @@ public class HistoryService {
 
 	@Transactional
 	public boolean deleteByIds(HistoryDeleteRequest request) {
-		if (validate(request)) {
+		if (!validate(request)) {
 			throw new RestApiException(HistoryErrorCode.NOT_FOUND_HISTORY);
 		}
 		int deletedRows = historyRepository.deleteByIds(request.getHistoryId());
