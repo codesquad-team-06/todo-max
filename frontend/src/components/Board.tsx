@@ -44,7 +44,18 @@ export default function Board() {
         }
         return column;
       });
+      return newBoard;
+    });
+  };
 
+  const editCardHandler = (updatedCard: Card) => {
+    setBoard((prevBoard) => {
+      const newBoard = [...prevBoard];
+      const columnIndex = updatedCard.columnId - 1;
+      const targetCardIndex = newBoard[columnIndex].cards.findIndex(
+        (card) => card.id === updatedCard.id
+      );
+      newBoard[columnIndex].cards[targetCardIndex] = updatedCard;
       return newBoard;
     });
   };
@@ -61,7 +72,15 @@ export default function Board() {
           name: string;
           cards: Card[];
         }) => (
-          <Column {...{ key: columnId, name, cards, addNewCardHandler }} />
+          <Column
+            {...{
+              key: columnId,
+              name,
+              cards,
+              addNewCardHandler,
+              editCardHandler,
+            }}
+          />
         )
       )}
     </StyledBoard>

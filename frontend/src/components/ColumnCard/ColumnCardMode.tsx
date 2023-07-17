@@ -10,10 +10,11 @@ const ModeKR = {
 };
 
 ColumnCardMode.defaultProps = {
+  cardDetails: {},
   toggleEditMode: undefined,
   toggleNewCard: undefined,
   addNewCardHandler: undefined,
-  cardDetails: {},
+  editCardHandler: undefined,
 };
 
 export default function ColumnCardMode({
@@ -22,6 +23,7 @@ export default function ColumnCardMode({
   toggleEditMode,
   toggleNewCard,
   addNewCardHandler,
+  editCardHandler,
 }: {
   mode: "add" | "edit";
   cardDetails?: {
@@ -32,6 +34,7 @@ export default function ColumnCardMode({
   toggleEditMode?: () => void;
   toggleNewCard?: () => void;
   addNewCardHandler?: (card: Card) => void;
+  editCardHandler?: (card: Card) => void;
 }) {
   const [newCardTitle, setNewCardTitle] = useState(
     mode === "add" ? "" : cardDetails?.title
@@ -111,8 +114,8 @@ export default function ColumnCardMode({
         addNewCardHandler && addNewCardHandler(newCard);
         toggleNewCard && toggleNewCard();
       } else if (mode === "edit") {
-        const { id, title, content } = await editCardRequest();
-        // TODO: Update board state
+        const updatedCard = await editCardRequest();
+        editCardHandler && editCardHandler(updatedCard);
         toggleEditMode && toggleEditMode();
       }
     } catch (error) {
