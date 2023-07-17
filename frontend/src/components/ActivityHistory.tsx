@@ -79,7 +79,7 @@ export default function ActivityHistory({
     <Layer>
       <TitleContainer>
         <h3>사용자 활동 기록</h3>
-        <CloseBtn onClick={closeModal}>
+        <CloseBtn onClick={toggleHistory}>
           <img src={closeButtonIcon} alt="닫기 버튼" />
           <span>닫기</span>
         </CloseBtn>
