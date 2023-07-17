@@ -41,7 +41,6 @@ export default function Board() {
     columnId,
   }: Card) => {
     setBoard((prevBoard: ColumnData[]) => {
-      const newBoard: ColumnData[] = [...prevBoard];
       const newCard = {
         id,
         title,
@@ -49,10 +48,16 @@ export default function Board() {
         position,
         columnId,
       };
-      const columnIndex = columnId - 1;
 
-      const updatedCardList = [newCard, ...newBoard[columnIndex].cards];
-      newBoard[columnIndex].cards = updatedCardList;
+      const newBoard: ColumnData[] = [...prevBoard].map((column) => {
+        if (column.columnId === columnId) {
+          return {
+            ...column,
+            cards: [newCard, ...column.cards],
+          };
+        }
+        return column;
+      });
 
       return newBoard;
     });
