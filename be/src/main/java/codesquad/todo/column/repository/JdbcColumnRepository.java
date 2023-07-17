@@ -1,10 +1,16 @@
 package codesquad.todo.column.repository;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import codesquad.todo.column.entity.Column;
@@ -25,7 +31,11 @@ public class JdbcColumnRepository implements ColumnRepository {
 
 	@Override
 	public Column save(Column column) {
-		return null;
+		String sql = "INSERT INTO columns (name) VALUES(:name)";
+		SqlParameterSource paramSource = new BeanPropertySqlParameterSource(column);
+		KeyHolder keyHolder = new GeneratedKeyHolder();
+		template.update(sql, paramSource, keyHolder);
+		return findById(Objects.requireNonNull(keyHolder.getKey()).longValue()).orElseThrow();
 	}
 
 	@Override
@@ -40,7 +50,8 @@ public class JdbcColumnRepository implements ColumnRepository {
 
 	@Override
 	public Optional<Column> findById(Long id) {
-		return Optional.empty();
+		String sql = "SELECT id, name FROM columns WHERE id = :id";
+		return template.query(sql, new MapSqlParameterSource("id", id), getColumnRowMapper()).stream().findAny();
 	}
 
 	private RowMapper<Column> getColumnRowMapper() {
