@@ -14,7 +14,11 @@ type History = {
   actionName: string;
 };
 
-export default function ActivityHistory() {
+export default function ActivityHistory({
+  toggleHistory,
+}: {
+  toggleHistory: () => void;
+}) {
   const { openModal, closeModal } = useContext(ModalContext);
   const [history, setHistory] = useState<History[]>([]);
 
@@ -75,51 +79,44 @@ export default function ActivityHistory() {
     <Layer>
       <TitleContainer>
         <h3>사용자 활동 기록</h3>
-        <CloseBtn onClick={closeModal}>
+        <CloseBtn onClick={toggleHistory}>
           <img src={closeButtonIcon} alt="닫기 버튼" />
           <span>닫기</span>
         </CloseBtn>
       </TitleContainer>
       <ListContainer>
-        {history.map(
-          ({
-            id,
-            cardTitle,
-            prevColumn,
-            nextColumn,
-            timestamp,
-            actionName,
-          }) => (
+        {history.length === 0 && (
+          <EmptyHistoryItem>사용자 활동 기록이 없습니다.</EmptyHistoryItem>
+        )}
+        {history.length !== 0 &&
+          history.map((historyItem) => (
             <ActivityHistoryItem
               {...{
-                key: id,
-                cardTitle,
-                prevColumn,
-                nextColumn,
-                timestamp,
-                actionName,
+                key: historyItem.id,
+                historyItem,
               }}
             />
-          )
-        )}
+          ))}
       </ListContainer>
-      <ButtonContainer>
-        <button
-          type="submit"
-          onClick={() =>
-            openModal("모든 사용자 활동 기록을 삭제할까요?", handleSubmit)
-          }>
-          기록 전체 삭제
-        </button>
-      </ButtonContainer>
+      {history.length !== 0 && (
+        <ButtonContainer>
+          <button
+            type="submit"
+            onClick={() =>
+              openModal("모든 사용자 활동 기록을 삭제할까요?", handleSubmit)
+            }>
+            기록 전체 삭제
+          </button>
+        </ButtonContainer>
+      )}
     </Layer>
   );
 }
 
 const Layer = styled.div`
   position: absolute;
-  top: 64px;
-  right: 60px;
+  top: 50px;
+  right: 50px;
 
   width: 366px;
   padding: 8px;
@@ -175,4 +172,15 @@ const ButtonContainer = styled.div`
     color: ${({ theme: { colors } }) => colors.red};
     cursor: pointer;
   }
+`;
+
+const EmptyHistoryItem = styled.li`
+  width: 100%;
+  padding: 16px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
+  font: ${({ theme: { font } }) => font.displayMD14};
+  color: ${({ theme: { colors } }) => colors.grey500};
 `;

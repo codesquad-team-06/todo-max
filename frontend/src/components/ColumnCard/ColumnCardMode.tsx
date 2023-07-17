@@ -2,7 +2,7 @@
 import React, { useState, ChangeEvent, FormEvent } from "react";
 import { styled } from "styled-components";
 import ActionButton from "../common/ActionButton.tsx";
-import { Card } from "../Column.tsx";
+import { Card } from "../../types.ts";
 
 const ModeKR = {
   add: "등록",
@@ -13,6 +13,7 @@ ColumnCardMode.defaultProps = {
   cardDetails: {},
   toggleEditMode: undefined,
   toggleNewCard: undefined,
+  addNewCardHandler: undefined,
   editCardHandler: undefined,
 };
 
@@ -21,6 +22,7 @@ export default function ColumnCardMode({
   cardDetails,
   toggleEditMode,
   toggleNewCard,
+  addNewCardHandler,
   editCardHandler,
 }: {
   mode: "add" | "edit";
@@ -31,6 +33,7 @@ export default function ColumnCardMode({
   };
   toggleEditMode?: () => void;
   toggleNewCard?: () => void;
+  addNewCardHandler?: (card: Card) => void;
   editCardHandler?: (card: Card) => void;
 }) {
   const [newCardTitle, setNewCardTitle] = useState(
@@ -107,9 +110,8 @@ export default function ColumnCardMode({
 
     try {
       if (mode === "add") {
-        const { id, title, content, position, columnId } =
-          await addNewCardRequest();
-        // TODO: Update board state
+        const newCard = await addNewCardRequest();
+        addNewCardHandler && addNewCardHandler(newCard);
         toggleNewCard && toggleNewCard();
       } else if (mode === "edit") {
         const updatedCard = await editCardRequest();

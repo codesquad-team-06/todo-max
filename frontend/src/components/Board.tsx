@@ -1,7 +1,8 @@
 /* eslint-disable no-alert */
 import React, { useState, useEffect } from "react";
 import { styled } from "styled-components";
-import Column, { Card } from "./Column.tsx";
+import Column from "./Column.tsx";
+import { Card } from "../types.ts";
 
 type ColumnData = {
   columnId: number;
@@ -32,6 +33,21 @@ export default function Board() {
     fetchBoard();
   }, []);
 
+  const addNewCardHandler = (newCard: Card) => {
+    setBoard((prevBoard: ColumnData[]) => {
+      const newBoard: ColumnData[] = prevBoard.map((column) => {
+        if (column.columnId === newCard.columnId) {
+          return {
+            ...column,
+            cards: [newCard, ...column.cards],
+          };
+        }
+        return column;
+      });
+      return newBoard;
+    });
+  };
+
   const editCardHandler = (updatedCard: Card) => {
     setBoard((prevBoard) => {
       const newBoard = [...prevBoard];
@@ -40,7 +56,6 @@ export default function Board() {
         (card) => card.id === updatedCard.id
       );
       newBoard[columnIndex].cards[targetCardIndex] = updatedCard;
-
       return newBoard;
     });
   };
@@ -57,7 +72,15 @@ export default function Board() {
           name: string;
           cards: Card[];
         }) => (
-          <Column {...{ key: columnId, name, cards, editCardHandler }} />
+          <Column
+            {...{
+              key: columnId,
+              name,
+              cards,
+              addNewCardHandler,
+              editCardHandler,
+            }}
+          />
         )
       )}
     </StyledBoard>
