@@ -49,7 +49,11 @@ export default function Board() {
         position,
         columnId,
       };
-      newBoard[columnId - 1].cards.push(newCard);
+      const columnIndex = columnId - 1;
+
+      const updatedCardList = [newCard, ...newBoard[columnIndex].cards];
+      newBoard[columnIndex].cards = updatedCardList;
+
       return newBoard;
     });
   };
