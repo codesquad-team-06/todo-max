@@ -6,6 +6,8 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import codesquad.todo.errors.errorcode.HistoryErrorCode;
+import codesquad.todo.errors.exception.RestApiException;
 import codesquad.todo.history.controller.dto.HistoryDeleteRequest;
 import codesquad.todo.history.controller.dto.HistoryFindAllResponse;
 import codesquad.todo.history.repository.HistoryRepository;
@@ -30,13 +32,12 @@ public class HistoryService {
 	@Transactional
 	public boolean deleteByIds(HistoryDeleteRequest request) {
 		if (validate(request)) {
-			throw new RuntimeException("유효하지 않은 히스토리입니다.");
+			throw new RestApiException(HistoryErrorCode.NOT_FOUND_HISTORY);
 		}
 		int deletedRows = historyRepository.deleteByIds(request.getHistoryId());
 		return deletedRows > 0;
 	}
 
-	// todo: 추후 Custom Exception으로 변경
 	@Transactional(readOnly = true)
 	public boolean validate(HistoryDeleteRequest request) {
 		int count = historyRepository.countIds(request.getHistoryId());
