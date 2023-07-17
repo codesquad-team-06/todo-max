@@ -4,7 +4,7 @@ import java.util.List;
 
 public class HistoryDeleteRequest {
 	private List<Long> historyId;
-
+	
 	public HistoryDeleteRequest() {
 	}
 
