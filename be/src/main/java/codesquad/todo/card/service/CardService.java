@@ -67,7 +67,15 @@ public class CardService {
 	}
 
 	public CardMoveResponse moveCard(CardMoveRequest cardMoveRequest) {
-		return CardMoveResponse.from(cardRepository.move(cardMoveRequest.getId(), cardMoveRequest.getPrevCardId(),
-			cardMoveRequest.getNextCardId(), cardMoveRequest.getColumnId()));
+		int calculatePosition = cardRepository.calculateNextPosition(cardMoveRequest.getPrevCardId(),
+			cardMoveRequest.getNextCardId());
+
+		if (calculatePosition == 0) {
+			// 컬럼 아이디에 해당하는 카드들의 position 재할당
+			cardRepository.reallocationPosition(cardMoveRequest.getColumnId());
+			return moveCard(cardMoveRequest);
+		}
+
+		return CardMoveResponse.from(cardRepository.move(cardMoveRequest.getId(), calculatePosition, cardMoveRequest.getColumnId()));
 	}
 }

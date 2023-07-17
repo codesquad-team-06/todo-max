@@ -90,8 +90,62 @@ public class JdbcCardRepository implements CardRepository {
 
 		return template.query(
 			"SELECT c.id, c.title, c.content, c.position, c.is_deleted, c.column_id FROM card c"
-				+" WHERE c.column_id = :column_id AND c.is_deleted = FALSE",
+				+ " WHERE c.column_id = :column_id AND c.is_deleted = FALSE",
 			param, cardRowMapper);
 	}
 
+	@Override
+	public Card move(Long id, int position, Long nextColumnId) {
+		String sql = "UPDATE card "
+			+ "SET position = :position, column_id = :nextColumnId "
+			+ "WHERE id = :id;";
+
+		template.update(sql, new MapSqlParameterSource()
+			.addValue("id", id)
+			.addValue("position", position)
+			.addValue("nextColumnId", nextColumnId));
+
+		return findById(id).orElseThrow();
+	}
+
+	@Override
+	public int calculateNextPosition(Long prevCardId, Long nextCardId) {
+		/**
+		 * 이동할 위치의 칼럼에 카드가 없는 경우(prevCardId = 0 이고 nextCardId = 0인 경우)
+		 * return : POSITION_OFFSET
+		 * 이동할 위치가 가장 상단인 경우 (prevCardId만 0인 경우)
+		 * return : nextCardId인 카드의 position값 + POSITION_OFFSET 반환
+		 * 기본적으로 이동할 위치의 position 값 계산
+		 * return : (이전 카드 position + 다음 카드 position) / 2
+		 * 이동할 position값과 prevCardId의 position값의 차가 1인 경우
+		 * return : 0
+		 * 이동할 위치가 가장 하단인 경우 (nextCardId만 0인 경우)
+		 * return : (이전 카드 position + 0) / 2
+		 */
+		String sql = "SELECT "
+			+ "		CASE "
+			+ "       WHEN :prevCardId = 0 AND :nextCardId = 0 THEN " + POSITION_OFFSET
+			+ "       WHEN :prevCardId = 0 THEN (SELECT c3.position + " + POSITION_OFFSET
+			+ " 								 	FROM card c3 WHERE c3.id = :nextCardId) "
+			+ "       WHEN (SELECT IFNULL(SUM(c2.position), 0) FROM card c2 WHERE c2.id = :prevCardId) "
+			+ "					 - IFNULL((ROUND(SUM(c1.position) / 2)), " + POSITION_OFFSET + ") = 1 "
+			+ " 	  THEN 0 "
+			+ "		  ELSE IFNULL((ROUND(SUM(c1.position) / 2)), " + POSITION_OFFSET + ") END AS move_position "
+			+ "FROM card c1 "
+			+ "WHERE c1.id IN (:prevCardId, :nextCardId);";
+
+		return Optional.ofNullable(template.queryForObject(sql, new MapSqlParameterSource()
+			.addValue("prevCardId", prevCardId)
+			.addValue("nextCardId", nextCardId), Integer.class)).orElseThrow();
+	}
+
+	@Override
+	public void reallocationPosition(Long columnId) {
+		String sql = "UPDATE card "
+			+ "SET position = (ROW_NUMBER() OVER (ORDER BY position)) * " + POSITION_OFFSET
+			+ "WHERE column_id = :columnId AND is_deleted = FALSE;";
+
+		template.update(sql, new MapSqlParameterSource()
+			.addValue("columnId", columnId));
+	}
 }
