@@ -3,8 +3,14 @@ import React, { useState, useEffect } from "react";
 import { styled } from "styled-components";
 import Column, { Card } from "./Column.tsx";
 
+type ColumnData = {
+  columnId: number;
+  name: string;
+  cards: Card[];
+};
+
 export default function Board() {
-  const [board, setBoard] = useState([]);
+  const [board, setBoard] = useState<ColumnData[]>([]);
 
   useEffect(() => {
     const fetchBoard = async () => {
@@ -26,6 +32,19 @@ export default function Board() {
     fetchBoard();
   }, []);
 
+  const editCardHandler = (updatedCard: Card) => {
+    setBoard((prevBoard) => {
+      const newBoard = [...prevBoard];
+      const columnIndex = updatedCard.columnId - 1;
+      const targetCardIndex = newBoard[columnIndex].cards.findIndex(
+        (card) => card.id === updatedCard.id
+      );
+      newBoard[columnIndex].cards[targetCardIndex] = updatedCard;
+
+      return newBoard;
+    });
+  };
+
   return (
     <StyledBoard>
       {board.map(
@@ -38,7 +57,7 @@ export default function Board() {
           name: string;
           cards: Card[];
         }) => (
-          <Column {...{ key: columnId, name, cards }} />
+          <Column {...{ key: columnId, name, cards, editCardHandler }} />
         )
       )}
     </StyledBoard>

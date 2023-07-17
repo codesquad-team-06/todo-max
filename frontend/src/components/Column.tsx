@@ -17,9 +17,11 @@ export type Card = {
 export default function Column({
   name,
   cards,
+  editCardHandler,
 }: {
   name: string;
   cards: Card[];
+  editCardHandler: (card: Card) => void;
 }) {
   const [isNewCardActive, setIsNewCardActive] = useState(false);
 
@@ -52,8 +54,10 @@ export default function Column({
       <ul className="cards-list">
         {isNewCardActive && <NewColumnCard {...{ toggleNewCard }} />}
 
-        {cards.map(({ id, title, content }) => (
-          <ColumnCard {...{ key: id, id, title, content }} />
+        {cards.map((cardDetails) => (
+          <ColumnCard
+            {...{ key: cardDetails.id, cardDetails, editCardHandler }}
+          />
         ))}
       </ul>
     </StyledColumn>

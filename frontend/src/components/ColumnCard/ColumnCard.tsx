@@ -2,11 +2,18 @@ import React, { useState } from "react";
 import { styled } from "styled-components";
 import ColumnCardDisplay from "./ColumnCardDisplay.tsx";
 import ColumnCardMode from "./ColumnCardMode.tsx";
+import { Card } from "../Column.tsx";
 
-export default function ColumnCard(cardDetails: {
-  id: number;
-  title: string;
-  content: string;
+export default function ColumnCard({
+  cardDetails,
+  editCardHandler,
+}: {
+  cardDetails: {
+    id: number;
+    title: string;
+    content: string;
+  };
+  editCardHandler: (card: Card) => void;
 }) {
   const [isEditMode, setIsEditMode] = useState<boolean>(false);
 
@@ -22,6 +29,7 @@ export default function ColumnCard(cardDetails: {
             mode: "edit",
             cardDetails,
             toggleEditMode,
+            editCardHandler,
           }}
         />
       ) : (

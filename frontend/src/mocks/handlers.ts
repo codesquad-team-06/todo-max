@@ -143,8 +143,9 @@ const failedCardAdd = {
 const successCardUpdate = {
   card: {
     id: 1,
-    title: "ERD 및 API 설계하기",
-    content: "팀원들과 협업하여 ERD 및 API 설계 완성하기",
+    title: "Updated Title!",
+    content: "Updated Content!",
+    columnId: 1,
   },
   success: true,
 };
