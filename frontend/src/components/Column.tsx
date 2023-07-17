@@ -27,7 +27,7 @@ export default function Column({
       <Header>
         <div className="column-info-container">
           <h2>{name}</h2>
-          <span>{cards.length}</span>
+          <span>{cards.length < 100 ? cards.length : "99+"}</span>
         </div>
         <div className="buttons-container">
           <IconButton
