@@ -1,20 +1,28 @@
 package codesquad.todo.card.controller;
 
-
-import static org.mockito.BDDMockito.*;
 import static org.hamcrest.Matchers.*;
+import static org.mockito.BDDMockito.any;
+import static org.mockito.BDDMockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.filter.CharacterEncodingFilter;
+
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -25,19 +33,6 @@ import codesquad.todo.card.controller.dto.CardModifyResponse;
 import codesquad.todo.card.controller.dto.CardSaveDTO;
 import codesquad.todo.card.controller.dto.CardSaveRequest;
 import codesquad.todo.card.controller.dto.CardSaveResponse;
-import java.util.ArrayList;
-import java.util.List;
-
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.web.filter.CharacterEncodingFilter;
-
 import codesquad.todo.card.entity.Card;
 import codesquad.todo.card.service.CardService;
 
@@ -114,6 +109,8 @@ class CardRestControllerTest {
 			.andExpect(jsonPath("cardId").value(3L))
 			.andExpect(jsonPath("success").value(true))
 			.andDo(print());
+	}
+
 
 	@BeforeEach
 	public void beforeEach() {
