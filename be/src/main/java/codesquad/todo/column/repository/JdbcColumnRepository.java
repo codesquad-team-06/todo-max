@@ -45,7 +45,11 @@ public class JdbcColumnRepository implements ColumnRepository {
 
 	@Override
 	public Column deleteById(Long id) {
-		return null;
+		String sql = "DELETE FROM columns WHERE id = :id";
+		SqlParameterSource paramSource = new MapSqlParameterSource("id", id);
+		Column delColumn = findById(id).orElseThrow();
+		template.update(sql, paramSource);
+		return delColumn;
 	}
 
 	@Override

@@ -22,4 +22,10 @@ public class ColumnService {
 		Column saveColumn = columnRepository.save(columnSaveRequest.toEntity());
 		return new ColumnSaveDto(saveColumn);
 	}
+
+	@Transactional
+	public ColumnSaveDto deleteColumn(Long columnId) {
+		Column delColumn = columnRepository.deleteById(columnId);
+		return new ColumnSaveDto(delColumn);
+	}
 }
