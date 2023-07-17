@@ -11,6 +11,8 @@ import org.springframework.transaction.annotation.Transactional;
 import codesquad.todo.card.controller.dto.CardDeleteResponse;
 import codesquad.todo.card.controller.dto.CardModifyRequest;
 import codesquad.todo.card.controller.dto.CardModifyResponse;
+import codesquad.todo.card.controller.dto.CardMoveRequest;
+import codesquad.todo.card.controller.dto.CardMoveResponse;
 import codesquad.todo.card.controller.dto.CardSaveRequest;
 import codesquad.todo.card.controller.dto.CardSaveResponse;
 import codesquad.todo.card.controller.CardListResponse;
@@ -62,5 +64,10 @@ public class CardService {
 
 	public CardDeleteResponse deleteCard(Long cardId) {
 		return CardDeleteResponse.from(cardRepository.deleteById(cardId));
+	}
+
+	public CardMoveResponse moveCard(CardMoveRequest cardMoveRequest) {
+		return CardMoveResponse.from(cardRepository.move(cardMoveRequest.getId(), cardMoveRequest.getPrevCardId(),
+			cardMoveRequest.getNextCardId(), cardMoveRequest.getColumnId()));
 	}
 }

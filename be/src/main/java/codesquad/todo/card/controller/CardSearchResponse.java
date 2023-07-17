@@ -2,7 +2,7 @@ package codesquad.todo.card.controller;
 
 import codesquad.todo.card.entity.Card;
 
-public class CardSearchResponse {
+public class 	CardSearchResponse {
 	private Long id;
 	private String title;
 	private String content;

@@ -17,9 +17,6 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
 import org.springframework.stereotype.Repository;
 
-import org.springframework.transaction.annotation.Transactional;
-
-
 import codesquad.todo.card.entity.Card;
 
 // Repository 애노테이션이 붙은 클래스만 빈으로 등록
@@ -112,7 +109,9 @@ class JdbcCardRepositoryTest {
 			() -> assertThat(card.getPosition()).isEqualTo(2048),
 			() -> assertThat(card.isDeleted()).isFalse()
 		);
-    
+	}
+
+	@Test
 	@DisplayName("모든 카드 데이터를 요청합니다.")
 	public void testFindAll() {
 		// given

@@ -28,14 +28,16 @@ public class JdbcCardRepository implements CardRepository {
 	@Override
 	public List<Card> findAll() {
 		return template.query(
-			"SELECT c.id, c.title, c.content, c.position, c.is_deleted, c.column_id FROM card c WHERE c.is_deleted = FALSE",
-			getCardRowMapper());
+			"SELECT c.id, c.title, c.content, c.position, c.is_deleted, c.column_id "
+				+ "FROM card c WHERE c.is_deleted = FALSE",
+			cardRowMapper);
 	}
 
 	@Override
 	public Card save(Card card) {
 		String sql = "INSERT INTO card(title, content, position, column_id) "
-			+ "VALUES (:title, :content, (SELECT IFNULL(MAX(position), 0) FROM card a WHERE column_id = :columnId AND is_deleted = FALSE) + "
+			+ "VALUES (:title, :content,"
+			+ "(SELECT IFNULL(MAX(position), 0) FROM card a WHERE column_id = :columnId AND is_deleted = FALSE) + "
 			+ POSITION_OFFSET + ", :columnId);";
 		GeneratedKeyHolder keyHolder = new GeneratedKeyHolder();
 		template.update(sql, new MapSqlParameterSource()
@@ -73,7 +75,6 @@ public class JdbcCardRepository implements CardRepository {
 		return Optional.ofNullable(template.queryForObject(sql, Map.of("id", id), cardRowMapper));
 	}
 
-
 	private final RowMapper<Card> cardRowMapper = ((rs, rowNum) -> Card.builder()
 		.id(rs.getLong("id"))
 		.title(rs.getString("title"))
@@ -88,19 +89,9 @@ public class JdbcCardRepository implements CardRepository {
 		SqlParameterSource param = new MapSqlParameterSource("column_id", columnId);
 
 		return template.query(
-			"SELECT c.id, c.title, c.content, c.position, c.is_deleted, c.column_id FROM card c WHERE c.column_id = :column_id AND c.is_deleted = FALSE",
-			param, getCardRowMapper());
-	}
-
-	private RowMapper<Card> getCardRowMapper() {
-		return (rs, rowNum) -> Card.builder()
-			.id(rs.getLong("id"))
-			.title(rs.getString("title"))
-			.content(rs.getString("content"))
-			.position(rs.getInt("position"))
-			.isDeleted(rs.getBoolean("is_deleted"))
-			.columnId(rs.getLong("column_id"))
-			.build();
+			"SELECT c.id, c.title, c.content, c.position, c.is_deleted, c.column_id FROM card c"
+				+" WHERE c.column_id = :column_id AND c.is_deleted = FALSE",
+			param, cardRowMapper);
 	}
 
 }
