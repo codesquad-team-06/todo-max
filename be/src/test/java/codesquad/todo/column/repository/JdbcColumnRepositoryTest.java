@@ -35,4 +35,22 @@ class JdbcColumnRepositoryTest {
 			softAssertions.assertAll();
 		});
 	}
+
+	@Test
+	@DisplayName("제목 데이터가 주어지고 컬럼 저장을 요청할때 저장된다")
+	public void testSave() {
+		// given
+		String name = "보류중인 일";
+		Column column = Column.builder()
+			.name(name)
+			.build();
+		// when
+		Column saveColumn = columnRepository.save(column);
+		// then
+		SoftAssertions.assertSoftly(softAssertions -> {
+			softAssertions.assertThat(saveColumn.getId()).isGreaterThan(0L);
+			softAssertions.assertThat(saveColumn.getName()).isEqualTo(name);
+			softAssertions.assertAll();
+		});
+	}
 }
