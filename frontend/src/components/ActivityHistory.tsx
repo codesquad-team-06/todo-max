@@ -89,27 +89,14 @@ export default function ActivityHistory({
           <EmptyHistoryItem>사용자 활동 기록이 없습니다.</EmptyHistoryItem>
         )}
         {history.length !== 0 &&
-          history.map(
-            ({
-              id,
-              cardTitle,
-              prevColumn,
-              nextColumn,
-              timestamp,
-              actionName,
-            }) => (
-              <ActivityHistoryItem
-                {...{
-                  key: id,
-                  cardTitle,
-                  prevColumn,
-                  nextColumn,
-                  timestamp,
-                  actionName,
-                }}
-              />
-            )
-          )}
+          history.map((historyItem) => (
+            <ActivityHistoryItem
+              {...{
+                key: historyItem.id,
+                historyItem,
+              }}
+            />
+          ))}
       </ListContainer>
       {history.length !== 0 && (
         <ButtonContainer>
@@ -128,8 +115,8 @@ export default function ActivityHistory({
 
 const Layer = styled.div`
   position: absolute;
-  top: 64px;
-  right: 60px;
+  top: 50px;
+  right: 50px;
 
   width: 366px;
   padding: 8px;

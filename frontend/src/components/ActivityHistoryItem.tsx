@@ -2,17 +2,15 @@ import React from "react";
 import { styled } from "styled-components";
 
 export default function ActivityHistoryItem({
-  cardTitle,
-  prevColumn,
-  nextColumn,
-  timestamp,
-  actionName,
+  historyItem: { cardTitle, prevColumn, nextColumn, timestamp, actionName },
 }: {
-  cardTitle: string;
-  prevColumn: string;
-  nextColumn: string;
-  timestamp: string;
-  actionName: string;
+  historyItem: {
+    cardTitle: string;
+    prevColumn: string;
+    nextColumn: string;
+    timestamp: string;
+    actionName: string;
+  };
 }) {
   return (
     <StyledItem>
