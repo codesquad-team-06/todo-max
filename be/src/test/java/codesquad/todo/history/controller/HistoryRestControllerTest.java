@@ -76,7 +76,6 @@ class HistoryRestControllerTest {
 			.andExpect(jsonPath("$.success", is(true)));
 	}
 
-	// todo: 추후 예외 발생 테스트 코드 작성
 	@Test
 	@DisplayName("유효하지 않은 id를 전달 받으면 예외를 발생시키고 실패 메세지를 Json 타입으로 반환한다.")
 	public void deleteHistoriesAndThrowException() throws Exception {
