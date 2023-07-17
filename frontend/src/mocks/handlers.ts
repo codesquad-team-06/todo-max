@@ -122,9 +122,9 @@ const board = [
 // 추가 요청 성공
 const successCardAdd = {
   card: {
-    id: 1,
-    title: "ERD 설계하기",
-    content: "팀원들과 협업하여 ERD 설계 완성하기",
+    id: 10,
+    title: "식재료 주문하기",
+    content: "쿠팡에서 필요한 것들 주문",
     position: 1024,
     columnId: 1,
   },
