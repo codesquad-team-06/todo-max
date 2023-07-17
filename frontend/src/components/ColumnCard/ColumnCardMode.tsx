@@ -107,12 +107,9 @@ export default function ColumnCardMode({
 
     try {
       if (mode === "add") {
-        const { id, title, content, position, columnId } =
-          await addNewCardRequest();
-        // TODO: Update board state
+        const newCard = await addNewCardRequest();
+        addNewCardHandler && addNewCardHandler(newCard);
         toggleNewCard && toggleNewCard();
-        addNewCardHandler &&
-          addNewCardHandler({ id, title, content, position, columnId });
       } else if (mode === "edit") {
         const { id, title, content } = await editCardRequest();
         // TODO: Update board state
