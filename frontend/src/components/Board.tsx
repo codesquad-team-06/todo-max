@@ -60,6 +60,24 @@ export default function Board() {
     });
   };
 
+  const deleteCardHandler = ({
+    id,
+    columnId,
+  }: {
+    id: number;
+    columnId: number;
+  }) => {
+    setBoard((prevBoard) => {
+      const newBoard = [...prevBoard];
+      const columnIndex = columnId - 1;
+      const updatedCards = newBoard[columnIndex].cards.filter(
+        (card) => card.id !== id
+      );
+      newBoard[columnIndex].cards = updatedCards;
+      return newBoard;
+    });
+  };
+
   return (
     <StyledBoard>
       {board.map(
@@ -79,6 +97,7 @@ export default function Board() {
               cards,
               addNewCardHandler,
               editCardHandler,
+              deleteCardHandler,
             }}
           />
         )

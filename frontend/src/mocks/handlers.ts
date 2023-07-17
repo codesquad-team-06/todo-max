@@ -145,6 +145,7 @@ const successCardUpdate = {
     id: 1,
     title: "Updated Title!",
     content: "Updated Content!",
+    position: 1024,
     columnId: 1,
   },
   success: true,
@@ -160,7 +161,13 @@ const failedCardUpdate = {
 };
 // 삭제 요청 성공
 const successCardDelete = {
-  cardId: 1,
+  card: {
+    id: 1,
+    title: "ERD 설계하기",
+    content: "팀원들과 협업하여 ERD 설계 완성하기",
+    position: 1024,
+    columnId: 1,
+  },
   success: true,
 };
 // 삭제 요청 실패
@@ -176,6 +183,8 @@ const failedCardDelete = {
 const successSameColumnMove = {
   card: {
     id: 1,
+    title: "blah",
+    content: "blah blah blah",
     position: 2560,
     columnId: 1,
   },
@@ -185,6 +194,8 @@ const successSameColumnMove = {
 const successDiffColumnMove = {
   card: {
     id: 3,
+    title: "식재료 주문하기",
+    content: "blah blah",
     position: 1536,
     columnId: 2,
   },

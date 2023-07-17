@@ -12,11 +12,16 @@ export default function Column({
   cards,
   addNewCardHandler,
   editCardHandler,
+  deleteCardHandler,
 }: {
   name: string;
   cards: Card[];
   addNewCardHandler: (card: Card) => void;
   editCardHandler: (card: Card) => void;
+  deleteCardHandler: (deletedCardInfo: {
+    id: number;
+    columnId: number;
+  }) => void;
 }) {
   const [isNewCardActive, setIsNewCardActive] = useState(false);
 
@@ -53,7 +58,12 @@ export default function Column({
 
         {cards.map((cardDetails) => (
           <ColumnCard
-            {...{ key: cardDetails.id, cardDetails, editCardHandler }}
+            {...{
+              key: cardDetails.id,
+              cardDetails,
+              editCardHandler,
+              deleteCardHandler,
+            }}
           />
         ))}
       </ul>

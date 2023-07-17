@@ -9,9 +9,14 @@ import { ModalContext } from "../../context/ModalContext.tsx";
 export default function ColumnCardDisplay({
   cardDetails,
   toggleEditMode,
+  deleteCardHandler,
 }: {
   cardDetails: { id: number; title: string; content: string };
   toggleEditMode: () => void;
+  deleteCardHandler: (deletedCardInfo: {
+    id: number;
+    columnId: number;
+  }) => void;
 }) {
   const { openModal } = useContext(ModalContext);
 
@@ -26,7 +31,10 @@ export default function ColumnCardDisplay({
     const data = await response.json();
 
     if (data.success) {
-      return { id: data.id };
+      const {
+        card: { id, columnId },
+      } = data;
+      return { id, columnId };
     }
 
     const {
@@ -39,8 +47,8 @@ export default function ColumnCardDisplay({
     evt.preventDefault();
 
     try {
-      const { id } = await deleteCardRequest();
-      // TODO: Update board state
+      const deletedCardInfo = await deleteCardRequest();
+      deleteCardHandler(deletedCardInfo);
     } catch (error) {
       alert(error);
     }
