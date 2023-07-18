@@ -5,21 +5,24 @@ export default function IconButton({
   className,
   src,
   alt,
+  disabled,
   onClick,
 }: {
   className: string;
   src: string;
   alt: string;
+  disabled?: boolean;
   onClick?: (evt: MouseEvent) => void;
 }) {
   return (
-    <StyledIconButton {...{ className, onClick }}>
+    <StyledIconButton {...{ className, disabled, onClick }}>
       <img {...{ src, alt }} />
     </StyledIconButton>
   );
 }
 
 IconButton.defaultProps = {
+  disabled: false,
   onClick: undefined,
 };
 

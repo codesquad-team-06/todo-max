@@ -91,8 +91,9 @@ export default function Board() {
       updateMouseCoordsHandler(evt.clientX, evt.clientY);
 
       // 잔상 위치 실시간으로 결정.
+      // document.elementFromPoint()
 
-      // 마우스 위치 및 위치에 있는 카드에 따라 잔상 위치 옮기기?
+      // 마우스 움직이면서 해당 위치에 있는 카드에 따라 잔상 위치 옮기기
     }
   };
 
