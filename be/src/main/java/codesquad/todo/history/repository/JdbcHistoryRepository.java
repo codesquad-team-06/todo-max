@@ -9,7 +9,6 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-import codesquad.todo.history.entity.Action;
 import codesquad.todo.history.entity.History;
 
 @Repository
@@ -21,7 +20,7 @@ public class JdbcHistoryRepository implements HistoryRepository {
 		.prevColumn(rs.getString("prev_column"))
 		.nextColumn(rs.getString("next_column"))
 		.createAt(rs.getTimestamp("created_at").toLocalDateTime())
-		.action(Action.builder().id(rs.getLong("action_id")).name(rs.getString("action_name")).build())
+		.actionName(rs.getString("action"))
 		.build()
 	);
 
@@ -29,15 +28,30 @@ public class JdbcHistoryRepository implements HistoryRepository {
 		this.jdbcTemplate = jdbcTemplate;
 	}
 
+	// todo : h.action_name 으로 바꾸기
 	@Override
 	public List<History> findAll() {
 		String sql =
-			"SELECT h.card_title, h.prev_column, h.next_column, h.created_at, a.id AS action_id, a.name AS action_name "
+			"SELECT h.card_title, h.prev_column, h.next_column, h.created_at, h.action_name "
 				+ "FROM history AS h "
-				+ "JOIN action AS a ON h.action_id = a.id "
 				+ "WHERE h.is_deleted = false "
 				+ "ORDER BY h.id DESC;";
 		return Collections.unmodifiableList(jdbcTemplate.query(sql, historyRowMapper));
+	}
+
+	@Override
+	public void save(History history) {
+		String sql =
+			"INSERT INTO history(card_title, prev_column, next_column, created_at, is_deleted, action_name, card_id)"
+				+ "VALUES(:cardTitle, :prevColumn, :nextColumn, now(), :isDeleted, :actionName, :cardId)";
+
+		jdbcTemplate.update(sql, new MapSqlParameterSource()
+			.addValue("cardTitle", history.getCardTitle())
+			.addValue("prevColumn", history.getPrevColumn())
+			.addValue("nextColumn", history.getNextColumn())
+			.addValue("isDeleted", history.isDeleted())
+			.addValue("actionName", history.getActionName())
+			.addValue("cardId", history.getCardId()));
 	}
 
 	@Override
@@ -55,11 +69,6 @@ public class JdbcHistoryRepository implements HistoryRepository {
 		parameters.addValue("ids", ids);
 		Integer count = jdbcTemplate.queryForObject(sql, parameters, Integer.class);
 		return Optional.ofNullable(count).orElse(0);
-	}
-
-	@Override
-	public History save(History history) {
-		return null;
 	}
 
 	@Override

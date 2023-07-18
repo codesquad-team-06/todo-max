@@ -10,6 +10,7 @@ import codesquad.todo.errors.errorcode.HistoryErrorCode;
 import codesquad.todo.errors.exception.RestApiException;
 import codesquad.todo.history.controller.dto.HistoryDeleteRequest;
 import codesquad.todo.history.controller.dto.HistoryFindAllResponse;
+import codesquad.todo.history.controller.dto.HistorySaveDto;
 import codesquad.todo.history.repository.HistoryRepository;
 
 @Service
@@ -27,6 +28,11 @@ public class HistoryService {
 			.stream()
 			.map(HistoryFindAllResponse::from)
 			.collect(Collectors.toList());
+	}
+
+	@Transactional
+	public void save(HistorySaveDto historySaveDto) {
+		historyRepository.save(historySaveDto.toEntity());
 	}
 
 	@Transactional
