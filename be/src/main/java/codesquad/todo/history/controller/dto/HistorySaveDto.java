@@ -6,15 +6,17 @@ public class HistorySaveDto {
 	String cardTitle;
 	String prevColumn;
 	String nextColumn;
+	String actionName;
 	Long cardId;
 
 	public HistorySaveDto() {
 	}
 
-	public HistorySaveDto(String cardTitle, String prevColumn, String nextColumn, Long cardId) {
+	public HistorySaveDto(String cardTitle, String prevColumn, String nextColumn, String actionName, Long cardId) {
 		this.cardTitle = cardTitle;
 		this.prevColumn = prevColumn;
 		this.nextColumn = nextColumn;
+		this.actionName = actionName;
 		this.cardId = cardId;
 	}
 
@@ -24,6 +26,7 @@ public class HistorySaveDto {
 			.prevColumn(prevColumn)
 			.nextColumn(nextColumn)
 			.cardId(cardId)
+			.actionName(actionName)
 			.isDeleted(false)
 			.build();
 	}
