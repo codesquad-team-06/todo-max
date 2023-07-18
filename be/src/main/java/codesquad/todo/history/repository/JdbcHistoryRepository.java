@@ -2,11 +2,14 @@ package codesquad.todo.history.repository;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.stereotype.Repository;
 
 import codesquad.todo.history.entity.History;
@@ -16,6 +19,7 @@ public class JdbcHistoryRepository implements HistoryRepository {
 
 	private final NamedParameterJdbcTemplate jdbcTemplate;
 	private final RowMapper<History> historyRowMapper = ((rs, rowNum) -> History.builder()
+		.id(rs.getLong("id"))
 		.cardTitle(rs.getString("card_title"))
 		.prevColumn(rs.getString("prev_column"))
 		.nextColumn(rs.getString("next_column"))
@@ -28,7 +32,6 @@ public class JdbcHistoryRepository implements HistoryRepository {
 		this.jdbcTemplate = jdbcTemplate;
 	}
 
-	// todo : h.action_name 으로 바꾸기
 	@Override
 	public List<History> findAll() {
 		String sql =
@@ -39,12 +42,13 @@ public class JdbcHistoryRepository implements HistoryRepository {
 		return Collections.unmodifiableList(jdbcTemplate.query(sql, historyRowMapper));
 	}
 
+	// todo : 예외 처리 수정
 	@Override
-	public void save(History history) {
+	public History save(History history) {
 		String sql =
 			"INSERT INTO history(card_title, prev_column, next_column, created_at, is_deleted, action_name, card_id)"
 				+ "VALUES(:cardTitle, :prevColumn, :nextColumn, now(), :isDeleted, :actionName, :cardId)";
-
+		GeneratedKeyHolder keyHolder = new GeneratedKeyHolder();
 		jdbcTemplate.update(sql, new MapSqlParameterSource()
 			.addValue("cardTitle", history.getCardTitle())
 			.addValue("prevColumn", history.getPrevColumn())
@@ -52,6 +56,16 @@ public class JdbcHistoryRepository implements HistoryRepository {
 			.addValue("isDeleted", history.isDeleted())
 			.addValue("actionName", history.getActionName())
 			.addValue("cardId", history.getCardId()));
+		long historyId = Objects.requireNonNull(keyHolder.getKey()).longValue();
+
+		return findById(historyId).orElseThrow();
+	}
+
+	@Override
+	public Optional<History> findById(Long id) {
+		String sql = "SELECT id, card_title, prev_column, next_Column, created_at, is_deleted, action_name, card_id "
+			+ "FROM history WHERE id = :id";
+		return Optional.ofNullable(jdbcTemplate.queryForObject(sql, Map.of("id", id), historyRowMapper));
 	}
 
 	@Override
@@ -71,13 +85,9 @@ public class JdbcHistoryRepository implements HistoryRepository {
 		return Optional.ofNullable(count).orElse(0);
 	}
 
+	// todo : 삭제
 	@Override
 	public History modify(History history) {
 		return null;
-	}
-
-	@Override
-	public Optional<History> findById(Long id) {
-		return Optional.empty();
 	}
 }
