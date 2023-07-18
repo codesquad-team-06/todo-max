@@ -7,10 +7,11 @@ import { CardType } from "../../types.ts";
 export default function Card({
   cardDetails,
   currMouseCoords,
-  isDraggingCardId,
+  dragCardId,
   editCardHandler,
   deleteCardHandler,
-  isDraggingCardIdHandler,
+  updateMouseCoordsHandler,
+  dragCardIdHandler,
 }: {
   cardDetails: {
     id: number;
@@ -18,13 +19,14 @@ export default function Card({
     content: string;
   };
   currMouseCoords: [number, number];
-  isDraggingCardId: number | null;
+  dragCardId: number | null;
   editCardHandler: (card: CardType) => void;
   deleteCardHandler: (deletedCardInfo: {
     id: number;
     columnId: number;
   }) => void;
-  isDraggingCardIdHandler: (cardId: number | null) => void;
+  updateMouseCoordsHandler: (x: number, y: number) => void;
+  dragCardIdHandler: (cardId: number | null) => void;
 }) {
   const [isEditMode, setIsEditMode] = useState<boolean>(false);
   const cardRef = useRef<HTMLLIElement | null>(null);
@@ -34,23 +36,31 @@ export default function Card({
   };
 
   const mouseDownHandler = (evt: MouseEvent) => {
-    // Dragging 시작
-    isDraggingCardIdHandler(cardDetails.id);
-    // 그랩된 카드는 absolute로 마우스 따라서 드래그 중
+    // Edge Cases
+    if (isEditMode === true || (evt.target as HTMLElement).closest("button"))
+      return;
 
-    // 마우스 위치에 따라 잔상 위치 옮기기
+    // 초기 `currMouseCoords = [0,0]` 깜빡임 방지
+    updateMouseCoordsHandler(evt.clientX, evt.clientY);
+
+    // Drag 시작 (그랩된 카드는 마우스 따라서 드래그 중)
+    dragCardIdHandler(cardDetails.id);
   };
 
   const mouseUpHandler = (evt: MouseEvent) => {
-    isDraggingCardIdHandler(cardDetails.id);
+    if (isEditMode === true || (evt.target as HTMLElement).closest("button"))
+      return;
+
+    dragCardIdHandler(cardDetails.id);
   };
 
   return (
     <StyledCard
       ref={cardRef}
-      $currentCardRef={cardRef}
-      $isGrabbed={isDraggingCardId === cardDetails.id}
+      $isEditMode={isEditMode}
+      $currCardRef={cardRef}
       $currMouseCoords={currMouseCoords}
+      $isGrabbed={dragCardId === cardDetails.id}
       onMouseDown={mouseDownHandler}
       onMouseUp={mouseUpHandler}>
       {isEditMode ? (
@@ -76,26 +86,29 @@ export default function Card({
 }
 
 type StyledCardProps = {
-  $currentCardRef: React.RefObject<HTMLLIElement | null>;
-  $isGrabbed: boolean;
+  $isEditMode: boolean;
+  $currCardRef: React.RefObject<HTMLLIElement | null>;
   $currMouseCoords: [number, number];
+  $isGrabbed: boolean;
 };
 
 const StyledCard = styled.li.attrs<StyledCardProps>(
-  (props): React.HTMLAttributes<HTMLLIElement> => {
-    const { $currentCardRef, $isGrabbed, $currMouseCoords } = props;
-
+  ({
+    $isEditMode,
+    $currCardRef,
+    $currMouseCoords,
+    $isGrabbed,
+  }): React.HTMLAttributes<HTMLLIElement> => {
     const cardHeight =
-      $currentCardRef.current?.getBoundingClientRect().height ?? 0;
-    const cardWidth =
-      $currentCardRef.current?.getBoundingClientRect().width ?? 0;
+      $currCardRef.current?.getBoundingClientRect().height ?? 0;
+    const cardWidth = $currCardRef.current?.getBoundingClientRect().width ?? 0;
 
     return {
       style: {
         position: $isGrabbed ? "absolute" : "static",
         top: `${$currMouseCoords[1] - cardHeight / 2}px`,
         left: `${$currMouseCoords[0] - cardWidth / 2}px`,
-        cursor: $isGrabbed ? "grabbing" : "grab",
+        cursor: $isEditMode ? "default" : $isGrabbed ? "grabbing" : "grab",
       },
     };
   }

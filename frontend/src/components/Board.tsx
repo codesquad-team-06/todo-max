@@ -12,9 +12,9 @@ type ColumnData = {
 
 export default function Board() {
   const [board, setBoard] = useState<ColumnData[]>([]);
-  const [isDraggingCardId, setIsDraggingCardId] = useState<number | null>(null);
+  const [dragCardId, setDragCardId] = useState<number | null>(null);
   const [currMouseCoords, setCurrMouseCoords] = useState<[number, number]>([
-    200, 200,
+    0, 0,
   ]);
 
   useEffect(() => {
@@ -82,9 +82,13 @@ export default function Board() {
     });
   };
 
+  const updateMouseCoordsHandler = (x: number, y: number) => {
+    setCurrMouseCoords([x, y]);
+  };
+
   const mouseMoveHandler = (evt: MouseEvent) => {
-    if (isDraggingCardId) {
-      setCurrMouseCoords([evt.clientX, evt.clientY]);
+    if (dragCardId) {
+      updateMouseCoordsHandler(evt.clientX, evt.clientY);
 
       // 잔상 위치 실시간으로 결정.
 
@@ -92,8 +96,8 @@ export default function Board() {
     }
   };
 
-  const isDraggingCardIdHandler = (cardId: number | null) => {
-    setIsDraggingCardId(cardId);
+  const dragCardIdHandler = (cardId: number | null) => {
+    setDragCardId(cardId);
   };
 
   return (
@@ -113,12 +117,13 @@ export default function Board() {
               key: columnId,
               name,
               cards,
-              isDraggingCardId,
+              dragCardId,
               currMouseCoords,
               addNewCardHandler,
               editCardHandler,
               deleteCardHandler,
-              isDraggingCardIdHandler,
+              updateMouseCoordsHandler,
+              dragCardIdHandler,
             }}
           />
         )

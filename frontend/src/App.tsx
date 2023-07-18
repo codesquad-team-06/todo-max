@@ -27,6 +27,7 @@ const StyledApp = styled.div`
   height: 100vh;
   background-color: ${({ theme: { colors } }) => colors.grey100};
   overflow: hidden;
+  position: relative;
 `;
 
 const MainWrapper = styled.div`
@@ -37,5 +38,4 @@ const MainWrapper = styled.div`
   padding-inline: 80px;
   display: flex;
   flex-direction: column;
-  position: relative;
 `;
