@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import codesquad.todo.column.service.ColumnService;
+import codesquad.todo.errors.errorcode.ColumnErrorCode;
+import codesquad.todo.errors.exception.RestApiException;
 
 @RestController
 @RequestMapping("/column")
@@ -29,6 +31,9 @@ public class ColumnRestController {
 
 	@DeleteMapping(path = "/{columnId}")
 	public ColumnSaveResponse deleteColumn(@PathVariable final Long columnId) {
+		if (!columnService.existColumnById(columnId)) {
+			throw new RestApiException(ColumnErrorCode.NOT_FOUND_COLUMN);
+		}
 		ColumnSaveDto columnSaveDto = columnService.deleteColumn(columnId);
 		return new ColumnSaveResponse(columnSaveDto, true);
 	}

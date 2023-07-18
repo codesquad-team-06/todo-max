@@ -28,4 +28,8 @@ public class ColumnService {
 		Column delColumn = columnRepository.deleteById(columnId);
 		return new ColumnSaveDto(delColumn);
 	}
+
+	public boolean existColumnById(Long columnId) {
+		return columnRepository.findById(columnId).isPresent();
+	}
 }
