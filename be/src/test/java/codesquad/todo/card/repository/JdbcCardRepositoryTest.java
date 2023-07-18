@@ -1,8 +1,8 @@
 package codesquad.todo.card.repository;
 
-
 import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.*;
+
 import java.util.List;
 
 import org.assertj.core.api.SoftAssertions;
@@ -27,7 +27,6 @@ class JdbcCardRepositoryTest {
 	private CardRepository cardRepository;
 
 	@Test
-
 	@DisplayName("새로운 카드를 저장하고 저장한 카드를 반환한다.")
 	public void saveTest() {
 		//given
@@ -134,5 +133,81 @@ class JdbcCardRepositoryTest {
 			softAssertions.assertThat(cards.size()).isEqualTo(3);
 			softAssertions.assertAll();
 		});
+	}
+
+	@Test
+	@DisplayName("이동할 위치의 position과 column_id를 입력 받아 카드의 position과 column_id를 수정한다.")
+	void testMove() {
+		//given
+		Long cardId = 3L;
+		int position = 1536;
+		Long columnId = 2L;
+		//when
+		cardRepository.move(cardId, position, columnId);
+		Card card = cardRepository.findById(3L).get();
+		//then
+		assertAll(
+			() -> assertThat(card.getId()).isEqualTo(3L),
+			() -> assertThat(card.getPosition()).isEqualTo(1536),
+			() -> assertThat(card.getColumnId()).isEqualTo(2L)
+		);
+	}
+
+	@Test
+	@DisplayName("이동할 위치의 상단 카드와 하단 카드의 id를 받아 position 값을 계산한다.")
+	void testCalculateNextPosition() {
+		//given
+		// 1. 이동하는 컬럼에 카드가 없는 경우
+		Long prevCardId1 = 0L;
+		Long nextCardId1 = 0L;
+		// 2. 이동할 위치가 최상단인 경우
+		Long prevCardId2 = 0L;
+		Long nextCardId2 = 6L;
+		// 3. 이동할 위치가 최하단인 경우
+		Long prevCardId3 = 4L;
+		Long nextCardId3 = 0L;
+		// 4. 이동할 위치의 상단 하단 카드가 있는 경우
+		Long prevCardId4 = 1L;
+		Long nextCardId4 = 2L;
+		// 5. 이동할 위치의 position과 상단 카드 position의 차이가 1인 경우(재할당이 필요한 경우)
+		cardRepository.move(8L, 1026, 3L);
+		Long prevCardId5 = 8L;
+		Long nextCardId5 = 7L;
+
+		//when
+		int calculateNextPosition1 = cardRepository.calculateNextPosition(prevCardId1, nextCardId1);
+		int calculateNextPosition2 = cardRepository.calculateNextPosition(prevCardId2, nextCardId2);
+		int calculateNextPosition3 = cardRepository.calculateNextPosition(prevCardId3, nextCardId3);
+		int calculateNextPosition4 = cardRepository.calculateNextPosition(prevCardId4, nextCardId4);
+		int calculateNextPosition5 = cardRepository.calculateNextPosition(prevCardId5, nextCardId5);
+
+		//then
+		assertThat(calculateNextPosition1).isEqualTo(1024);
+		assertThat(calculateNextPosition2).isEqualTo(4096);
+		assertThat(calculateNextPosition3).isEqualTo(512);
+		assertThat(calculateNextPosition4).isEqualTo(1536);
+		assertThat(calculateNextPosition5).isEqualTo(0);
+	}
+
+	@Test
+	@DisplayName("요청받은 columnId에 해당하는 카드들의 position 값 오름차순을 기준으로 POSITION_OFFSET 상수 간격으로 재정렬한다.")
+	void testReallocationPosition() {
+		//given
+		Long columnId = 1L;
+		cardRepository.move(1L, 2, 1L);
+		cardRepository.move(2L, 1, 1L);
+		cardRepository.move(3L, 3, 1L);
+		//when
+		cardRepository.reallocationPosition(1L);
+		List<Card> cardList = cardRepository.findAllByColumnId(columnId);
+		int card1Position = cardList.get(0).getPosition();
+		int card2Position = cardList.get(1).getPosition();
+		int card3Position = cardList.get(2).getPosition();
+		//then
+		assertAll(
+			() -> assertThat(card1Position).isEqualTo(2048),
+			() -> assertThat(card2Position).isEqualTo(1024),
+			() -> assertThat(card3Position).isEqualTo(3072)
+		);
 	}
 }
