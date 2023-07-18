@@ -11,23 +11,25 @@ export default function Column({
   name,
   cards,
   currMouseCoords,
-  isDraggingCardId,
+  dragCardId,
   addNewCardHandler,
   editCardHandler,
   deleteCardHandler,
-  isDraggingCardIdHandler,
+  updateMouseCoordsHandler,
+  dragCardIdHandler,
 }: {
   name: string;
   cards: CardType[];
   currMouseCoords: [number, number];
-  isDraggingCardId: number | null;
+  dragCardId: number | null;
   addNewCardHandler: (card: CardType) => void;
   editCardHandler: (card: CardType) => void;
   deleteCardHandler: (deletedCardInfo: {
     id: number;
     columnId: number;
   }) => void;
-  isDraggingCardIdHandler: (cardId: number | null) => void;
+  updateMouseCoordsHandler: (x: number, y: number) => void;
+  dragCardIdHandler: (cardId: number | null) => void;
 }) {
   const [isNewCardActive, setIsNewCardActive] = useState(false);
 
@@ -68,10 +70,11 @@ export default function Column({
               key: cardDetails.id,
               cardDetails,
               currMouseCoords,
-              isDraggingCardId,
+              dragCardId,
               editCardHandler,
               deleteCardHandler,
-              isDraggingCardIdHandler,
+              updateMouseCoordsHandler,
+              dragCardIdHandler,
             }}
           />
         ))}
