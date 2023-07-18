@@ -15,4 +15,6 @@ public interface ColumnRepository {
 	Column deleteById(Long id);
 
 	Optional<Column> findById(Long id);
+
+	List<String> findAllNameById(List<Long> ids);
 }

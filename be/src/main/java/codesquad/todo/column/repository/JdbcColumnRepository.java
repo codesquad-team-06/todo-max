@@ -58,10 +58,20 @@ public class JdbcColumnRepository implements ColumnRepository {
 		return template.query(sql, new MapSqlParameterSource("id", id), getColumnRowMapper()).stream().findAny();
 	}
 
+	@Override
+	public List<String> findAllNameById(List<Long> ids) {
+		String sql = "SELECT name FROM columns WHERE id IN (:id)";
+		return template.query(sql, new MapSqlParameterSource("id", ids), getColumnNameRowMapper());
+	}
+
 	private RowMapper<Column> getColumnRowMapper() {
 		return (rs, rowNum) -> Column.builder()
 			.id(rs.getLong("id"))
 			.name(rs.getString("name"))
 			.build();
+	}
+
+	private RowMapper<String> getColumnNameRowMapper() {
+		return (rs, rowNum) -> rs.getString("name");
 	}
 }
