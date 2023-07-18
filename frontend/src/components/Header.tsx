@@ -23,7 +23,7 @@ export default function Header() {
           onClick={toggleHistory}
         />
       </StyledHeader>
-      <AnimationWrapper show={isHistoryActive}>
+      <AnimationWrapper isShowing={isHistoryActive}>
         <ActivityHistory {...{ isHistoryActive, toggleHistory }} />
       </AnimationWrapper>
     </>
