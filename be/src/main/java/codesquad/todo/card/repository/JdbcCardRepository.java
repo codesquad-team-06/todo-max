@@ -141,9 +141,12 @@ public class JdbcCardRepository implements CardRepository {
 
 	@Override
 	public void reallocationPosition(Long columnId) {
-		String sql = "UPDATE card "
-			+ "SET position = (ROW_NUMBER() OVER (ORDER BY position)) * " + POSITION_OFFSET
-			+ "WHERE column_id = :columnId AND is_deleted = FALSE;";
+		String sql = "UPDATE card c1, "
+			+ "(SELECT id, (ROW_NUMBER() OVER (ORDER BY position)) * " + POSITION_OFFSET + " AS move_position "
+			+ "FROM card "
+			+ "WHERE column_id = :columnId AND is_deleted = FALSE) AS c2 "
+			+ "SET c1.position = c2.move_position "
+			+ "WHERE c1.id = c2.id;";
 
 		template.update(sql, new MapSqlParameterSource()
 			.addValue("columnId", columnId));
