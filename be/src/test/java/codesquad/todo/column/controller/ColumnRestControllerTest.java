@@ -17,6 +17,7 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Import;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.filter.CharacterEncodingFilter;
@@ -24,12 +25,14 @@ import org.springframework.web.filter.CharacterEncodingFilter;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import codesquad.todo.column.service.ColumnService;
+import codesquad.todo.errors.handler.GlobalExceptionHandler;
 
 class ColumnRestControllerTest {
 
 	@Nested
 	@DisplayName("컬럼 추가")
-	@WebMvcTest(ColumnRestController.class)
+	@WebMvcTest(controllers = {ColumnRestController.class})
+	@Import(GlobalExceptionHandler.class)
 	class SaveColumnTest {
 
 		private MockMvc mockMvc;
@@ -46,6 +49,7 @@ class ColumnRestControllerTest {
 		@BeforeEach
 		public void beforeEach() {
 			mockMvc = MockMvcBuilders.standaloneSetup(columnRestController)
+				.setControllerAdvice(GlobalExceptionHandler.class)
 				.addFilter(new CharacterEncodingFilter("UTF-8", true))
 				.alwaysDo(print())
 				.build();
@@ -88,7 +92,7 @@ class ColumnRestControllerTest {
 				.andExpect(status().is4xxClientError())
 				.andExpect(jsonPath("errorCode.status").value(Matchers.equalTo(400)))
 				.andExpect(jsonPath("errorCode.code").value(Matchers.equalTo("Bad Request")))
-				.andExpect(jsonPath("errorCode.message").value(Matchers.equalTo("컬럼의 제목은 공백이면 안됩니다.")))
+				.andExpect(jsonPath("errorCode.message").value(Matchers.equalTo("유효하지 않은 형식입니다.")))
 				.andExpect(jsonPath("success").value(Matchers.equalTo(false)));
 		}
 
@@ -109,7 +113,7 @@ class ColumnRestControllerTest {
 				.andExpect(status().is4xxClientError())
 				.andExpect(jsonPath("errorCode.status").value(Matchers.equalTo(400)))
 				.andExpect(jsonPath("errorCode.code").value(Matchers.equalTo("Bad Request")))
-				.andExpect(jsonPath("errorCode.message").value(Matchers.equalTo("컬럼의 제목은 공백이면 안됩니다.")))
+				.andExpect(jsonPath("errorCode.message").value(Matchers.equalTo("유효하지 않은 형식입니다.")))
 				.andExpect(jsonPath("success").value(Matchers.equalTo(false)));
 		}
 
@@ -121,7 +125,7 @@ class ColumnRestControllerTest {
 			Arrays.fill(name, "a");
 			String joinName = String.join("", name);
 			ColumnSaveRequest columnSaveRequest = new ColumnSaveRequest(joinName);
-			ColumnSaveDto columnSaveDto = new ColumnSaveDto(1L, "");
+			ColumnSaveDto columnSaveDto = new ColumnSaveDto(1L, joinName);
 			String body = objectMapper.writeValueAsString(columnSaveRequest);
 			// mocking
 			when(columnService.saveColumn(Mockito.any(ColumnSaveRequest.class))).thenReturn(columnSaveDto);
@@ -131,15 +135,16 @@ class ColumnRestControllerTest {
 					.content(body)
 					.accept(APPLICATION_JSON))
 				.andExpect(status().is4xxClientError())
+				.andDo(print())
 				.andExpect(jsonPath("errorCode.status").value(Matchers.equalTo(400)))
 				.andExpect(jsonPath("errorCode.code").value(Matchers.equalTo("Bad Request")))
-				.andExpect(jsonPath("errorCode.message").value(Matchers.equalTo("컬럼의 제목은 최대 100글자 이내여야 합니다.")))
+				.andExpect(jsonPath("errorCode.message").value(Matchers.equalTo("유효하지 않은 형식입니다.")))
 				.andExpect(jsonPath("success").value(Matchers.equalTo(false)));
 		}
 	}
 
 	@Nested
-	@DisplayName("컬럼 추가")
+	@DisplayName("컬럼 삭제")
 	@WebMvcTest(ColumnRestController.class)
 	class DeleteColumnTest {
 		private MockMvc mockMvc;
@@ -153,6 +158,7 @@ class ColumnRestControllerTest {
 		@BeforeEach
 		public void beforeEach() {
 			mockMvc = MockMvcBuilders.standaloneSetup(columnRestController)
+				.setControllerAdvice(GlobalExceptionHandler.class)
 				.addFilter(new CharacterEncodingFilter("UTF-8", true))
 				.alwaysDo(print())
 				.build();
@@ -165,6 +171,7 @@ class ColumnRestControllerTest {
 			String columnId = "1";
 			ColumnSaveDto columnSaveDto = new ColumnSaveDto(1L, "해야할 일");
 			// mocking
+			when(columnService.existColumnById(any())).thenReturn(true);
 			when(columnService.deleteColumn(any())).thenReturn(columnSaveDto);
 			// when
 			mockMvc.perform(delete("/column/" + columnId))
@@ -172,7 +179,23 @@ class ColumnRestControllerTest {
 				.andExpect(jsonPath("column.id").value(Matchers.equalTo(1)))
 				.andExpect(jsonPath("column.name").value(Matchers.equalTo("해야할 일")))
 				.andExpect(jsonPath("success").value(Matchers.equalTo(true)));
-			// then
+		}
+
+		@Test
+		@DisplayName("유효하지 않은 컬럼아이디가 주어지고 컬럼 삭제요청을 할때 에러 코드를 응답받는다")
+		public void testDeleteColumn_givenInvalidColumnId_whenRequestDeleteColumn_thenResponseErrorCode() throws
+			Exception {
+			// given
+			String columnId = "9999";
+			// mocking
+			when(columnService.existColumnById(any())).thenReturn(false);
+			// when
+			mockMvc.perform(delete("/column/" + columnId))
+				.andExpect(status().isNotFound())
+				.andExpect(jsonPath("success").value(Matchers.equalTo(false)))
+				.andExpect(jsonPath("errorCode.status").value(Matchers.equalTo(404)))
+				.andExpect(jsonPath("errorCode.code").value(Matchers.equalTo("Not Found")))
+				.andExpect(jsonPath("errorCode.message").value(Matchers.equalTo("존재하지 않는 컬럼입니다.")));
 		}
 	}
 
