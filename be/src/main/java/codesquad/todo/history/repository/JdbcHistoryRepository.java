@@ -84,10 +84,4 @@ public class JdbcHistoryRepository implements HistoryRepository {
 		Integer count = jdbcTemplate.queryForObject(sql, parameters, Integer.class);
 		return Optional.ofNullable(count).orElse(0);
 	}
-
-	// todo : 삭제
-	@Override
-	public History modify(History history) {
-		return null;
-	}
 }
