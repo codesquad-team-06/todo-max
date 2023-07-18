@@ -3,13 +3,12 @@ import { styled } from "styled-components";
 import ActivityHistory from "./ActivityHistory.tsx";
 import IconButton from "./common/IconButton.tsx";
 import historyButtonIcon from "../assets/history.svg";
+import AnimationWrapper from "./AnimationWrapper.tsx";
 
 export default function Header() {
   const [isHistoryActive, setIsHistoryActive] = useState(false);
 
-  const toggleHistory = async () => {
-    // eslint-disable-next-line no-promise-executor-return
-    await new Promise((r) => setTimeout(r, 300));
+  const toggleHistory = () => {
     setIsHistoryActive(!isHistoryActive);
   };
 
@@ -24,7 +23,9 @@ export default function Header() {
           onClick={toggleHistory}
         />
       </StyledHeader>
-      <ActivityHistory {...{ isHistoryActive, toggleHistory }} />
+      <AnimationWrapper show={isHistoryActive}>
+        <ActivityHistory {...{ isHistoryActive, toggleHistory }} />
+      </AnimationWrapper>
     </>
   );
 }
