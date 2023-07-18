@@ -27,6 +27,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import codesquad.todo.card.controller.dto.CardDeleteResponse;
 import codesquad.todo.card.controller.dto.CardModifyRequest;
 import codesquad.todo.card.controller.dto.CardModifyResponse;
+import codesquad.todo.card.controller.dto.CardMoveRequest;
+import codesquad.todo.card.controller.dto.CardMoveResponse;
 import codesquad.todo.card.controller.dto.CardResponseDTO;
 import codesquad.todo.card.controller.dto.CardSaveRequest;
 import codesquad.todo.card.controller.dto.CardSaveResponse;
@@ -139,5 +141,26 @@ class CardRestControllerTest {
 			.andExpect(jsonPath(expectedColumnName, 0).value(equalTo("해야할 일")))
 			.andExpect(jsonPath(expectedColumnId, 0).value(equalTo(1)))
 			.andExpect(jsonPath(expectedCards, 0).isArray());
+	}
+
+	@Test
+	@DisplayName("카드이동 요청을 받아 입력받은 위치로 카드를 이동시킨 후 이동 시킨 카드의 데이터를 반환한다.")
+	public void testMoveCard() throws Exception {
+		// given
+		CardMoveRequest cardMoveRequest = new CardMoveRequest(7L, 5L, 4L, 2L);
+		CardMoveResponse cardMoveResponse = new CardMoveResponse(new CardResponseDTO(7L, "제목7", "내용7", 1536, 2L), true);
+		given(cardService.moveCard(any())).willReturn(cardMoveResponse);
+		// when then
+		mockMvc.perform(put("/cards/move/7")
+			.content(objectMapper.writeValueAsString(cardMoveRequest))
+			.contentType(MediaType.APPLICATION_JSON_VALUE))
+			.andExpect(status().isOk())
+			.andExpect(jsonPath("$[0].id").value(7))
+			.andExpect(jsonPath("$[0].title").value("제목7"))
+			.andExpect(jsonPath("$[0].content").value("내용7"))
+			.andExpect(jsonPath("$[0].position").value(1536))
+			.andExpect(jsonPath("$[0].columnId").value(2))
+			.andExpect(jsonPath("success").value(true))
+			.andDo(print());
 	}
 }
