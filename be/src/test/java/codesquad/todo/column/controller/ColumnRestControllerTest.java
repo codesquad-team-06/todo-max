@@ -92,7 +92,7 @@ class ColumnRestControllerTest {
 				.andExpect(status().is4xxClientError())
 				.andExpect(jsonPath("errorCode.status").value(Matchers.equalTo(400)))
 				.andExpect(jsonPath("errorCode.code").value(Matchers.equalTo("Bad Request")))
-				.andExpect(jsonPath("errorCode.message").value(Matchers.equalTo("유효하지 않은 형식입니다.")))
+				.andExpect(jsonPath("errorCode.message").value(Matchers.equalTo("컬럼의 제목은 공백이면 안됩니다.")))
 				.andExpect(jsonPath("success").value(Matchers.equalTo(false)));
 		}
 
@@ -113,7 +113,7 @@ class ColumnRestControllerTest {
 				.andExpect(status().is4xxClientError())
 				.andExpect(jsonPath("errorCode.status").value(Matchers.equalTo(400)))
 				.andExpect(jsonPath("errorCode.code").value(Matchers.equalTo("Bad Request")))
-				.andExpect(jsonPath("errorCode.message").value(Matchers.equalTo("유효하지 않은 형식입니다.")))
+				.andExpect(jsonPath("errorCode.message").value(Matchers.equalTo("컬럼의 제목은 공백이면 안됩니다.")))
 				.andExpect(jsonPath("success").value(Matchers.equalTo(false)));
 		}
 
@@ -138,7 +138,7 @@ class ColumnRestControllerTest {
 				.andDo(print())
 				.andExpect(jsonPath("errorCode.status").value(Matchers.equalTo(400)))
 				.andExpect(jsonPath("errorCode.code").value(Matchers.equalTo("Bad Request")))
-				.andExpect(jsonPath("errorCode.message").value(Matchers.equalTo("유효하지 않은 형식입니다.")))
+				.andExpect(jsonPath("errorCode.message").value(Matchers.equalTo("컬럼의 제목은 최대 100글자 이내여야 합니다.")))
 				.andExpect(jsonPath("success").value(Matchers.equalTo(false)));
 		}
 	}
@@ -191,6 +191,152 @@ class ColumnRestControllerTest {
 			when(columnService.existColumnById(any())).thenReturn(false);
 			// when
 			mockMvc.perform(delete("/column/" + columnId))
+				.andExpect(status().isNotFound())
+				.andExpect(jsonPath("success").value(Matchers.equalTo(false)))
+				.andExpect(jsonPath("errorCode.status").value(Matchers.equalTo(404)))
+				.andExpect(jsonPath("errorCode.code").value(Matchers.equalTo("Not Found")))
+				.andExpect(jsonPath("errorCode.message").value(Matchers.equalTo("존재하지 않는 컬럼입니다.")));
+		}
+	}
+
+	@Nested
+	@DisplayName("컬럼 수정")
+	@WebMvcTest(ColumnRestController.class)
+	class ModifyColumnTest {
+		private MockMvc mockMvc;
+
+		@Autowired
+		ObjectMapper objectMapper;
+
+		@Autowired
+		private ColumnRestController columnRestController;
+
+		@MockBean
+		private ColumnService columnService;
+
+		@BeforeEach
+		public void beforeEach() {
+			mockMvc = MockMvcBuilders.standaloneSetup(columnRestController)
+				.setControllerAdvice(GlobalExceptionHandler.class)
+				.addFilter(new CharacterEncodingFilter("UTF-8", true))
+				.alwaysDo(print())
+				.build();
+		}
+
+		@Test
+		@DisplayName("수정할 컬럼이 주어지고 컬럼 수정을 요청할때 수정된 컬럼을 응답합니다")
+		public void testModifyColumn() throws Exception {
+			// given
+			Long columnId = 1L;
+			ColumnModifyRequest modifyRequest = new ColumnModifyRequest(columnId, "수정된 제목");
+			ColumnSaveDto columnSaveDto = new ColumnSaveDto(columnId, "수정된 제목");
+			String body = objectMapper.writeValueAsString(modifyRequest);
+			// mocking
+			when(columnService.existColumnById(any())).thenReturn(true);
+			when(columnService.modifyColumn(any())).thenReturn(columnSaveDto);
+			// when
+			mockMvc.perform(put("/column/" + columnId)
+					.content(body)
+					.contentType(APPLICATION_JSON)
+					.accept(APPLICATION_JSON))
+				.andExpect(status().isOk())
+				.andExpect(jsonPath("success").value(Matchers.equalTo(true)))
+				.andExpect(jsonPath("column.id").value(Matchers.equalTo(1)))
+				.andExpect(jsonPath("column.name").value(Matchers.equalTo("수정된 제목")));
+		}
+
+		@Test
+		@DisplayName("빈 이름이 주어지고 컬럼 수정 요청시 에러 코드를 응답합니다.")
+		public void testModifyColumn_givenEmptyName_whenModifyColumn_thenResponseErrorCode() throws
+			Exception {
+			// given
+			Long columnId = 1L;
+			ColumnModifyRequest modifyRequest = new ColumnModifyRequest(columnId, "");
+			ColumnSaveDto columnSaveDto = new ColumnSaveDto(columnId, "수정된 제목");
+			String body = objectMapper.writeValueAsString(modifyRequest);
+			// mocking
+			when(columnService.existColumnById(any())).thenReturn(true);
+			when(columnService.modifyColumn(any())).thenReturn(columnSaveDto);
+			// when
+			mockMvc.perform(put("/column/" + columnId)
+					.content(body)
+					.contentType(APPLICATION_JSON)
+					.accept(APPLICATION_JSON))
+				.andExpect(status().isBadRequest())
+				.andExpect(jsonPath("success").value(Matchers.equalTo(false)))
+				.andExpect(jsonPath("errorCode.status").value(Matchers.equalTo(400)))
+				.andExpect(jsonPath("errorCode.code").value(Matchers.equalTo("Bad Request")))
+				.andExpect(jsonPath("errorCode.message").value(Matchers.equalTo("컬럼의 제목은 공백이면 안됩니다.")));
+		}
+
+		@Test
+		@DisplayName("null 이름이 주어지고 컬럼 수정 요청시 에러 코드를 응답합니다.")
+		public void testModifyColumn_givenNullName_whenModifyColumn_thenResponseErrorCode() throws
+			Exception {
+			// given
+			Long columnId = 1L;
+			ColumnModifyRequest modifyRequest = new ColumnModifyRequest(columnId, null);
+			ColumnSaveDto columnSaveDto = new ColumnSaveDto(columnId, "수정된 제목");
+			String body = objectMapper.writeValueAsString(modifyRequest);
+			// mocking
+			when(columnService.existColumnById(any())).thenReturn(true);
+			when(columnService.modifyColumn(any())).thenReturn(columnSaveDto);
+			// when
+			mockMvc.perform(put("/column/" + columnId)
+					.content(body)
+					.contentType(APPLICATION_JSON)
+					.accept(APPLICATION_JSON))
+				.andExpect(status().isBadRequest())
+				.andExpect(jsonPath("success").value(Matchers.equalTo(false)))
+				.andExpect(jsonPath("errorCode.status").value(Matchers.equalTo(400)))
+				.andExpect(jsonPath("errorCode.code").value(Matchers.equalTo("Bad Request")))
+				.andExpect(jsonPath("errorCode.message").value(Matchers.equalTo("컬럼의 제목은 공백이면 안됩니다.")));
+		}
+
+		@Test
+		@DisplayName("100글자 초과 이름이 주어지고 컬럼 수정 요청시 에러 코드를 응답합니다.")
+		public void testModifyColumn_givenLongName_whenModifyColumn_thenResponseErrorCode() throws
+			Exception {
+			// given
+			Long columnId = 1L;
+			String[] name = new String[101];
+			Arrays.fill(name, "a");
+			String joinName = String.join("", name);
+			ColumnModifyRequest modifyRequest = new ColumnModifyRequest(columnId, joinName);
+			ColumnSaveDto columnSaveDto = new ColumnSaveDto(columnId, "수정된 제목");
+			String body = objectMapper.writeValueAsString(modifyRequest);
+			// mocking
+			when(columnService.existColumnById(any())).thenReturn(true);
+			when(columnService.modifyColumn(any())).thenReturn(columnSaveDto);
+			// when
+			mockMvc.perform(put("/column/" + columnId)
+					.content(body)
+					.contentType(APPLICATION_JSON)
+					.accept(APPLICATION_JSON))
+				.andExpect(status().isBadRequest())
+				.andExpect(jsonPath("success").value(Matchers.equalTo(false)))
+				.andExpect(jsonPath("errorCode.status").value(Matchers.equalTo(400)))
+				.andExpect(jsonPath("errorCode.code").value(Matchers.equalTo("Bad Request")))
+				.andExpect(jsonPath("errorCode.message").value(Matchers.equalTo("컬럼의 제목은 최대 100글자 이내여야 합니다.")));
+		}
+
+		@Test
+		@DisplayName("존재하지 않는 컬럼 아이디가 주어지고 컬럼 수정 요청시 에러 코드를 응답합니다.")
+		public void testModifyColumn_givenNotExistColumnId_whenModifyColumn_thenResponseErrorCode() throws
+			Exception {
+			// given
+			Long columnId = 9999L;
+			ColumnModifyRequest modifyRequest = new ColumnModifyRequest(columnId, "수정된 제목");
+			ColumnSaveDto columnSaveDto = new ColumnSaveDto(columnId, "수정된 제목");
+			String body = objectMapper.writeValueAsString(modifyRequest);
+			// mocking
+			when(columnService.existColumnById(any())).thenReturn(false);
+			when(columnService.modifyColumn(any())).thenReturn(columnSaveDto);
+			// when
+			mockMvc.perform(put("/column/" + columnId)
+					.content(body)
+					.contentType(APPLICATION_JSON)
+					.accept(APPLICATION_JSON))
 				.andExpect(status().isNotFound())
 				.andExpect(jsonPath("success").value(Matchers.equalTo(false)))
 				.andExpect(jsonPath("errorCode.status").value(Matchers.equalTo(404)))

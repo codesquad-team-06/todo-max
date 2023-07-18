@@ -86,4 +86,20 @@ class JdbcColumnRepositoryTest {
 			softAssertions.assertAll();
 		});
 	}
+
+	@Test
+	@DisplayName("수정된 컬럼이 주어지고 컬럼 수정 요청시 컬럼이 수정됩니다.")
+	public void testModifyColumn() {
+		// given
+		Column saveColumn = columnRepository.save(Column.builder().name("기존 제목").isDeleted(false).build());
+		Column column = Column.builder().id(saveColumn.getId()).name("수정된 제목").build();
+		// when
+		Column modifiedColumn = columnRepository.modify(column);
+		// then
+		SoftAssertions.assertSoftly(softAssertions -> {
+			softAssertions.assertThat(modifiedColumn.getId()).isEqualTo(saveColumn.getId());
+			softAssertions.assertThat(modifiedColumn.getName()).isEqualTo("수정된 제목");
+			softAssertions.assertAll();
+		});
+	}
 }
