@@ -72,10 +72,10 @@ public class CardService {
 
 		if (calculatePosition == 0) {
 			// 컬럼 아이디에 해당하는 카드들의 position 재할당
-			cardRepository.reallocationPosition(cardMoveRequest.getColumnId());
+			cardRepository.reallocationPosition(cardMoveRequest.getNextColumnId());
 			return moveCard(cardMoveRequest);
 		}
 
-		return CardMoveResponse.from(cardRepository.move(cardMoveRequest.getId(), calculatePosition, cardMoveRequest.getColumnId()));
+		return CardMoveResponse.from(cardRepository.move(cardMoveRequest.getId(), calculatePosition, cardMoveRequest.getNextColumnId()));
 	}
 }
