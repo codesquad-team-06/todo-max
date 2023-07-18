@@ -2,8 +2,8 @@
 import React, { useEffect, useState, useContext, FormEvent } from "react";
 import { styled, keyframes, css } from "styled-components";
 import ActivityHistoryItem from "./ActivityHistoryItem.tsx";
-import closeButtonIcon from "../assets/closed.svg";
-import { ModalContext } from "../context/ModalContext.tsx";
+import closeButtonIcon from "../../assets/closed.svg";
+import { ModalContext } from "../../context/ModalContext.tsx";
 
 type History = {
   id: number;

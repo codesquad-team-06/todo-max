@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import { styled } from "styled-components";
-import ActivityHistory from "./ActivityHistory.tsx";
+import ActivityHistory from "./ActivityHistory/ActivityHistory.tsx";
 import IconButton from "./common/IconButton.tsx";
 import historyButtonIcon from "../assets/history.svg";
-import AnimationWrapper from "./AnimationWrapper.tsx";
+import AnimationWrapper from "./common/AnimationWrapper.tsx";
 
 export default function Header() {
   const [isHistoryActive, setIsHistoryActive] = useState(false);
