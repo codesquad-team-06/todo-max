@@ -58,7 +58,7 @@ class JdbcColumnRepositoryTest {
 	@DisplayName("컬럼 아이디번호가 주어지고 컬럼 삭제 요청시 컬럼이 삭제됩니다.")
 	public void testDeleteById() {
 		// given
-		Column saveColumn = columnRepository.save(new Column(null, "보류한 일"));
+		Column saveColumn = columnRepository.save(Column.builder().name("보류한 일").isDeleted(false).build());
 		// when
 		Column delColumn = columnRepository.deleteById(saveColumn.getId());
 		// then
