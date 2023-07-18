@@ -9,7 +9,7 @@ public interface HistoryRepository {
 
 	List<History> findAll();
 
-	History save(History history);
+	void save(History history);
 
 	History modify(History history);
 
