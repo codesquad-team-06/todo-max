@@ -1,7 +1,5 @@
 package codesquad.todo.column.controller;
 
-import static org.hamcrest.Matchers.*;
-import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.*;
 import static org.springframework.http.MediaType.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -10,6 +8,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import java.util.Arrays;
 
+import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -67,9 +66,9 @@ class ColumnRestControllerTest {
 					.content(body)
 					.accept(APPLICATION_JSON))
 				.andExpect(status().isOk())
-				.andExpect(jsonPath("column.id").value(equalTo(1)))
-				.andExpect(jsonPath("column.name").value(equalTo("보류한 일")))
-				.andExpect(jsonPath("success").value(equalTo(true)));
+				.andExpect(jsonPath("column.id").value(Matchers.equalTo(1)))
+				.andExpect(jsonPath("column.name").value(Matchers.equalTo("보류한 일")))
+				.andExpect(jsonPath("success").value(Matchers.equalTo(true)));
 		}
 
 		@Test
@@ -87,10 +86,10 @@ class ColumnRestControllerTest {
 					.content(body)
 					.accept(APPLICATION_JSON))
 				.andExpect(status().is4xxClientError())
-				.andExpect(jsonPath("errorCode.status").value(equalTo(400)))
-				.andExpect(jsonPath("errorCode.code").value(equalTo("Bad Request")))
-				.andExpect(jsonPath("errorCode.message").value(equalTo("컬럼의 제목은 공백이면 안됩니다.")))
-				.andExpect(jsonPath("success").value(equalTo(false)));
+				.andExpect(jsonPath("errorCode.status").value(Matchers.equalTo(400)))
+				.andExpect(jsonPath("errorCode.code").value(Matchers.equalTo("Bad Request")))
+				.andExpect(jsonPath("errorCode.message").value(Matchers.equalTo("컬럼의 제목은 공백이면 안됩니다.")))
+				.andExpect(jsonPath("success").value(Matchers.equalTo(false)));
 		}
 
 		@Test
@@ -108,10 +107,10 @@ class ColumnRestControllerTest {
 					.content(body)
 					.accept(APPLICATION_JSON))
 				.andExpect(status().is4xxClientError())
-				.andExpect(jsonPath("errorCode.status").value(equalTo(400)))
-				.andExpect(jsonPath("errorCode.code").value(equalTo("Bad Request")))
-				.andExpect(jsonPath("errorCode.message").value(equalTo("컬럼의 제목은 공백이면 안됩니다.")))
-				.andExpect(jsonPath("success").value(equalTo(false)));
+				.andExpect(jsonPath("errorCode.status").value(Matchers.equalTo(400)))
+				.andExpect(jsonPath("errorCode.code").value(Matchers.equalTo("Bad Request")))
+				.andExpect(jsonPath("errorCode.message").value(Matchers.equalTo("컬럼의 제목은 공백이면 안됩니다.")))
+				.andExpect(jsonPath("success").value(Matchers.equalTo(false)));
 		}
 
 		@Test
@@ -132,10 +131,10 @@ class ColumnRestControllerTest {
 					.content(body)
 					.accept(APPLICATION_JSON))
 				.andExpect(status().is4xxClientError())
-				.andExpect(jsonPath("errorCode.status").value(equalTo(400)))
-				.andExpect(jsonPath("errorCode.code").value(equalTo("Bad Request")))
-				.andExpect(jsonPath("errorCode.message").value(equalTo("컬럼의 제목은 최대 100글자 이내여야 합니다.")))
-				.andExpect(jsonPath("success").value(equalTo(false)));
+				.andExpect(jsonPath("errorCode.status").value(Matchers.equalTo(400)))
+				.andExpect(jsonPath("errorCode.code").value(Matchers.equalTo("Bad Request")))
+				.andExpect(jsonPath("errorCode.message").value(Matchers.equalTo("컬럼의 제목은 최대 100글자 이내여야 합니다.")))
+				.andExpect(jsonPath("success").value(Matchers.equalTo(false)));
 		}
 	}
 
@@ -170,9 +169,9 @@ class ColumnRestControllerTest {
 			// when
 			mockMvc.perform(delete("/column/" + columnId))
 				.andExpect(status().isOk())
-				.andExpect(jsonPath("column.id").value(equalTo(1)))
-				.andExpect(jsonPath("column.name").value(equalTo("해야할 일")))
-				.andExpect(jsonPath("success").value(equalTo(true)));
+				.andExpect(jsonPath("column.id").value(Matchers.equalTo(1)))
+				.andExpect(jsonPath("column.name").value(Matchers.equalTo("해야할 일")))
+				.andExpect(jsonPath("success").value(Matchers.equalTo(true)));
 			// then
 		}
 	}
