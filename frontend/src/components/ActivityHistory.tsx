@@ -78,7 +78,7 @@ export default function ActivityHistory({
   };
 
   return (
-    <Layer isHistoryActive={isHistoryActive}>
+    <Layer $isHistoryActive={isHistoryActive}>
       <TitleContainer>
         <h3>사용자 활동 기록</h3>
         <CloseBtn onClick={toggleHistory}>
@@ -137,27 +137,27 @@ const slideOut = keyframes`
   }
 `;
 
-const Layer = styled.div<{ isHistoryActive: boolean }>`
+const Layer = styled.div<{ $isHistoryActive: boolean }>`
   width: 366px;
   padding: 8px;
   position: absolute;
-  top: ${({ isHistoryActive }) => (isHistoryActive ? "60px" : "-500px")};
+  top: ${({ $isHistoryActive }) => ($isHistoryActive ? "60px" : "-500px")};
   right: 50px;
   background-color: ${({ theme: { colors } }) => colors.grey50};
   border-radius: ${({ theme: { objectStyles } }) => objectStyles.radius.m};
   box-shadow: ${({ theme: { objectStyles } }) =>
     objectStyles.dropShadow.floating};
-  opacity: ${({ isHistoryActive }) => (isHistoryActive ? 1 : 0)};
-  animation: ${({ isHistoryActive }) =>
-    isHistoryActive
+  opacity: ${({ $isHistoryActive }) => ($isHistoryActive ? 1 : 0)};
+  animation: ${({ $isHistoryActive }) =>
+    $isHistoryActive
       ? css`
           ${slideIn} 0.5s ease-in
         `
       : css`
           ${slideOut} 0.5s ease-out
         `};
-  visibility: ${({ isHistoryActive }) =>
-    isHistoryActive ? "visible" : "hidden"};
+  visibility: ${({ $isHistoryActive }) =>
+    $isHistoryActive ? "visible" : "hidden"};
   transition: visibility 1s linear;
 `;
 

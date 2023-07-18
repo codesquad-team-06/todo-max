@@ -1,20 +1,20 @@
-import React, { useEffect, useState } from "react";
+import React, { ReactElement, useEffect, useState } from "react";
 
 export default function AnimationWrapper({
-  show,
+  isShowing,
   children,
 }: {
-  show: boolean;
-  children: React.ReactNode;
+  isShowing: boolean;
+  children: ReactElement;
 }) {
-  const [shouldRender, setRender] = useState(show);
+  const [shouldRender, setRender] = useState(isShowing);
 
   useEffect(() => {
-    if (show) setRender(true);
-  }, [show]);
+    if (isShowing) setRender(true);
+  }, [isShowing]);
 
   const onAnimationEnd = () => {
-    if (!show) setRender(false);
+    if (!isShowing) setRender(false);
   };
 
   return shouldRender && <div onAnimationEnd={onAnimationEnd}>{children}</div>;
