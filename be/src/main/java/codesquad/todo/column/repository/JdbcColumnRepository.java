@@ -40,7 +40,10 @@ public class JdbcColumnRepository implements ColumnRepository {
 
 	@Override
 	public Column modify(Column column) {
-		return null;
+		String sql = "UPDATE columns SET name = :name WHERE id = :id";
+		SqlParameterSource paramSource = new BeanPropertySqlParameterSource(column);
+		template.update(sql, paramSource);
+		return findById(column.getId()).orElseThrow();
 	}
 
 	@Override

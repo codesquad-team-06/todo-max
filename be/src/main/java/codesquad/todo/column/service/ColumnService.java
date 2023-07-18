@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import codesquad.todo.column.controller.ColumnModifyRequest;
 import codesquad.todo.column.controller.ColumnSaveDto;
 import codesquad.todo.column.controller.ColumnSaveRequest;
 import codesquad.todo.column.entity.Column;
@@ -19,6 +20,10 @@ public class ColumnService {
 		this.columnRepository = columnRepository;
 	}
 
+	public List<String> findColumnNames(List<Long> ids) {
+		return columnRepository.findAllNameById(ids);
+	}
+
 	@Transactional
 	public ColumnSaveDto saveColumn(ColumnSaveRequest columnSaveRequest) {
 		Column saveColumn = columnRepository.save(columnSaveRequest.toEntity());
@@ -31,11 +36,13 @@ public class ColumnService {
 		return new ColumnSaveDto(delColumn);
 	}
 
-	public boolean existColumnById(Long columnId) {
-		return columnRepository.findById(columnId).isPresent();
+	@Transactional
+	public ColumnSaveDto modifyColumn(ColumnModifyRequest request) {
+		Column modifiedColumn = columnRepository.modify(request.toEntity());
+		return new ColumnSaveDto(modifiedColumn);
 	}
 
-	public List<String> findColumnNames(List<Long> ids) {
-		return columnRepository.findAllNameById(ids);
+	public boolean existColumnById(Long columnId) {
+		return columnRepository.findById(columnId).isPresent();
 	}
 }
