@@ -49,6 +49,7 @@ public class CardRestController {
 		return cardService.getAllCard();
 	}
 
+	@PutMapping("/move/{cardId}")
 	public CardMoveResponse moveCard(@RequestBody CardMoveRequest cardMoveRequest){
 		return cardService.moveCard(cardMoveRequest);
 	}
