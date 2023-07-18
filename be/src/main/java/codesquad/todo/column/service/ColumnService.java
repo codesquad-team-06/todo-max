@@ -35,7 +35,7 @@ public class ColumnService {
 		return columnRepository.findById(columnId).isPresent();
 	}
 
-	public List<String> findColumnNamesById(List<Long> ids) {
+	public List<String> findColumnNames(List<Long> ids) {
 		return columnRepository.findAllNameById(ids);
 	}
 }

@@ -1,5 +1,7 @@
 package codesquad.todo.column.repository;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.assertj.core.api.SoftAssertions;
@@ -32,6 +34,22 @@ class JdbcColumnRepositoryTest {
 		// then
 		SoftAssertions.assertSoftly(softAssertions -> {
 			softAssertions.assertThat(columns.size()).isEqualTo(3);
+			softAssertions.assertAll();
+		});
+	}
+
+	@Test
+	@DisplayName("특정 컬럼 아이디에 따른 컬럼 이름들을 요청합니다.")
+	public void testFindAllNameById() {
+		// given
+		Column saveColumn1 = columnRepository.save(Column.builder().name("보류한 일").build());
+		Column saveColumn2 = columnRepository.save(Column.builder().name("보류한 일2").build());
+		List<Long> ids = new ArrayList<>(Arrays.asList(saveColumn1.getId(), saveColumn2.getId()));
+		// when
+		List<String> names = columnRepository.findAllNameById(ids);
+		// then
+		SoftAssertions.assertSoftly(softAssertions -> {
+			softAssertions.assertThat(names).contains("보류한 일", "보류한 일2");
 			softAssertions.assertAll();
 		});
 	}
