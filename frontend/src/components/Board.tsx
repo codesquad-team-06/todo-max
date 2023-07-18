@@ -2,12 +2,12 @@
 import React, { useState, useEffect, MouseEvent } from "react";
 import { styled } from "styled-components";
 import Column from "./Column.tsx";
-import { Card } from "../types.ts";
+import { CardType } from "../types.ts";
 
 type ColumnData = {
   columnId: number;
   name: string;
-  cards: Card[];
+  cards: CardType[];
 };
 
 export default function Board() {
@@ -37,7 +37,7 @@ export default function Board() {
     fetchBoard();
   }, []);
 
-  const addNewCardHandler = (newCard: Card) => {
+  const addNewCardHandler = (newCard: CardType) => {
     setBoard((prevBoard: ColumnData[]) => {
       const newBoard: ColumnData[] = prevBoard.map((column) => {
         if (column.columnId === newCard.columnId) {
@@ -52,7 +52,7 @@ export default function Board() {
     });
   };
 
-  const editCardHandler = (updatedCard: Card) => {
+  const editCardHandler = (updatedCard: CardType) => {
     setBoard((prevBoard) => {
       const newBoard = [...prevBoard];
       const columnIndex = updatedCard.columnId - 1;
@@ -106,7 +106,7 @@ export default function Board() {
         }: {
           columnId: number;
           name: string;
-          cards: Card[];
+          cards: CardType[];
         }) => (
           <Column
             {...{

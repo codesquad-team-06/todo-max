@@ -1,10 +1,10 @@
 import React, { useState, useRef, MouseEvent } from "react";
 import { styled } from "styled-components";
-import ColumnCardDisplay from "./ColumnCardDisplay.tsx";
-import ColumnCardMode from "./ColumnCardMode.tsx";
-import { Card } from "../../types.ts";
+import CardDisplay from "./CardDisplay.tsx";
+import CardMode from "./CardMode.tsx";
+import { CardType } from "../../types.ts";
 
-export default function ColumnCard({
+export default function Card({
   cardDetails,
   currMouseCoords,
   isDraggingCardId,
@@ -19,7 +19,7 @@ export default function ColumnCard({
   };
   currMouseCoords: [number, number];
   isDraggingCardId: number | null;
-  editCardHandler: (card: Card) => void;
+  editCardHandler: (card: CardType) => void;
   deleteCardHandler: (deletedCardInfo: {
     id: number;
     columnId: number;
@@ -27,7 +27,7 @@ export default function ColumnCard({
   isDraggingCardIdHandler: (cardId: number | null) => void;
 }) {
   const [isEditMode, setIsEditMode] = useState<boolean>(false);
-  const columnCardRef = useRef<HTMLLIElement | null>(null);
+  const cardRef = useRef<HTMLLIElement | null>(null);
 
   const toggleEditMode = () => {
     setIsEditMode(!isEditMode);
@@ -46,15 +46,15 @@ export default function ColumnCard({
   };
 
   return (
-    <StyledColumnCard
-      ref={columnCardRef}
-      $currentCardRef={columnCardRef}
+    <StyledCard
+      ref={cardRef}
+      $currentCardRef={cardRef}
       $isGrabbed={isDraggingCardId === cardDetails.id}
       $currMouseCoords={currMouseCoords}
       onMouseDown={mouseDownHandler}
       onMouseUp={mouseUpHandler}>
       {isEditMode ? (
-        <ColumnCardMode
+        <CardMode
           {...{
             mode: "edit",
             cardDetails,
@@ -63,7 +63,7 @@ export default function ColumnCard({
           }}
         />
       ) : (
-        <ColumnCardDisplay
+        <CardDisplay
           {...{
             cardDetails,
             toggleEditMode,
@@ -71,30 +71,30 @@ export default function ColumnCard({
           }}
         />
       )}
-    </StyledColumnCard>
+    </StyledCard>
   );
 }
 
-type StyledColumnCardProps = {
+type StyledCardProps = {
   $currentCardRef: React.RefObject<HTMLLIElement | null>;
   $isGrabbed: boolean;
   $currMouseCoords: [number, number];
 };
 
-const StyledColumnCard = styled.li.attrs<StyledColumnCardProps>(
+const StyledCard = styled.li.attrs<StyledCardProps>(
   (props): React.HTMLAttributes<HTMLLIElement> => {
     const { $currentCardRef, $isGrabbed, $currMouseCoords } = props;
 
-    const columnCardHeight =
+    const cardHeight =
       $currentCardRef.current?.getBoundingClientRect().height ?? 0;
-    const columnCardWidth =
+    const cardWidth =
       $currentCardRef.current?.getBoundingClientRect().width ?? 0;
 
     return {
       style: {
         position: $isGrabbed ? "absolute" : "static",
-        top: `${$currMouseCoords[1] - columnCardHeight / 2}px`,
-        left: `${$currMouseCoords[0] - columnCardWidth / 2}px`,
+        top: `${$currMouseCoords[1] - cardHeight / 2}px`,
+        left: `${$currMouseCoords[0] - cardWidth / 2}px`,
         cursor: $isGrabbed ? "grabbing" : "grab",
       },
     };

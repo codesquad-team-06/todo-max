@@ -6,7 +6,7 @@ import deleteButtonIcon from "../../assets/closed.svg";
 import editButtonIcon from "../../assets/edit.svg";
 import { ModalContext } from "../../context/ModalContext.tsx";
 
-export default function ColumnCardDisplay({
+export default function CardDisplay({
   cardDetails,
   toggleEditMode,
   deleteCardHandler,
@@ -55,7 +55,7 @@ export default function ColumnCardDisplay({
   };
 
   return (
-    <StyledColumnCardDisplay>
+    <StyledCardDisplay>
       <div className="card-info-container">
         <h3 className="card-title">{cardDetails.title}</h3>
         <p className="card-content">{cardDetails.content}</p>
@@ -76,11 +76,11 @@ export default function ColumnCardDisplay({
           onClick={toggleEditMode}
         />
       </div>
-    </StyledColumnCardDisplay>
+    </StyledCardDisplay>
   );
 }
 
-const StyledColumnCardDisplay = styled.div`
+const StyledCardDisplay = styled.div`
   width: 100%;
   height: 100%;
   display: flex;
