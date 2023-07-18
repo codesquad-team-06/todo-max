@@ -85,7 +85,6 @@ export default function Board() {
   const mouseMoveHandler = (evt: MouseEvent) => {
     if (isDraggingCardId) {
       setCurrMouseCoords([evt.clientX, evt.clientY]);
-      console.log("mouseCoords", [evt.clientX, evt.clientY]);
 
       // 잔상 위치 실시간으로 결정.
 

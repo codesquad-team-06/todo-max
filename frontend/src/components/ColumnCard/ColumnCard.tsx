@@ -75,29 +75,37 @@ export default function ColumnCard({
   );
 }
 
-const StyledColumnCard = styled.li<{
+type StyledColumnCardProps = {
   $currentCardRef: React.RefObject<HTMLLIElement | null>;
   $isGrabbed: boolean;
   $currMouseCoords: [number, number];
-}>`
+};
+
+const StyledColumnCard = styled.li.attrs<StyledColumnCardProps>(
+  (props): React.HTMLAttributes<HTMLLIElement> => {
+    const { $currentCardRef, $isGrabbed, $currMouseCoords } = props;
+
+    const columnCardHeight =
+      $currentCardRef.current?.getBoundingClientRect().height ?? 0;
+    const columnCardWidth =
+      $currentCardRef.current?.getBoundingClientRect().width ?? 0;
+
+    return {
+      style: {
+        position: $isGrabbed ? "absolute" : "static",
+        top: `${$currMouseCoords[1] - columnCardHeight / 2}px`,
+        left: `${$currMouseCoords[0] - columnCardWidth / 2}px`,
+        cursor: $isGrabbed ? "grabbing" : "grab",
+      },
+    };
+  }
+)`
   width: inherit;
   min-height: 104px;
   padding: 16px;
-  position: ${({ $isGrabbed }) => ($isGrabbed ? "absolute" : "static")};
-  top: ${({ $currMouseCoords, $currentCardRef }) => {
-    const columnCardHeight =
-      $currentCardRef.current?.getBoundingClientRect().height ?? 0;
-    return `${$currMouseCoords[1] - columnCardHeight / 2}px;`;
-  }};
-  left: ${({ $currMouseCoords, $currentCardRef }) => {
-    const columnCardWidth =
-      $currentCardRef.current?.getBoundingClientRect().width ?? 0;
-    return `${$currMouseCoords[0] - columnCardWidth / 2}px;`;
-  }};
   background-color: ${({ theme: { colors } }) => colors.grey50};
   border-radius: ${({ theme: { objectStyles } }) => objectStyles.radius.s};
   box-shadow: ${({ theme: { objectStyles } }) =>
     objectStyles.dropShadow.normal};
-  cursor: ${({ $isGrabbed }) => ($isGrabbed ? "grabbing" : "grab")};
   user-select: none;
 `;
