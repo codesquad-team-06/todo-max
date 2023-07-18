@@ -94,6 +94,27 @@ class ColumnRestControllerTest {
 		}
 
 		@Test
+		@DisplayName("제목이 null로 주어지고 컬럼 추가를 요청할때 에러 코드를 응답합니다")
+		public void saveColumn_givenNameIsNull_whenSave_thenInvalidEmpty() throws Exception {
+			// given
+			ColumnSaveRequest columnSaveRequest = new ColumnSaveRequest(null);
+			ColumnSaveDto columnSaveDto = new ColumnSaveDto(1L, "");
+			String body = objectMapper.writeValueAsString(columnSaveRequest);
+			// mocking
+			when(columnService.saveColumn(Mockito.any(ColumnSaveRequest.class))).thenReturn(columnSaveDto);
+			// when
+			mockMvc.perform(post("/column")
+					.contentType(APPLICATION_JSON)
+					.content(body)
+					.accept(APPLICATION_JSON))
+				.andExpect(status().is4xxClientError())
+				.andExpect(jsonPath("errorCode.status").value(equalTo(400)))
+				.andExpect(jsonPath("errorCode.code").value(equalTo("Bad Request")))
+				.andExpect(jsonPath("errorCode.message").value(equalTo("컬럼의 제목은 공백이면 안됩니다.")))
+				.andExpect(jsonPath("success").value(equalTo(false)));
+		}
+
+		@Test
 		@DisplayName("100글자가 넘는 제목이 주어지고 컬럼 저장을 요청할때 에러 코드를 응답합니다")
 		public void saveColumn_whenSave_thenInvalidLength() throws Exception {
 			// given
