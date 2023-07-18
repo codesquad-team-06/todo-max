@@ -1,5 +1,5 @@
 /* eslint-disable no-alert */
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, MouseEvent } from "react";
 import { styled } from "styled-components";
 import Column from "./Column.tsx";
 import { Card } from "../types.ts";
@@ -12,6 +12,10 @@ type ColumnData = {
 
 export default function Board() {
   const [board, setBoard] = useState<ColumnData[]>([]);
+  const [isDraggingCardId, setIsDraggingCardId] = useState<number | null>(null);
+  const [currMouseCoords, setCurrMouseCoords] = useState<[number, number]>([
+    200, 200,
+  ]);
 
   useEffect(() => {
     const fetchBoard = async () => {
@@ -78,8 +82,23 @@ export default function Board() {
     });
   };
 
+  const mouseMoveHandler = (evt: MouseEvent) => {
+    if (isDraggingCardId) {
+      setCurrMouseCoords([evt.clientX, evt.clientY]);
+      console.log("mouseCoords", [evt.clientX, evt.clientY]);
+
+      // 잔상 위치 실시간으로 결정.
+
+      // 마우스 위치 및 위치에 있는 카드에 따라 잔상 위치 옮기기?
+    }
+  };
+
+  const isDraggingCardIdHandler = (cardId: number | null) => {
+    setIsDraggingCardId(cardId);
+  };
+
   return (
-    <StyledBoard>
+    <StyledBoard onMouseMove={mouseMoveHandler}>
       {board.map(
         ({
           columnId,
@@ -95,9 +114,12 @@ export default function Board() {
               key: columnId,
               name,
               cards,
+              isDraggingCardId,
+              currMouseCoords,
               addNewCardHandler,
               editCardHandler,
               deleteCardHandler,
+              isDraggingCardIdHandler,
             }}
           />
         )

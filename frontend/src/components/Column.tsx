@@ -10,18 +10,24 @@ import { Card } from "../types.ts";
 export default function Column({
   name,
   cards,
+  currMouseCoords,
+  isDraggingCardId,
   addNewCardHandler,
   editCardHandler,
   deleteCardHandler,
+  isDraggingCardIdHandler,
 }: {
   name: string;
   cards: Card[];
+  currMouseCoords: [number, number];
+  isDraggingCardId: number | null;
   addNewCardHandler: (card: Card) => void;
   editCardHandler: (card: Card) => void;
   deleteCardHandler: (deletedCardInfo: {
     id: number;
     columnId: number;
   }) => void;
+  isDraggingCardIdHandler: (cardId: number | null) => void;
 }) {
   const [isNewCardActive, setIsNewCardActive] = useState(false);
 
@@ -61,8 +67,11 @@ export default function Column({
             {...{
               key: cardDetails.id,
               cardDetails,
+              currMouseCoords,
+              isDraggingCardId,
               editCardHandler,
               deleteCardHandler,
+              isDraggingCardIdHandler,
             }}
           />
         ))}
