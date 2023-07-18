@@ -1,6 +1,6 @@
 package codesquad.todo.history.entity;
 
-public enum Action {
+public enum Actions {
 	REGISTERED("등록"),
 	DELETED("삭제"),
 	MOVED("이동"),
@@ -8,7 +8,7 @@ public enum Action {
 
 	private final String name;
 
-	Action(String name) {
+	Actions(String name) {
 		this.name = name;
 	}
 
