@@ -45,6 +45,8 @@ export default function Card({
 
     // Drag 시작 (그랩된 카드는 마우스 따라서 드래그 중)
     dragCardIdHandler(cardDetails.id);
+
+    // 잔상 생성
   };
 
   const mouseUpHandler = (evt: MouseEvent) => {
