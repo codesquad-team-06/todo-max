@@ -20,6 +20,8 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import codesquad.todo.errors.errorcode.HistoryErrorCode;
+import codesquad.todo.errors.exception.RestApiException;
 import codesquad.todo.history.controller.dto.HistoryDeleteRequest;
 import codesquad.todo.history.controller.dto.HistoryFindAllResponse;
 import codesquad.todo.history.service.HistoryService;
@@ -74,5 +76,23 @@ class HistoryRestControllerTest {
 			.andExpect(jsonPath("$.success", is(true)));
 	}
 
-	// todo: 추후 예외 발생 테스트 코드 작성
+	@Test
+	@DisplayName("유효하지 않은 id를 전달 받으면 예외를 발생시키고 실패 메세지를 Json 타입으로 반환한다.")
+	public void deleteHistoriesAndThrowException() throws Exception {
+		//given
+		List<Long> ids = new ArrayList<>(Arrays.asList(100L, 5L, 6L));
+		HistoryDeleteRequest request = new HistoryDeleteRequest(ids);
+		given(historyService.deleteByIds(ArgumentMatchers.any(HistoryDeleteRequest.class))).willThrow(
+			new RestApiException(HistoryErrorCode.NOT_FOUND_HISTORY));
+
+		//when & then
+		mockMvc.perform(delete("/histories")
+				.content(objectMapper.writeValueAsString(request))
+				.contentType(MediaType.APPLICATION_JSON))
+			.andExpect(status().isNotFound())
+			.andExpect(jsonPath("$.success", is(false)))
+			.andExpect(jsonPath("$.errorCode.status", is(404)))
+			.andExpect(jsonPath("$.errorCode.code", is("Not Found")))
+			.andExpect(jsonPath("$.errorCode.message", is("존재하지 않는 활동 기록입니다.")));
+	}
 }

@@ -24,12 +24,13 @@ public class HistoryRestController {
 	}
 
 	@GetMapping
-	public List<HistoryFindAllResponse> getHistories() {
+	public List<HistoryFindAllResponse> getList() {
 		return historyService.getAll();
 	}
 
 	@DeleteMapping
-	public ResponseEntity<?> deleteAndFetch(@RequestBody HistoryDeleteRequest historyDeleteRequest) {
-		return ResponseEntity.ok(Collections.singletonMap("success", historyService.deleteByIds(historyDeleteRequest)));
+	public ResponseEntity<?> deleteList(@RequestBody HistoryDeleteRequest request) {
+		historyService.deleteByIds(request);
+		return ResponseEntity.ok(Collections.singletonMap("success", true));
 	}
 }
