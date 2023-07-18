@@ -3,8 +3,7 @@ package codesquad.todo.errors.errorcode;
 import org.springframework.http.HttpStatus;
 
 public enum CommonErrorCode implements ErrorCode {
-	INVALID_INPUT_FORMAT(HttpStatus.BAD_REQUEST, "유효하지 않은 형식입니다."),
-	PAGE_NOT_FOUND(HttpStatus.NOT_FOUND, "페이지를 찾을 수 없습니다.");
+	INVALID_INPUT_FORMAT(HttpStatus.BAD_REQUEST, "유효하지 않은 형식입니다.");
 
 	private final HttpStatus httpStatus;
 	private final String message;
