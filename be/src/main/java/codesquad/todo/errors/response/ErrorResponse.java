@@ -1,8 +1,5 @@
 package codesquad.todo.errors.response;
 
-import java.util.List;
-
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import codesquad.todo.errors.errorcode.ErrorCode;
@@ -12,14 +9,16 @@ public class ErrorResponse {
 	@JsonProperty("errorCode")
 	private final ErrorDto errorDto;
 
-	@JsonInclude(value = JsonInclude.Include.NON_NULL)
-	private final List<ValidationError> errors;
-
-	public ErrorResponse(ErrorCode errorDto, List<ValidationError> errors) {
+	public ErrorResponse(ErrorCode errorCode) {
 		this.success = false;
-		this.errorDto = new ErrorDto(errorDto.getHttpStatus().value(), errorDto.getHttpStatus().getReasonPhrase(),
-			errorDto.getMessage());
-		this.errors = errors;
+		this.errorDto = new ErrorDto(errorCode.getHttpStatus().value(), errorCode.getHttpStatus().getReasonPhrase(),
+			errorCode.getMessage());
+	}
+
+	public ErrorResponse(ErrorCode errorCode, String message) {
+		this.success = false;
+		this.errorDto = new ErrorDto(errorCode.getHttpStatus().value(), errorCode.getHttpStatus().getReasonPhrase(),
+			message);
 	}
 
 	public boolean isSuccess() {
@@ -28,9 +27,5 @@ public class ErrorResponse {
 
 	public ErrorDto getErrorDto() {
 		return errorDto;
-	}
-
-	public List<ValidationError> getErrors() {
-		return errors;
 	}
 }
