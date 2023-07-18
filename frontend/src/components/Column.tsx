@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import { styled } from "styled-components";
-import ColumnCard from "./ColumnCard/ColumnCard.tsx";
-import NewColumnCard from "./ColumnCard/NewColumnCard.tsx";
+import Card from "./Card/Card.tsx";
+import NewCard from "./Card/NewCard.tsx";
 import IconButton from "./common/IconButton.tsx";
 import addButtonIcon from "../assets/plus.svg";
 import deleteButtonIcon from "../assets/closed.svg";
-import { Card } from "../types.ts";
+import { CardType } from "../types.ts";
 
 export default function Column({
   name,
@@ -18,11 +18,11 @@ export default function Column({
   isDraggingCardIdHandler,
 }: {
   name: string;
-  cards: Card[];
+  cards: CardType[];
   currMouseCoords: [number, number];
   isDraggingCardId: number | null;
-  addNewCardHandler: (card: Card) => void;
-  editCardHandler: (card: Card) => void;
+  addNewCardHandler: (card: CardType) => void;
+  editCardHandler: (card: CardType) => void;
   deleteCardHandler: (deletedCardInfo: {
     id: number;
     columnId: number;
@@ -59,11 +59,11 @@ export default function Column({
 
       <ul className="cards-list">
         {isNewCardActive && (
-          <NewColumnCard {...{ toggleNewCard, addNewCardHandler }} />
+          <NewCard {...{ toggleNewCard, addNewCardHandler }} />
         )}
 
         {cards.map((cardDetails) => (
-          <ColumnCard
+          <Card
             {...{
               key: cardDetails.id,
               cardDetails,

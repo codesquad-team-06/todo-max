@@ -1,23 +1,23 @@
 import React from "react";
 import { styled } from "styled-components";
-import ColumnCardMode from "./ColumnCardMode.tsx";
-import { Card } from "../../types.ts";
+import CardMode from "./CardMode.tsx";
+import { CardType } from "../../types.ts";
 
-export default function NewColumnCard({
+export default function NewCard({
   toggleNewCard,
   addNewCardHandler,
 }: {
   toggleNewCard: () => void;
-  addNewCardHandler: (card: Card) => void;
+  addNewCardHandler: (card: CardType) => void;
 }) {
   return (
-    <StyledNewColumnCard>
-      <ColumnCardMode {...{ mode: "add", toggleNewCard, addNewCardHandler }} />
-    </StyledNewColumnCard>
+    <StyledNewCard>
+      <CardMode {...{ mode: "add", toggleNewCard, addNewCardHandler }} />
+    </StyledNewCard>
   );
 }
 
-const StyledNewColumnCard = styled.li`
+const StyledNewCard = styled.li`
   width: 100%;
   min-height: 104px;
   padding: 16px;

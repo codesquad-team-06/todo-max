@@ -2,14 +2,14 @@
 import React, { useState, ChangeEvent, FormEvent } from "react";
 import { styled } from "styled-components";
 import ActionButton from "../common/ActionButton.tsx";
-import { Card } from "../../types.ts";
+import { CardType } from "../../types.ts";
 
 const ModeKR = {
   add: "등록",
   edit: "저장",
 };
 
-ColumnCardMode.defaultProps = {
+CardMode.defaultProps = {
   cardDetails: {},
   toggleEditMode: undefined,
   toggleNewCard: undefined,
@@ -17,7 +17,7 @@ ColumnCardMode.defaultProps = {
   editCardHandler: undefined,
 };
 
-export default function ColumnCardMode({
+export default function CardMode({
   mode,
   cardDetails,
   toggleEditMode,
@@ -33,8 +33,8 @@ export default function ColumnCardMode({
   };
   toggleEditMode?: () => void;
   toggleNewCard?: () => void;
-  addNewCardHandler?: (card: Card) => void;
-  editCardHandler?: (card: Card) => void;
+  addNewCardHandler?: (card: CardType) => void;
+  editCardHandler?: (card: CardType) => void;
 }) {
   const [newCardTitle, setNewCardTitle] = useState(
     mode === "add" ? "" : cardDetails?.title
@@ -131,7 +131,7 @@ export default function ColumnCardMode({
   };
 
   return (
-    <StyledColumnCardMode onSubmit={handleSubmit}>
+    <StyledCardMode onSubmit={handleSubmit}>
       <div className="card-info-container">
         <input
           className="card-title"
@@ -169,11 +169,11 @@ export default function ColumnCardMode({
           disabled={!newCardTitle || !newCardContent}
         />
       </div>
-    </StyledColumnCardMode>
+    </StyledCardMode>
   );
 }
 
-const StyledColumnCardMode = styled.form`
+const StyledCardMode = styled.form`
   width: 100%;
   height: 100%;
 
