@@ -26,7 +26,7 @@ public class JdbcColumnRepository implements ColumnRepository {
 
 	@Override
 	public List<Column> findAll() {
-		return template.query("SELECT c.id, c.name FROM columns c", getColumnRowMapper());
+		return template.query("SELECT c.id, c.name FROM columns c WHERE c.is_deleted = false", getColumnRowMapper());
 	}
 
 	@Override
@@ -45,16 +45,15 @@ public class JdbcColumnRepository implements ColumnRepository {
 
 	@Override
 	public Column deleteById(Long id) {
-		String sql = "DELETE FROM columns WHERE id = :id";
+		String sql = "UPDATE columns SET is_deleted = true WHERE id = :id";
 		SqlParameterSource paramSource = new MapSqlParameterSource("id", id);
-		Column delColumn = findById(id).orElseThrow();
 		template.update(sql, paramSource);
-		return delColumn;
+		return findById(id).orElseThrow();
 	}
 
 	@Override
 	public Optional<Column> findById(Long id) {
-		String sql = "SELECT id, name FROM columns WHERE id = :id";
+		String sql = "SELECT id, name FROM columns WHERE id = :id AND is_deleted = false";
 		return template.query(sql, new MapSqlParameterSource("id", id), getColumnRowMapper()).stream().findAny();
 	}
 
