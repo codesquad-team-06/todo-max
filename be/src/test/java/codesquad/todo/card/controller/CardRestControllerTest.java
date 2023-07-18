@@ -50,7 +50,7 @@ class CardRestControllerTest {
 	@DisplayName("새로운 카드를 등록하면 등록한 카드 데이터를 json으로 반환한다.")
 	void saveCardTest() throws Exception {
 		//given
-		CardSaveRequest cardSaveRequest = new CardSaveRequest("new제목", "new내용", 1);
+		CardSaveRequest cardSaveRequest = new CardSaveRequest("new제목", "new내용", 1L);
 		CardSaveResponse cardSaveResponse = new CardSaveResponse(
 			new CardResponseDTO(1L, "new제목", "new내용", 1024, 1L), true);
 		String body = objectMapper.writeValueAsString(cardSaveRequest);
