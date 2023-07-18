@@ -24,7 +24,9 @@ public class JdbcHistoryRepository implements HistoryRepository {
 		.prevColumn(rs.getString("prev_column"))
 		.nextColumn(rs.getString("next_column"))
 		.createAt(rs.getTimestamp("created_at").toLocalDateTime())
-		.actionName(rs.getString("action"))
+		.actionName(rs.getString("action_name"))
+		.isDeleted(rs.getBoolean("is_deleted"))
+		.cardId(rs.getLong("card_id"))
 		.build()
 	);
 
@@ -35,10 +37,10 @@ public class JdbcHistoryRepository implements HistoryRepository {
 	@Override
 	public List<History> findAll() {
 		String sql =
-			"SELECT h.card_title, h.prev_column, h.next_column, h.created_at, h.action_name "
-				+ "FROM history AS h "
-				+ "WHERE h.is_deleted = false "
-				+ "ORDER BY h.id DESC;";
+			"SELECT id, card_title, prev_column, next_column, created_at, action_name, is_deleted, card_id "
+				+ "FROM history "
+				+ "WHERE is_deleted = false "
+				+ "ORDER BY id DESC;";
 		return Collections.unmodifiableList(jdbcTemplate.query(sql, historyRowMapper));
 	}
 
@@ -46,7 +48,7 @@ public class JdbcHistoryRepository implements HistoryRepository {
 	@Override
 	public History save(History history) {
 		String sql =
-			"INSERT INTO history(card_title, prev_column, next_column, created_at, is_deleted, action_name, card_id)"
+			"INSERT INTO history(card_title, prev_column, next_column, created_at, is_deleted, action_name, card_id) "
 				+ "VALUES(:cardTitle, :prevColumn, :nextColumn, now(), :isDeleted, :actionName, :cardId)";
 		GeneratedKeyHolder keyHolder = new GeneratedKeyHolder();
 		jdbcTemplate.update(sql, new MapSqlParameterSource()
@@ -55,7 +57,7 @@ public class JdbcHistoryRepository implements HistoryRepository {
 			.addValue("nextColumn", history.getNextColumn())
 			.addValue("isDeleted", history.isDeleted())
 			.addValue("actionName", history.getActionName())
-			.addValue("cardId", history.getCardId()));
+			.addValue("cardId", history.getCardId()), keyHolder);
 		long historyId = Objects.requireNonNull(keyHolder.getKey()).longValue();
 
 		return findById(historyId).orElseThrow();
