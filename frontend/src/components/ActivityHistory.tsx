@@ -21,7 +21,7 @@ export default function ActivityHistory({
   isHistoryActive: boolean;
   toggleHistory: () => void;
 }) {
-  const { openModal, closeModal } = useContext(ModalContext);
+  const { openModal } = useContext(ModalContext);
   const [history, setHistory] = useState<History[]>([]);
 
   useEffect(() => {
