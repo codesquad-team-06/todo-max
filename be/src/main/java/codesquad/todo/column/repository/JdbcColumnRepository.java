@@ -14,6 +14,8 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import codesquad.todo.column.entity.Column;
+import codesquad.todo.errors.errorcode.ColumnErrorCode;
+import codesquad.todo.errors.exception.RestApiException;
 
 @Repository
 public class JdbcColumnRepository implements ColumnRepository {
@@ -35,7 +37,8 @@ public class JdbcColumnRepository implements ColumnRepository {
 		SqlParameterSource paramSource = new BeanPropertySqlParameterSource(column);
 		KeyHolder keyHolder = new GeneratedKeyHolder();
 		template.update(sql, paramSource, keyHolder);
-		return findById(Objects.requireNonNull(keyHolder.getKey()).longValue()).orElseThrow();
+		return findById(Objects.requireNonNull(keyHolder.getKey()).longValue()).orElseThrow(() ->
+			new RestApiException(ColumnErrorCode.NOT_FOUND_COLUMN));
 	}
 
 	@Override
@@ -43,14 +46,14 @@ public class JdbcColumnRepository implements ColumnRepository {
 		String sql = "UPDATE columns SET name = :name WHERE id = :id";
 		SqlParameterSource paramSource = new BeanPropertySqlParameterSource(column);
 		template.update(sql, paramSource);
-		return findById(column.getId()).orElseThrow();
+		return findById(column.getId()).orElseThrow(() -> new RestApiException(ColumnErrorCode.NOT_FOUND_COLUMN));
 	}
 
 	@Override
 	public Column deleteById(Long id) {
 		String sql = "UPDATE columns SET is_deleted = true WHERE id = :id";
 		SqlParameterSource paramSource = new MapSqlParameterSource("id", id);
-		Column delColumn = findById(id).orElseThrow();
+		Column delColumn = findById(id).orElseThrow(() -> new RestApiException(ColumnErrorCode.NOT_FOUND_COLUMN));
 		template.update(sql, paramSource);
 		return delColumn;
 	}
