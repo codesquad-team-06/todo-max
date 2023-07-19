@@ -2,7 +2,6 @@ package codesquad.todo.column.repository;
 
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
@@ -37,8 +36,7 @@ public class JdbcColumnRepository implements ColumnRepository {
 		SqlParameterSource paramSource = new BeanPropertySqlParameterSource(column);
 		KeyHolder keyHolder = new GeneratedKeyHolder();
 		template.update(sql, paramSource, keyHolder);
-		return findById(Objects.requireNonNull(keyHolder.getKey()).longValue()).orElseThrow(() ->
-			new RestApiException(ColumnErrorCode.NOT_FOUND_COLUMN));
+		return findById(Objects.requireNonNull(keyHolder.getKey()).longValue());
 	}
 
 	@Override
@@ -46,22 +44,25 @@ public class JdbcColumnRepository implements ColumnRepository {
 		String sql = "UPDATE columns SET name = :name WHERE id = :id";
 		SqlParameterSource paramSource = new BeanPropertySqlParameterSource(column);
 		template.update(sql, paramSource);
-		return findById(column.getId()).orElseThrow(() -> new RestApiException(ColumnErrorCode.NOT_FOUND_COLUMN));
+		return findById(column.getId());
 	}
 
 	@Override
 	public Column deleteById(Long id) {
 		String sql = "UPDATE columns SET is_deleted = true WHERE id = :id";
 		SqlParameterSource paramSource = new MapSqlParameterSource("id", id);
-		Column delColumn = findById(id).orElseThrow(() -> new RestApiException(ColumnErrorCode.NOT_FOUND_COLUMN));
+		Column delColumn = findById(id);
 		template.update(sql, paramSource);
 		return delColumn;
 	}
 
 	@Override
-	public Optional<Column> findById(Long id) {
+	public Column findById(Long id) {
 		String sql = "SELECT id, name FROM columns WHERE id = :id AND is_deleted = false";
-		return template.query(sql, new MapSqlParameterSource("id", id), getColumnRowMapper()).stream().findAny();
+		return template.query(sql, new MapSqlParameterSource("id", id), getColumnRowMapper())
+			.stream()
+			.findAny()
+			.orElseThrow(() -> new RestApiException(ColumnErrorCode.NOT_FOUND_COLUMN));
 	}
 
 	@Override

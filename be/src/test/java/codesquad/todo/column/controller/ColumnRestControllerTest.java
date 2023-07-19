@@ -154,7 +154,6 @@ class ColumnRestControllerTest {
 			String columnId = "1";
 			ColumnSaveDto columnSaveDto = new ColumnSaveDto(1L, "해야할 일");
 			// mocking
-			when(columnService.existColumnById(any())).thenReturn(true);
 			when(columnService.deleteColumn(any())).thenReturn(columnSaveDto);
 			// when
 			mockMvc.perform(delete("/column/" + columnId))
@@ -171,7 +170,6 @@ class ColumnRestControllerTest {
 			// given
 			String columnId = "9999";
 			// mocking
-			when(columnService.existColumnById(any())).thenReturn(false);
 			// when
 			mockMvc.perform(delete("/column/" + columnId))
 				.andExpect(status().isNotFound())
@@ -195,7 +193,6 @@ class ColumnRestControllerTest {
 			ColumnSaveDto columnSaveDto = new ColumnSaveDto(columnId, "수정된 제목");
 			String body = objectMapper.writeValueAsString(modifyRequest);
 			// mocking
-			when(columnService.existColumnById(any())).thenReturn(true);
 			when(columnService.modifyColumn(any())).thenReturn(columnSaveDto);
 			// when
 			mockMvc.perform(put("/column/" + columnId)
@@ -218,7 +215,6 @@ class ColumnRestControllerTest {
 			ColumnSaveDto columnSaveDto = new ColumnSaveDto(columnId, "수정된 제목");
 			String body = objectMapper.writeValueAsString(modifyRequest);
 			// mocking
-			when(columnService.existColumnById(any())).thenReturn(true);
 			when(columnService.modifyColumn(any())).thenReturn(columnSaveDto);
 			// when
 			mockMvc.perform(put("/column/" + columnId)
@@ -242,7 +238,6 @@ class ColumnRestControllerTest {
 			ColumnSaveDto columnSaveDto = new ColumnSaveDto(columnId, "수정된 제목");
 			String body = objectMapper.writeValueAsString(modifyRequest);
 			// mocking
-			when(columnService.existColumnById(any())).thenReturn(true);
 			when(columnService.modifyColumn(any())).thenReturn(columnSaveDto);
 			// when
 			mockMvc.perform(put("/column/" + columnId)
@@ -269,7 +264,6 @@ class ColumnRestControllerTest {
 			ColumnSaveDto columnSaveDto = new ColumnSaveDto(columnId, "수정된 제목");
 			String body = objectMapper.writeValueAsString(modifyRequest);
 			// mocking
-			when(columnService.existColumnById(any())).thenReturn(true);
 			when(columnService.modifyColumn(any())).thenReturn(columnSaveDto);
 			// when
 			mockMvc.perform(put("/column/" + columnId)
@@ -293,7 +287,6 @@ class ColumnRestControllerTest {
 			ColumnSaveDto columnSaveDto = new ColumnSaveDto(columnId, "수정된 제목");
 			String body = objectMapper.writeValueAsString(modifyRequest);
 			// mocking
-			when(columnService.existColumnById(any())).thenReturn(false);
 			when(columnService.modifyColumn(any())).thenReturn(columnSaveDto);
 			// when
 			mockMvc.perform(put("/column/" + columnId)
