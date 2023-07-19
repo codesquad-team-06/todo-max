@@ -2,14 +2,14 @@ package codesquad.todo.card.controller.dto;
 
 import codesquad.todo.card.entity.Card;
 
-public class CardSaveDTO {
+public class CardResponseDTO {
 	private Long id;
 	private String title;
 	private String content;
 	private int position;
 	private Long columnId;
 
-	public CardSaveDTO(Long id, String title, String content, int position, Long columnId) {
+	public CardResponseDTO(Long id, String title, String content, int position, Long columnId) {
 		this.id = id;
 		this.title = title;
 		this.content = content;
@@ -37,8 +37,8 @@ public class CardSaveDTO {
 		return columnId;
 	}
 
-	public static CardSaveDTO from(Card card) {
-		return new CardSaveDTO(card.getId(), card.getTitle(), card.getContent(), card.getPosition(),
+	public static CardResponseDTO from(Card card) {
+		return new CardResponseDTO(card.getId(), card.getTitle(), card.getContent(), card.getPosition(),
 			card.getColumnId());
 	}
 }

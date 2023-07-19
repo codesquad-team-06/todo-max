@@ -11,6 +11,8 @@ import org.springframework.transaction.annotation.Transactional;
 import codesquad.todo.card.controller.dto.CardDeleteResponse;
 import codesquad.todo.card.controller.dto.CardModifyRequest;
 import codesquad.todo.card.controller.dto.CardModifyResponse;
+import codesquad.todo.card.controller.dto.CardMoveRequest;
+import codesquad.todo.card.controller.dto.CardMoveResponse;
 import codesquad.todo.card.controller.dto.CardSaveRequest;
 import codesquad.todo.card.controller.dto.CardSaveResponse;
 import codesquad.todo.card.controller.CardListResponse;
@@ -62,5 +64,18 @@ public class CardService {
 
 	public CardDeleteResponse deleteCard(Long cardId) {
 		return CardDeleteResponse.from(cardRepository.deleteById(cardId));
+	}
+
+	public CardMoveResponse moveCard(CardMoveRequest cardMoveRequest) {
+		int calculatePosition = cardRepository.calculateNextPosition(cardMoveRequest.getPrevCardId(),
+			cardMoveRequest.getNextCardId());
+
+		if (calculatePosition == 0) {
+			// 컬럼 아이디에 해당하는 카드들의 position 재할당
+			cardRepository.reallocationPosition(cardMoveRequest.getNextColumnId());
+			return moveCard(cardMoveRequest);
+		}
+
+		return CardMoveResponse.from(cardRepository.move(cardMoveRequest.getId(), calculatePosition, cardMoveRequest.getNextColumnId()));
 	}
 }
