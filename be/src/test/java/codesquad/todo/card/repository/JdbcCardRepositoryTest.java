@@ -3,7 +3,9 @@ package codesquad.todo.card.repository;
 import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.DisplayName;
@@ -94,7 +96,7 @@ class JdbcCardRepositoryTest {
 		Long cardId = 2L;
 
 		//when
-		Card card = cardRepository.findById(cardId).get();
+		Card card = cardRepository.findById(cardId);
 
 		//then
 		assertAll(
@@ -144,7 +146,7 @@ class JdbcCardRepositoryTest {
 		Long columnId = 2L;
 		//when
 		cardRepository.move(cardId, position, columnId);
-		Card card = cardRepository.findById(3L).get();
+		Card card = cardRepository.findById(3L);
 		//then
 		assertAll(
 			() -> assertThat(card.getId()).isEqualTo(3L),
@@ -199,7 +201,9 @@ class JdbcCardRepositoryTest {
 		cardRepository.move(3L, 3, 1L);
 		//when
 		cardRepository.reallocationPosition(1L);
-		List<Card> cardList = cardRepository.findAllByColumnId(columnId);
+		List<Card> cardList = cardRepository.findAllByColumnId(columnId).stream()
+			.sorted(Comparator.comparingLong(Card::getId))
+			.collect(Collectors.toList());
 		int card1Position = cardList.get(0).getPosition();
 		int card2Position = cardList.get(1).getPosition();
 		int card3Position = cardList.get(2).getPosition();

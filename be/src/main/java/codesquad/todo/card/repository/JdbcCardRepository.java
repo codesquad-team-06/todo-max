@@ -13,6 +13,8 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.stereotype.Repository;
 
 import codesquad.todo.card.entity.Card;
+import codesquad.todo.errors.errorcode.CardErrorCode;
+import codesquad.todo.errors.exception.RestApiException;
 
 @Repository
 public class JdbcCardRepository implements CardRepository {
@@ -20,6 +22,14 @@ public class JdbcCardRepository implements CardRepository {
 	private static final int POSITION_OFFSET = 1024;
 
 	private final NamedParameterJdbcTemplate template;
+	private final RowMapper<Card> cardRowMapper = ((rs, rowNum) -> Card.builder()
+		.id(rs.getLong("id"))
+		.title(rs.getString("title"))
+		.content(rs.getString("content"))
+		.position(rs.getInt("position"))
+		.isDeleted(rs.getBoolean("is_deleted"))
+		.columnId(rs.getLong("column_id"))
+		.build());
 
 	public JdbcCardRepository(NamedParameterJdbcTemplate template) {
 		this.template = template;
@@ -46,7 +56,7 @@ public class JdbcCardRepository implements CardRepository {
 			.addValue("columnId", card.getColumnId()), keyHolder);
 		long cardId = Objects.requireNonNull(keyHolder.getKey()).longValue();
 
-		return findById(cardId).orElseThrow();
+		return findById(cardId);
 	}
 
 	@Override
@@ -57,7 +67,7 @@ public class JdbcCardRepository implements CardRepository {
 			.addValue("content", card.getContent())
 			.addValue("id", card.getId()));
 
-		return findById(card.getId()).orElseThrow();
+		return findById(card.getId());
 	}
 
 	@Override
@@ -66,23 +76,16 @@ public class JdbcCardRepository implements CardRepository {
 		template.update(sql, new MapSqlParameterSource()
 			.addValue("id", cardId));
 
-		return findById(cardId).orElseThrow();
+		return findById(cardId);
 	}
 
 	@Override
-	public Optional<Card> findById(Long id) {
+	public Card findById(Long id) {
 		String sql = "SELECT id,title,content,position,is_deleted,column_id FROM card WHERE id = :id";
-		return Optional.ofNullable(template.queryForObject(sql, Map.of("id", id), cardRowMapper));
+		return template.query(sql, Map.of("id", id), cardRowMapper).stream()
+			.findAny()
+			.orElseThrow(() -> new RestApiException(CardErrorCode.NOT_FOUND_CARD));
 	}
-
-	private final RowMapper<Card> cardRowMapper = ((rs, rowNum) -> Card.builder()
-		.id(rs.getLong("id"))
-		.title(rs.getString("title"))
-		.content(rs.getString("content"))
-		.position(rs.getInt("position"))
-		.isDeleted(rs.getBoolean("is_deleted"))
-		.columnId(rs.getLong("column_id"))
-		.build());
 
 	@Override
 	public List<Card> findAllByColumnId(Long columnId) {
@@ -105,7 +108,7 @@ public class JdbcCardRepository implements CardRepository {
 			.addValue("position", position)
 			.addValue("nextColumnId", nextColumnId));
 
-		return findById(id).orElseThrow();
+		return findById(id);
 	}
 
 	@Override
@@ -135,8 +138,9 @@ public class JdbcCardRepository implements CardRepository {
 			+ "WHERE c1.id IN (:prevCardId, :nextCardId);";
 
 		return Optional.ofNullable(template.queryForObject(sql, new MapSqlParameterSource()
-			.addValue("prevCardId", prevCardId)
-			.addValue("nextCardId", nextCardId), Integer.class)).orElseThrow();
+				.addValue("prevCardId", prevCardId)
+				.addValue("nextCardId", nextCardId), Integer.class))
+			.orElseThrow(() -> new RestApiException(CardErrorCode.NOT_FOUND_CARD));
 	}
 
 	@Override

@@ -2,6 +2,8 @@ package codesquad.todo.card.controller;
 
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -30,12 +32,12 @@ public class CardRestController {
 	}
 
 	@PostMapping
-	public CardSaveResponse saveCard(@RequestBody CardSaveRequest cardSaveRequest) {
+	public CardSaveResponse saveCard(@Valid @RequestBody CardSaveRequest cardSaveRequest) {
 		return cardService.saveCard(cardSaveRequest);
 	}
 
 	@PutMapping
-	public CardModifyResponse modifyCard(@RequestBody CardModifyRequest cardModifyRequest) {
+	public CardModifyResponse modifyCard(@Valid @RequestBody CardModifyRequest cardModifyRequest) {
 		return cardService.modifyCard(cardModifyRequest);
 	}
 
