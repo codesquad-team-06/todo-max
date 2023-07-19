@@ -94,7 +94,7 @@ class JdbcCardRepositoryTest {
 		Long cardId = 2L;
 
 		//when
-		Card card = cardRepository.findById(cardId).get();
+		Card card = cardRepository.findById(cardId);
 
 		//then
 		assertAll(
@@ -144,7 +144,7 @@ class JdbcCardRepositoryTest {
 		Long columnId = 2L;
 		//when
 		cardRepository.move(cardId, position, columnId);
-		Card card = cardRepository.findById(3L).get();
+		Card card = cardRepository.findById(3L);
 		//then
 		assertAll(
 			() -> assertThat(card.getId()).isEqualTo(3L),
