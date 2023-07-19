@@ -2,6 +2,7 @@
 import React, { useState, useEffect, MouseEvent } from "react";
 import { styled } from "styled-components";
 import Column from "./Column.tsx";
+import { API_URL } from "../index.tsx";
 import { CardType } from "../types.ts";
 
 type ColumnData = {
@@ -20,7 +21,7 @@ export default function Board() {
   useEffect(() => {
     const fetchBoard = async () => {
       try {
-        const response = await fetch("/cards");
+        const response = await fetch(`${API_URL}/cards`);
         const boardData = await response.json();
 
         if (response.status === 200) {
