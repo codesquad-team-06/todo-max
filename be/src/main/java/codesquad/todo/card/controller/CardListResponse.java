@@ -2,13 +2,10 @@ package codesquad.todo.card.controller;
 
 import java.util.List;
 
-
 public class CardListResponse {
-	private Long columnId; // 컬럼의 아이디 번호
-
-	private String name; // 컬럼의 제목
-
 	List<CardSearchResponse> cards;
+	private Long columnId; // 컬럼의 아이디 번호
+	private String name; // 컬럼의 제목
 
 	public CardListResponse(Long columnId, String name, List<CardSearchResponse> cards) {
 		this.columnId = columnId;

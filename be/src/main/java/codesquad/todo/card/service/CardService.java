@@ -8,6 +8,8 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import codesquad.todo.card.controller.CardListResponse;
+import codesquad.todo.card.controller.CardSearchResponse;
 import codesquad.todo.card.controller.dto.CardDeleteResponse;
 import codesquad.todo.card.controller.dto.CardModifyRequest;
 import codesquad.todo.card.controller.dto.CardModifyResponse;
@@ -15,8 +17,6 @@ import codesquad.todo.card.controller.dto.CardMoveRequest;
 import codesquad.todo.card.controller.dto.CardMoveResponse;
 import codesquad.todo.card.controller.dto.CardSaveRequest;
 import codesquad.todo.card.controller.dto.CardSaveResponse;
-import codesquad.todo.card.controller.CardListResponse;
-import codesquad.todo.card.controller.CardSearchResponse;
 import codesquad.todo.card.entity.Card;
 import codesquad.todo.card.repository.CardRepository;
 import codesquad.todo.column.entity.Column;
@@ -76,6 +76,7 @@ public class CardService {
 			return moveCard(cardMoveRequest);
 		}
 
-		return CardMoveResponse.from(cardRepository.move(cardMoveRequest.getId(), calculatePosition, cardMoveRequest.getNextColumnId()));
+		return CardMoveResponse.from(
+			cardRepository.move(cardMoveRequest.getId(), calculatePosition, cardMoveRequest.getNextColumnId()));
 	}
 }

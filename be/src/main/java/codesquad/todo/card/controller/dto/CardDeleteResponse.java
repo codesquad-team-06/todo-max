@@ -11,15 +11,15 @@ public class CardDeleteResponse {
 		this.success = success;
 	}
 
+	public static CardDeleteResponse from(Card card) {
+		return new CardDeleteResponse(card.getId(), true);
+	}
+
 	public Long getCardId() {
 		return cardId;
 	}
 
 	public boolean isSuccess() {
 		return success;
-	}
-
-	public static CardDeleteResponse from(Card card) {
-		return new CardDeleteResponse(card.getId(), true);
 	}
 }

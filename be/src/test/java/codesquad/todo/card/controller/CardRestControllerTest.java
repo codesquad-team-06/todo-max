@@ -1,7 +1,6 @@
 package codesquad.todo.card.controller;
 
 import static org.hamcrest.Matchers.*;
-import static org.mockito.BDDMockito.any;
 import static org.mockito.BDDMockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.*;
@@ -29,7 +28,7 @@ import codesquad.todo.card.controller.dto.CardModifyRequest;
 import codesquad.todo.card.controller.dto.CardModifyResponse;
 import codesquad.todo.card.controller.dto.CardMoveRequest;
 import codesquad.todo.card.controller.dto.CardMoveResponse;
-import codesquad.todo.card.controller.dto.CardResponseDTO;
+import codesquad.todo.card.controller.dto.CardResponseDto;
 import codesquad.todo.card.controller.dto.CardSaveRequest;
 import codesquad.todo.card.controller.dto.CardSaveResponse;
 import codesquad.todo.card.entity.Card;
@@ -52,7 +51,7 @@ class CardRestControllerTest {
 		//given
 		CardSaveRequest cardSaveRequest = new CardSaveRequest("new제목", "new내용", 1L);
 		CardSaveResponse cardSaveResponse = new CardSaveResponse(
-			new CardResponseDTO(1L, "new제목", "new내용", 1024, 1L), true);
+			new CardResponseDto(1L, "new제목", "new내용", 1024, 1L), true);
 		String body = objectMapper.writeValueAsString(cardSaveRequest);
 		//when
 		given(cardService.saveCard(any())).willReturn(cardSaveResponse);
@@ -77,7 +76,8 @@ class CardRestControllerTest {
 	void modifyCard() throws Exception {
 		//given
 		CardModifyRequest cardModifyRequest = new CardModifyRequest(1L, "제목수정", "내용수정");
-		CardModifyResponse cardModifyResponse = new CardModifyResponse(new CardResponseDTO(1L, "제목수정", "내용수정", 1024, 1L), true);
+		CardModifyResponse cardModifyResponse = new CardModifyResponse(
+			new CardResponseDto(1L, "제목수정", "내용수정", 1024, 1L), true);
 
 		// when
 		given(cardService.modifyCard(any())).willReturn(cardModifyResponse);
@@ -148,12 +148,12 @@ class CardRestControllerTest {
 	public void testMoveCard() throws Exception {
 		// given
 		CardMoveRequest cardMoveRequest = new CardMoveRequest(7L, 5L, 4L, 2L);
-		CardMoveResponse cardMoveResponse = new CardMoveResponse(new CardResponseDTO(7L, "제목7", "내용7", 1536, 2L), true);
+		CardMoveResponse cardMoveResponse = new CardMoveResponse(new CardResponseDto(7L, "제목7", "내용7", 1536, 2L), true);
 		given(cardService.moveCard(any())).willReturn(cardMoveResponse);
 		// when then
 		mockMvc.perform(put("/cards/move/7")
-			.content(objectMapper.writeValueAsString(cardMoveRequest))
-			.contentType(MediaType.APPLICATION_JSON_VALUE))
+				.content(objectMapper.writeValueAsString(cardMoveRequest))
+				.contentType(MediaType.APPLICATION_JSON_VALUE))
 			.andExpect(status().isOk())
 			.andExpect(jsonPath("$[0].id").value(7))
 			.andExpect(jsonPath("$[0].title").value("제목7"))
