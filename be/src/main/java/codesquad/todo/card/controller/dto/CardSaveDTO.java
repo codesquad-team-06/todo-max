@@ -17,6 +17,11 @@ public class CardSaveDTO {
 		this.columnId = columnId;
 	}
 
+	public static CardSaveDTO from(Card card) {
+		return new CardSaveDTO(card.getId(), card.getTitle(), card.getContent(), card.getPosition(),
+			card.getColumnId());
+	}
+
 	public Long getId() {
 		return id;
 	}
@@ -35,10 +40,5 @@ public class CardSaveDTO {
 
 	public Long getColumnId() {
 		return columnId;
-	}
-
-	public static CardSaveDTO from(Card card) {
-		return new CardSaveDTO(card.getId(), card.getTitle(), card.getContent(), card.getPosition(),
-			card.getColumnId());
 	}
 }

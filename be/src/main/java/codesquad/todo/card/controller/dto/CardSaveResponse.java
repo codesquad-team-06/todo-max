@@ -11,16 +11,16 @@ public class CardSaveResponse {
 		this.success = success;
 	}
 
+	public static CardSaveResponse from(Card card) {
+		return new CardSaveResponse(CardSaveDTO.from(card), true);
+	}
+
 	public CardSaveDTO getCard() {
 		return card;
 	}
 
 	public boolean isSuccess() {
 		return success;
-	}
-
-	public static CardSaveResponse from(Card card) {
-		return new CardSaveResponse(CardSaveDTO.from(card), true);
 	}
 
 }

@@ -11,15 +11,15 @@ public class CardModifyResponse {
 		this.success = success;
 	}
 
+	public static CardModifyResponse from(Card card) {
+		return new CardModifyResponse(CardModifyDTO.from(card), true);
+	}
+
 	public CardModifyDTO getCard() {
 		return card;
 	}
 
 	public boolean isSuccess() {
 		return success;
-	}
-
-	public static CardModifyResponse from(Card card) {
-		return new CardModifyResponse(CardModifyDTO.from(card), true);
 	}
 }

@@ -14,6 +14,10 @@ public class Column {
 		this.isDeleted = isDeleted;
 	}
 
+	public static Builder builder() {
+		return new Builder();
+	}
+
 	public Long getId() {
 		return id;
 	}
@@ -33,10 +37,6 @@ public class Column {
 			", name='" + name + '\'' +
 			", isDeleted=" + isDeleted +
 			'}';
-	}
-
-	public static Builder builder() {
-		return new Builder();
 	}
 
 	public static class Builder {

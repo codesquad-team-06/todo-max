@@ -35,11 +35,9 @@ class ColumnRestControllerTest {
 	@Import(GlobalExceptionHandler.class)
 	class SaveColumnTest {
 
-		private MockMvc mockMvc;
-
 		@Autowired
 		ObjectMapper objectMapper;
-
+		private MockMvc mockMvc;
 		@Autowired
 		private ColumnRestController columnRestController;
 
@@ -203,11 +201,9 @@ class ColumnRestControllerTest {
 	@DisplayName("컬럼 수정")
 	@WebMvcTest(ColumnRestController.class)
 	class ModifyColumnTest {
-		private MockMvc mockMvc;
-
 		@Autowired
 		ObjectMapper objectMapper;
-
+		private MockMvc mockMvc;
 		@Autowired
 		private ColumnRestController columnRestController;
 
