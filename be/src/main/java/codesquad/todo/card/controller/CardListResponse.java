@@ -3,7 +3,7 @@ package codesquad.todo.card.controller;
 import java.util.List;
 
 public class CardListResponse {
-	List<CardSearchResponse> cards;
+	private List<CardSearchResponse> cards;
 	private Long columnId; // 컬럼의 아이디 번호
 	private String name; // 컬럼의 제목
 
