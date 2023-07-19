@@ -18,7 +18,6 @@ public class CardModifyResponse {
 	public CardResponseDto getCard() {
 		return card;
 	}
-
 	public boolean isSuccess() {
 		return success;
 	}
