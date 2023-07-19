@@ -2,15 +2,15 @@ package codesquad.todo.column.controller;
 
 import codesquad.todo.column.entity.Column;
 
-public class ColumnSaveDto {
+public class ColumnSaveDTO {
 	private Long id;
 	private String name;
 
-	public ColumnSaveDto(Column column) {
+	public ColumnSaveDTO(Column column) {
 		this(column.getId(), column.getName());
 	}
 
-	public ColumnSaveDto(Long id, String name) {
+	public ColumnSaveDTO(Long id, String name) {
 		this.id = id;
 		this.name = name;
 	}

@@ -1,18 +1,18 @@
 package codesquad.todo.column.controller;
 
-public class ColumnResponseDto {
-	private ColumnSaveDto column;
+public class ColumnResponseDTO {
+	private ColumnSaveDTO column;
 	private boolean success;
 
-	public ColumnResponseDto() {
+	public ColumnResponseDTO() {
 	}
 
-	public ColumnResponseDto(ColumnSaveDto column, boolean success) {
+	public ColumnResponseDTO(ColumnSaveDTO column, boolean success) {
 		this.column = column;
 		this.success = success;
 	}
 
-	public ColumnSaveDto getColumn() {
+	public ColumnSaveDTO getColumn() {
 		return column;
 	}
 

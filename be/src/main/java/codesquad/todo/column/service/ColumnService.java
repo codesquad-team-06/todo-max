@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import codesquad.todo.column.controller.ColumnModifyRequest;
-import codesquad.todo.column.controller.ColumnSaveDto;
+import codesquad.todo.column.controller.ColumnSaveDTO;
 import codesquad.todo.column.controller.ColumnSaveRequest;
 import codesquad.todo.column.entity.Column;
 import codesquad.todo.column.repository.ColumnRepository;
@@ -25,21 +25,21 @@ public class ColumnService {
 	}
 
 	@Transactional
-	public ColumnSaveDto saveColumn(ColumnSaveRequest columnSaveRequest) {
+	public ColumnSaveDTO saveColumn(ColumnSaveRequest columnSaveRequest) {
 		Column saveColumn = columnRepository.save(columnSaveRequest.toEntity());
-		return new ColumnSaveDto(saveColumn);
+		return new ColumnSaveDTO(saveColumn);
 	}
 
 	@Transactional
-	public ColumnSaveDto deleteColumn(Long columnId) {
+	public ColumnSaveDTO deleteColumn(Long columnId) {
 		Column delColumn = columnRepository.deleteById(columnId);
-		return new ColumnSaveDto(delColumn);
+		return new ColumnSaveDTO(delColumn);
 	}
 
 	@Transactional
-	public ColumnSaveDto modifyColumn(ColumnModifyRequest request) {
+	public ColumnSaveDTO modifyColumn(ColumnModifyRequest request) {
 		Column modifiedColumn = columnRepository.modify(request.toEntity());
-		return new ColumnSaveDto(modifiedColumn);
+		return new ColumnSaveDTO(modifiedColumn);
 	}
 
 	public boolean existColumnById(Long columnId) {

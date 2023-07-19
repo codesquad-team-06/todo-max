@@ -11,7 +11,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import codesquad.todo.column.controller.ColumnSaveDto;
+import codesquad.todo.column.controller.ColumnSaveDTO;
 import codesquad.todo.column.controller.ColumnSaveRequest;
 import codesquad.todo.column.entity.Column;
 import codesquad.todo.column.repository.ColumnRepository;
@@ -34,7 +34,7 @@ class ColumnServiceTest {
 		Mockito.when(columnRepository.save(any(Column.class)))
 			.thenReturn(Column.builder().id(1L).name("보류한 일").isDeleted(false).build());
 		// when
-		ColumnSaveDto response = columnService.saveColumn(columnSaveRequest);
+		ColumnSaveDTO response = columnService.saveColumn(columnSaveRequest);
 		// then
 		SoftAssertions.assertSoftly(softAssertions -> {
 			softAssertions.assertThat(response.getId()).isGreaterThan(0L);

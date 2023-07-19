@@ -25,27 +25,27 @@ public class ColumnRestController {
 	}
 
 	@PostMapping
-	public ColumnResponseDto saveColumn(@Valid @RequestBody final ColumnSaveRequest request) {
-		ColumnSaveDto columnSaveDto = columnService.saveColumn(request);
-		return new ColumnResponseDto(columnSaveDto, true);
+	public ColumnResponseDTO saveColumn(@Valid @RequestBody final ColumnSaveRequest request) {
+		ColumnSaveDTO columnSaveDto = columnService.saveColumn(request);
+		return new ColumnResponseDTO(columnSaveDto, true);
 	}
 
 	@DeleteMapping(path = "/{columnId}")
-	public ColumnResponseDto deleteColumn(@PathVariable final Long columnId) {
+	public ColumnResponseDTO deleteColumn(@PathVariable final Long columnId) {
 		if (!columnService.existColumnById(columnId)) {
 			throw new RestApiException(ColumnErrorCode.NOT_FOUND_COLUMN);
 		}
-		ColumnSaveDto columnSaveDto = columnService.deleteColumn(columnId);
-		return new ColumnResponseDto(columnSaveDto, true);
+		ColumnSaveDTO columnSaveDto = columnService.deleteColumn(columnId);
+		return new ColumnResponseDTO(columnSaveDto, true);
 	}
 
 	@PutMapping(path = "/{columnId}")
-	public ColumnResponseDto modifyColumn(@PathVariable final Long columnId,
+	public ColumnResponseDTO modifyColumn(@PathVariable final Long columnId,
 		@Valid @RequestBody final ColumnModifyRequest request) {
 		if (!columnService.existColumnById(columnId)) {
 			throw new RestApiException(ColumnErrorCode.NOT_FOUND_COLUMN);
 		}
-		ColumnSaveDto columnSaveDto = columnService.modifyColumn(request);
-		return new ColumnResponseDto(columnSaveDto, true);
+		ColumnSaveDTO columnSaveDto = columnService.modifyColumn(request);
+		return new ColumnResponseDTO(columnSaveDto, true);
 	}
 }

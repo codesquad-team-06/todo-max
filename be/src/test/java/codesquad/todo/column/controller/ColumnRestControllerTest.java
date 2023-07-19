@@ -58,7 +58,7 @@ class ColumnRestControllerTest {
 		public void saveColumn() throws Exception {
 			// given
 			ColumnSaveRequest columnSaveRequest = new ColumnSaveRequest("보류한 일");
-			ColumnSaveDto columnSaveDto = new ColumnSaveDto(1L, "보류한 일");
+			ColumnSaveDTO columnSaveDto = new ColumnSaveDTO(1L, "보류한 일");
 			String body = objectMapper.writeValueAsString(columnSaveRequest);
 			// mocking
 			when(columnService.saveColumn(Mockito.any(ColumnSaveRequest.class))).thenReturn(columnSaveDto);
@@ -78,7 +78,7 @@ class ColumnRestControllerTest {
 		public void saveColumn_whenSave_thenInvalidEmpty() throws Exception {
 			// given
 			ColumnSaveRequest columnSaveRequest = new ColumnSaveRequest("");
-			ColumnSaveDto columnSaveDto = new ColumnSaveDto(1L, "");
+			ColumnSaveDTO columnSaveDto = new ColumnSaveDTO(1L, "");
 			String body = objectMapper.writeValueAsString(columnSaveRequest);
 			// mocking
 			when(columnService.saveColumn(Mockito.any(ColumnSaveRequest.class))).thenReturn(columnSaveDto);
@@ -99,7 +99,7 @@ class ColumnRestControllerTest {
 		public void saveColumn_givenNameIsNull_whenSave_thenInvalidEmpty() throws Exception {
 			// given
 			ColumnSaveRequest columnSaveRequest = new ColumnSaveRequest(null);
-			ColumnSaveDto columnSaveDto = new ColumnSaveDto(1L, "");
+			ColumnSaveDTO columnSaveDto = new ColumnSaveDTO(1L, "");
 			String body = objectMapper.writeValueAsString(columnSaveRequest);
 			// mocking
 			when(columnService.saveColumn(Mockito.any(ColumnSaveRequest.class))).thenReturn(columnSaveDto);
@@ -123,7 +123,7 @@ class ColumnRestControllerTest {
 			Arrays.fill(name, "a");
 			String joinName = String.join("", name);
 			ColumnSaveRequest columnSaveRequest = new ColumnSaveRequest(joinName);
-			ColumnSaveDto columnSaveDto = new ColumnSaveDto(1L, joinName);
+			ColumnSaveDTO columnSaveDto = new ColumnSaveDTO(1L, joinName);
 			String body = objectMapper.writeValueAsString(columnSaveRequest);
 			// mocking
 			when(columnService.saveColumn(Mockito.any(ColumnSaveRequest.class))).thenReturn(columnSaveDto);
@@ -167,7 +167,7 @@ class ColumnRestControllerTest {
 		public void testDeleteColumn_givenColumnId_whenRequestDeleteColumn_thenDeleteColumn() throws Exception {
 			// given
 			String columnId = "1";
-			ColumnSaveDto columnSaveDto = new ColumnSaveDto(1L, "해야할 일");
+			ColumnSaveDTO columnSaveDto = new ColumnSaveDTO(1L, "해야할 일");
 			// mocking
 			when(columnService.existColumnById(any())).thenReturn(true);
 			when(columnService.deleteColumn(any())).thenReturn(columnSaveDto);
@@ -225,7 +225,7 @@ class ColumnRestControllerTest {
 			// given
 			Long columnId = 1L;
 			ColumnModifyRequest modifyRequest = new ColumnModifyRequest(columnId, "수정된 제목");
-			ColumnSaveDto columnSaveDto = new ColumnSaveDto(columnId, "수정된 제목");
+			ColumnSaveDTO columnSaveDto = new ColumnSaveDTO(columnId, "수정된 제목");
 			String body = objectMapper.writeValueAsString(modifyRequest);
 			// mocking
 			when(columnService.existColumnById(any())).thenReturn(true);
@@ -248,7 +248,7 @@ class ColumnRestControllerTest {
 			// given
 			Long columnId = 1L;
 			ColumnModifyRequest modifyRequest = new ColumnModifyRequest(columnId, "");
-			ColumnSaveDto columnSaveDto = new ColumnSaveDto(columnId, "수정된 제목");
+			ColumnSaveDTO columnSaveDto = new ColumnSaveDTO(columnId, "수정된 제목");
 			String body = objectMapper.writeValueAsString(modifyRequest);
 			// mocking
 			when(columnService.existColumnById(any())).thenReturn(true);
@@ -272,7 +272,7 @@ class ColumnRestControllerTest {
 			// given
 			Long columnId = 1L;
 			ColumnModifyRequest modifyRequest = new ColumnModifyRequest(columnId, null);
-			ColumnSaveDto columnSaveDto = new ColumnSaveDto(columnId, "수정된 제목");
+			ColumnSaveDTO columnSaveDto = new ColumnSaveDTO(columnId, "수정된 제목");
 			String body = objectMapper.writeValueAsString(modifyRequest);
 			// mocking
 			when(columnService.existColumnById(any())).thenReturn(true);
@@ -299,7 +299,7 @@ class ColumnRestControllerTest {
 			Arrays.fill(name, "a");
 			String joinName = String.join("", name);
 			ColumnModifyRequest modifyRequest = new ColumnModifyRequest(columnId, joinName);
-			ColumnSaveDto columnSaveDto = new ColumnSaveDto(columnId, "수정된 제목");
+			ColumnSaveDTO columnSaveDto = new ColumnSaveDTO(columnId, "수정된 제목");
 			String body = objectMapper.writeValueAsString(modifyRequest);
 			// mocking
 			when(columnService.existColumnById(any())).thenReturn(true);
@@ -323,7 +323,7 @@ class ColumnRestControllerTest {
 			// given
 			Long columnId = 9999L;
 			ColumnModifyRequest modifyRequest = new ColumnModifyRequest(columnId, "수정된 제목");
-			ColumnSaveDto columnSaveDto = new ColumnSaveDto(columnId, "수정된 제목");
+			ColumnSaveDTO columnSaveDto = new ColumnSaveDTO(columnId, "수정된 제목");
 			String body = objectMapper.writeValueAsString(modifyRequest);
 			// mocking
 			when(columnService.existColumnById(any())).thenReturn(false);
