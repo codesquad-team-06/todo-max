@@ -27,31 +27,33 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import codesquad.todo.column.service.ColumnService;
 import codesquad.todo.errors.handler.GlobalExceptionHandler;
 
+@WebMvcTest(controllers = {ColumnRestController.class})
+@Import(GlobalExceptionHandler.class)
 class ColumnRestControllerTest {
+
+	@Autowired
+	ObjectMapper objectMapper;
+
+	private MockMvc mockMvc;
+
+	@Autowired
+	private ColumnRestController columnRestController;
+
+	@MockBean
+	private ColumnService columnService;
+
+	@BeforeEach
+	public void beforeEach() {
+		mockMvc = MockMvcBuilders.standaloneSetup(columnRestController)
+			.setControllerAdvice(GlobalExceptionHandler.class)
+			.addFilter(new CharacterEncodingFilter("UTF-8", true))
+			.alwaysDo(print())
+			.build();
+	}
 
 	@Nested
 	@DisplayName("컬럼 추가")
-	@WebMvcTest(controllers = {ColumnRestController.class})
-	@Import(GlobalExceptionHandler.class)
 	class SaveColumnTest {
-
-		@Autowired
-		ObjectMapper objectMapper;
-		private MockMvc mockMvc;
-		@Autowired
-		private ColumnRestController columnRestController;
-
-		@MockBean
-		private ColumnService columnService;
-
-		@BeforeEach
-		public void beforeEach() {
-			mockMvc = MockMvcBuilders.standaloneSetup(columnRestController)
-				.setControllerAdvice(GlobalExceptionHandler.class)
-				.addFilter(new CharacterEncodingFilter("UTF-8", true))
-				.alwaysDo(print())
-				.build();
-		}
 
 		@Test
 		@DisplayName("컬럼 저장 데이터가 주어지고 서비스에 저장을 요청할때 저장된 컬럼을 응답한다")
@@ -143,24 +145,7 @@ class ColumnRestControllerTest {
 
 	@Nested
 	@DisplayName("컬럼 삭제")
-	@WebMvcTest(ColumnRestController.class)
 	class DeleteColumnTest {
-		private MockMvc mockMvc;
-
-		@Autowired
-		private ColumnRestController columnRestController;
-
-		@MockBean
-		private ColumnService columnService;
-
-		@BeforeEach
-		public void beforeEach() {
-			mockMvc = MockMvcBuilders.standaloneSetup(columnRestController)
-				.setControllerAdvice(GlobalExceptionHandler.class)
-				.addFilter(new CharacterEncodingFilter("UTF-8", true))
-				.alwaysDo(print())
-				.build();
-		}
 
 		@Test
 		@DisplayName("컬럼 아이디번호가 주어지고 컬럼 삭제를 요청할때 컬럼을 삭제하고 응답합니다")
@@ -199,25 +184,7 @@ class ColumnRestControllerTest {
 
 	@Nested
 	@DisplayName("컬럼 수정")
-	@WebMvcTest(ColumnRestController.class)
 	class ModifyColumnTest {
-		@Autowired
-		ObjectMapper objectMapper;
-		private MockMvc mockMvc;
-		@Autowired
-		private ColumnRestController columnRestController;
-
-		@MockBean
-		private ColumnService columnService;
-
-		@BeforeEach
-		public void beforeEach() {
-			mockMvc = MockMvcBuilders.standaloneSetup(columnRestController)
-				.setControllerAdvice(GlobalExceptionHandler.class)
-				.addFilter(new CharacterEncodingFilter("UTF-8", true))
-				.alwaysDo(print())
-				.build();
-		}
 
 		@Test
 		@DisplayName("수정할 컬럼이 주어지고 컬럼 수정을 요청할때 수정된 컬럼을 응답합니다")
