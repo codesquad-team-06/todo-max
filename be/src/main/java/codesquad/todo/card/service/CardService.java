@@ -76,6 +76,7 @@ public class CardService {
 			return moveCard(cardMoveRequest);
 		}
 
-		return CardMoveResponse.from(cardRepository.move(cardMoveRequest.getId(), calculatePosition, cardMoveRequest.getNextColumnId()));
+		return CardMoveResponse.from(
+			cardRepository.move(cardMoveRequest.getId(), calculatePosition, cardMoveRequest.getNextColumnId()));
 	}
 }

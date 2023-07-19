@@ -77,7 +77,8 @@ class CardRestControllerTest {
 	void modifyCard() throws Exception {
 		//given
 		CardModifyRequest cardModifyRequest = new CardModifyRequest(1L, "제목수정", "내용수정");
-		CardModifyResponse cardModifyResponse = new CardModifyResponse(new CardResponseDTO(1L, "제목수정", "내용수정", 1024, 1L), true);
+		CardModifyResponse cardModifyResponse = new CardModifyResponse(
+			new CardResponseDTO(1L, "제목수정", "내용수정", 1024, 1L), true);
 
 		// when
 		given(cardService.modifyCard(any())).willReturn(cardModifyResponse);
@@ -152,8 +153,8 @@ class CardRestControllerTest {
 		given(cardService.moveCard(any())).willReturn(cardMoveResponse);
 		// when then
 		mockMvc.perform(put("/cards/move/7")
-			.content(objectMapper.writeValueAsString(cardMoveRequest))
-			.contentType(MediaType.APPLICATION_JSON_VALUE))
+				.content(objectMapper.writeValueAsString(cardMoveRequest))
+				.contentType(MediaType.APPLICATION_JSON_VALUE))
 			.andExpect(status().isOk())
 			.andExpect(jsonPath("$[0].id").value(7))
 			.andExpect(jsonPath("$[0].title").value("제목7"))
