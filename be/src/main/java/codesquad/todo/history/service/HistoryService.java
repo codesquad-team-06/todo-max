@@ -10,6 +10,7 @@ import codesquad.todo.errors.errorcode.HistoryErrorCode;
 import codesquad.todo.errors.exception.RestApiException;
 import codesquad.todo.history.controller.dto.HistoryDeleteRequest;
 import codesquad.todo.history.controller.dto.HistoryFindAllResponse;
+import codesquad.todo.history.controller.dto.HistorySaveDto;
 import codesquad.todo.history.repository.HistoryRepository;
 
 @Service
@@ -30,8 +31,13 @@ public class HistoryService {
 	}
 
 	@Transactional
+	public void save(HistorySaveDto historySaveDto) {
+		historyRepository.save(historySaveDto.toEntity());
+	}
+
+	@Transactional
 	public boolean deleteByIds(HistoryDeleteRequest request) {
-		if (!validate(request)) {
+		if (!validateIds(request)) {
 			throw new RestApiException(HistoryErrorCode.NOT_FOUND_HISTORY);
 		}
 		int deletedRows = historyRepository.deleteByIds(request.getHistoryId());
@@ -39,7 +45,7 @@ public class HistoryService {
 	}
 
 	@Transactional(readOnly = true)
-	public boolean validate(HistoryDeleteRequest request) {
+	public boolean validateIds(HistoryDeleteRequest request) {
 		int count = historyRepository.countIds(request.getHistoryId());
 		return count == request.getHistoryId().size();
 	}
