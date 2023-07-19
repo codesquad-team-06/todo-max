@@ -21,16 +21,22 @@ import codesquad.todo.card.entity.Card;
 import codesquad.todo.card.repository.CardRepository;
 import codesquad.todo.column.entity.Column;
 import codesquad.todo.column.repository.ColumnRepository;
+import codesquad.todo.history.controller.dto.HistorySaveDto;
+import codesquad.todo.history.entity.Actions;
+import codesquad.todo.history.service.HistoryService;
 
 @Service
 public class CardService {
 
 	private final CardRepository cardRepository;
 	private final ColumnRepository columnRepository;
+	private final HistoryService historyService;
 
-	public CardService(CardRepository cardRepository, ColumnRepository columnRepository) {
+	public CardService(CardRepository cardRepository, ColumnRepository columnRepository,
+		HistoryService historyService) {
 		this.cardRepository = cardRepository;
 		this.columnRepository = columnRepository;
+		this.historyService = historyService;
 	}
 
 	@Transactional(readOnly = true)
@@ -54,19 +60,28 @@ public class CardService {
 		return cardListResponses;
 	}
 
+	@Transactional
 	public CardSaveResponse saveCard(CardSaveRequest cardSaveRequest) {
-
-		return CardSaveResponse.from(cardRepository.save(cardSaveRequest.toEntity()));
+		Card card = cardRepository.save(cardSaveRequest.toEntity());
+		generateHistory(card, Actions.REGISTERED, List.of(card.getColumnId()));
+		return CardSaveResponse.from(card);
 	}
 
+	@Transactional
 	public CardModifyResponse modifyCard(CardModifyRequest cardModifyRequest) {
-		return CardModifyResponse.from(cardRepository.modify(cardModifyRequest.toEntity()));
+		Card card = cardRepository.modify(cardModifyRequest.toEntity());
+		generateHistory(card, Actions.MODIFIED, List.of(card.getColumnId()));
+		return CardModifyResponse.from(card);
 	}
 
+	@Transactional
 	public CardDeleteResponse deleteCard(Long cardId) {
-		return CardDeleteResponse.from(cardRepository.deleteById(cardId));
+		Card card = cardRepository.deleteById(cardId);
+		generateHistory(card, Actions.DELETED, List.of(card.getColumnId()));
+		return CardDeleteResponse.from(card);
 	}
 
+	@Transactional
 	public CardMoveResponse moveCard(CardMoveRequest cardMoveRequest) {
 		int calculatePosition = cardRepository.calculateNextPosition(cardMoveRequest.getPrevCardId(),
 			cardMoveRequest.getNextCardId());
@@ -77,7 +92,24 @@ public class CardService {
 			return moveCard(cardMoveRequest);
 		}
 
-		return CardMoveResponse.from(
-			cardRepository.move(cardMoveRequest.getId(), calculatePosition, cardMoveRequest.getNextColumnId()));
+		Long prevColumId = cardRepository.findById(cardMoveRequest.getId()).getColumnId();
+		Card moveCard = cardRepository.move(cardMoveRequest.getId(), calculatePosition,
+			cardMoveRequest.getNextColumnId());
+
+		generateHistory(moveCard, Actions.MOVED, List.of(prevColumId, cardMoveRequest.getNextColumnId()));
+		return CardMoveResponse.from(moveCard);
+	}
+
+	private void generateHistory(Card card, Actions action, List<Long> columnIds) {
+		List<String> columnNames = columnRepository.findAllNameById(columnIds);
+		if (columnIds.size() == 1) {
+			historyService.save(
+				new HistorySaveDto(card.getTitle(), columnNames.get(0), columnNames.get(0), action.getName(),
+					card.getId()));
+		} else {
+			historyService.save(
+				new HistorySaveDto(card.getTitle(), columnNames.get(0), columnNames.get(1), action.getName(),
+					card.getId()));
+		}
 	}
 }
