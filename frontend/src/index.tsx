@@ -6,7 +6,7 @@ import browserServiceWorker from "./mocks/browserServiceWorker.ts";
 
 // eslint-disable-next-line import/prefer-default-export
 export const API_URL =
-  process.env.NODE_ENV === "development" ? "" : "http://localhost:8080";
+  process.env.NODE_ENV === "development" ? "" : process.env.REACT_APP_API_URL;
 
 if (process.env.NODE_ENV === "development") {
   browserServiceWorker.start({
