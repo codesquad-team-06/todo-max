@@ -84,7 +84,7 @@ public class JdbcCardRepository implements CardRepository {
 		String sql = "SELECT id,title,content,position,is_deleted,column_id FROM card WHERE id = :id";
 		return template.query(sql, Map.of("id", id), cardRowMapper).stream()
 			.findAny()
-			.orElseThrow(() -> new RestApiException(CardErrorCode.NOT_FOUND_Card));
+			.orElseThrow(() -> new RestApiException(CardErrorCode.NOT_FOUND_CARD));
 	}
 
 	@Override
@@ -140,7 +140,7 @@ public class JdbcCardRepository implements CardRepository {
 		return Optional.ofNullable(template.queryForObject(sql, new MapSqlParameterSource()
 				.addValue("prevCardId", prevCardId)
 				.addValue("nextCardId", nextCardId), Integer.class))
-			.orElseThrow(() -> new RestApiException(CardErrorCode.NOT_FOUND_Card));
+			.orElseThrow(() -> new RestApiException(CardErrorCode.NOT_FOUND_CARD));
 	}
 
 	@Override

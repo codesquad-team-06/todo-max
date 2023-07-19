@@ -3,7 +3,7 @@ package codesquad.todo.errors.errorcode;
 import org.springframework.http.HttpStatus;
 
 public enum CardErrorCode implements ErrorCode {
-	NOT_FOUND_Card(HttpStatus.NOT_FOUND, "존재하지 않는 카드입니다.");
+	NOT_FOUND_CARD(HttpStatus.NOT_FOUND, "존재하지 않는 카드입니다.");
 
 	private final HttpStatus httpStatus;
 	private final String message;
