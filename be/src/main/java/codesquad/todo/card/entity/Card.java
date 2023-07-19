@@ -50,14 +50,14 @@ public class Card {
 
 	@Override
 	public String toString() {
-		return "Card{" +
-			"id=" + id +
-			", title='" + title + '\'' +
-			", content='" + content + '\'' +
-			", position=" + position +
-			", isDeleted=" + isDeleted +
-			", columnId=" + columnId +
-			'}';
+		return "Card{"
+			+ "id=" + id
+			+ ", title='" + title + '\''
+			+ ", content='" + content + '\''
+			+ ", position=" + position
+			+ ", isDeleted=" + isDeleted
+			+ ", columnId=" + columnId
+			+ '}';
 	}
 
 	public static class Builder {

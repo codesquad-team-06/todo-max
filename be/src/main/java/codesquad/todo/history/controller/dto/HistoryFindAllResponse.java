@@ -27,7 +27,7 @@ public class HistoryFindAllResponse {
 			history.getPrevColumn(),
 			history.getNextColumn(),
 			calculateElapsedTime(history.getCreatedAt()),
-			history.getAction().getName());
+			history.getActionName());
 	}
 
 	public static String calculateElapsedTime(LocalDateTime start) {
