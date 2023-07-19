@@ -23,4 +23,6 @@ public interface CardRepository {
 	int calculateNextPosition(Long prevCardId, Long nextCardId);
 
 	void reallocationPosition(Long columnId);
+
+	List<Card> deleteAllByColumnId(Long columnId);
 }
