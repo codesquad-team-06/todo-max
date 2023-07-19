@@ -2,13 +2,13 @@ package codesquad.todo.errors.errorcode;
 
 import org.springframework.http.HttpStatus;
 
-public enum CommonErrorCode implements ErrorCode {
-	INVALID_INPUT_FORMAT(HttpStatus.BAD_REQUEST, "유효하지 않은 형식입니다.");
+public enum CardErrorCode implements ErrorCode {
+	NOT_FOUND_CARD(HttpStatus.NOT_FOUND, "존재하지 않는 카드입니다.");
 
 	private final HttpStatus httpStatus;
 	private final String message;
 
-	CommonErrorCode(HttpStatus httpStatus, String message) {
+	CardErrorCode(HttpStatus httpStatus, String message) {
 		this.httpStatus = httpStatus;
 		this.message = message;
 	}

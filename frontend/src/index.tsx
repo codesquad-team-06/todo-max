@@ -8,8 +8,6 @@ import browserServiceWorker from "./mocks/browserServiceWorker.ts";
 export const API_URL =
   process.env.NODE_ENV === "development" ? "" : process.env.REACT_APP_API_URL;
 
-console.log(process.env.REACT_APP_API_URL);
-
 if (process.env.NODE_ENV === "development") {
   browserServiceWorker.start({
     onUnhandledRequest: "bypass",

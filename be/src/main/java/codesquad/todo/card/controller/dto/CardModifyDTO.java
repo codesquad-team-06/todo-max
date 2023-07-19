@@ -1,4 +1,5 @@
 package codesquad.todo.card.controller.dto;
+
 import codesquad.todo.card.entity.Card;
 
 public class CardModifyDTO {
@@ -12,6 +13,10 @@ public class CardModifyDTO {
 		this.content = content;
 	}
 
+	public static CardModifyDTO from(Card card) {
+		return new CardModifyDTO(card.getId(), card.getTitle(), card.getContent());
+	}
+
 	public Long getId() {
 		return id;
 	}
@@ -22,9 +27,5 @@ public class CardModifyDTO {
 
 	public String getContent() {
 		return content;
-	}
-
-	public static CardModifyDTO from(Card card) {
-		return new CardModifyDTO(card.getId(), card.getTitle(), card.getContent());
 	}
 }
