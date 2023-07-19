@@ -5,6 +5,7 @@ import IconButton from "../common/IconButton.tsx";
 import deleteButtonIcon from "../../assets/closed.svg";
 import editButtonIcon from "../../assets/edit.svg";
 import { ModalContext } from "../../context/ModalContext.tsx";
+import { API_URL } from "../../index.tsx";
 
 export default function CardDisplay({
   cardDetails,
@@ -21,7 +22,7 @@ export default function CardDisplay({
   const { openModal } = useContext(ModalContext);
 
   const deleteCardRequest = async () => {
-    const response = await fetch(`/cards/${cardDetails.id}`, {
+    const response = await fetch(`${API_URL}/cards/${cardDetails.id}`, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",

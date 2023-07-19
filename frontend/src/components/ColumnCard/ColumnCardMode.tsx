@@ -2,6 +2,7 @@
 import React, { useState, ChangeEvent, FormEvent } from "react";
 import { styled } from "styled-components";
 import ActionButton from "../common/ActionButton.tsx";
+import { API_URL } from "../../index.tsx";
 
 const ModeKR = {
   add: "등록",
@@ -48,7 +49,7 @@ export default function ColumnCardMode({
 
   // TODO: "POST" to "/cards". Request payload: {title, content, column_id}
   const addNewCardRequest = async () => {
-    const response = await fetch("/cards", {
+    const response = await fetch(`${API_URL}/cards`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
