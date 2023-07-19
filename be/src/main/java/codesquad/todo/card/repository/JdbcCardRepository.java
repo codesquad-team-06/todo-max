@@ -155,4 +155,12 @@ public class JdbcCardRepository implements CardRepository {
 		template.update(sql, new MapSqlParameterSource()
 			.addValue("columnId", columnId));
 	}
+
+	@Override
+	public List<Card> deleteAllByColumnId(Long columnId) {
+		List<Card> delCards = findAllByColumnId(columnId);
+		String sql = "UPDATE CARD SET is_deleted = TRUE WHERE column_id = :columnId";
+		template.update(sql, new MapSqlParameterSource("columnId", columnId));
+		return delCards;
+	}
 }

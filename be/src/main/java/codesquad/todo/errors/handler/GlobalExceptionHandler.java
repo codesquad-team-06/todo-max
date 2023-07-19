@@ -1,7 +1,6 @@
 package codesquad.todo.errors.handler;
 
-import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,7 +18,6 @@ import codesquad.todo.errors.errorcode.CommonErrorCode;
 import codesquad.todo.errors.errorcode.ErrorCode;
 import codesquad.todo.errors.exception.RestApiException;
 import codesquad.todo.errors.response.ErrorResponse;
-import codesquad.todo.errors.response.ValidationError;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
@@ -45,7 +43,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 	}
 
 	private ErrorResponse makeErrorResponse(ErrorCode errorCode) {
-		return new ErrorResponse(errorCode, null);
+		return new ErrorResponse(errorCode);
 	}
 
 	private ResponseEntity<Object> handleExceptionInternal(BindException ex, ErrorCode errorCode) {
@@ -53,12 +51,12 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 	}
 
 	private ErrorResponse makeErrorResponse(BindException ex, ErrorCode errorCode) {
-		List<ValidationError> validationErrorList = ex.getBindingResult()
+		String message = ex.getBindingResult()
 			.getFieldErrors()
 			.stream()
-			.map(ValidationError::of)
-			.collect(
-				Collectors.toUnmodifiableList());
-		return new ErrorResponse(errorCode, validationErrorList);
+			.map(fieldError -> Optional.ofNullable(fieldError.getDefaultMessage()).orElse(errorCode.getMessage()))
+			.findAny()
+			.orElseThrow();
+		return new ErrorResponse(errorCode, message);
 	}
 }

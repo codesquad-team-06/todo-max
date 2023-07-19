@@ -22,4 +22,8 @@ public class CardMoveResponse {
 	public boolean isSuccess() {
 		return success;
 	}
+
+	public static CardMoveResponse from(Card card) {
+		return new CardMoveResponse(CardResponseDTO.from(card), true);
+	}
 }
