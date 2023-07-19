@@ -1,12 +1,36 @@
 import React, { useState } from "react";
 import { styled } from "styled-components";
-import ColumnCard from "./ColumnCard/ColumnCard.tsx";
-import NewColumnCard from "./ColumnCard/NewColumnCard.tsx";
+import Card from "./Card/Card.tsx";
+import NewCard from "./Card/NewCard.tsx";
 import IconButton from "./common/IconButton.tsx";
 import addButtonIcon from "../assets/plus.svg";
 import deleteButtonIcon from "../assets/closed.svg";
+import { CardType } from "../types.ts";
 
-export default function Column() {
+export default function Column({
+  name,
+  cards,
+  currMouseCoords,
+  dragCardId,
+  addNewCardHandler,
+  editCardHandler,
+  deleteCardHandler,
+  updateMouseCoordsHandler,
+  dragCardIdHandler,
+}: {
+  name: string;
+  cards: CardType[];
+  currMouseCoords: [number, number];
+  dragCardId: number | null;
+  addNewCardHandler: (card: CardType) => void;
+  editCardHandler: (card: CardType) => void;
+  deleteCardHandler: (deletedCardInfo: {
+    id: number;
+    columnId: number;
+  }) => void;
+  updateMouseCoordsHandler: (x: number, y: number) => void;
+  dragCardIdHandler: (cardId: number | null) => void;
+}) {
   const [isNewCardActive, setIsNewCardActive] = useState(false);
 
   const toggleNewCard = () => {
@@ -17,8 +41,8 @@ export default function Column() {
     <StyledColumn>
       <Header>
         <div className="column-info-container">
-          <h2>해야할 일</h2>
-          <span>2</span>
+          <h2>{name}</h2>
+          <span>{cards.length < 100 ? cards.length : "99+"}</span>
         </div>
         <div className="buttons-container">
           <IconButton
@@ -36,15 +60,30 @@ export default function Column() {
       </Header>
 
       <ul className="cards-list">
-        {isNewCardActive && <NewColumnCard {...{ toggleNewCard }} />}
-        <ColumnCard />
-        <ColumnCard />
+        {isNewCardActive && (
+          <NewCard {...{ toggleNewCard, addNewCardHandler }} />
+        )}
+
+        {cards.map((cardDetails) => (
+          <Card
+            {...{
+              key: cardDetails.id,
+              cardDetails,
+              currMouseCoords,
+              dragCardId,
+              editCardHandler,
+              deleteCardHandler,
+              updateMouseCoordsHandler,
+              dragCardIdHandler,
+            }}
+          />
+        ))}
       </ul>
     </StyledColumn>
   );
 }
 
-const StyledColumn = styled.main`
+const StyledColumn = styled.div`
   width: 300px;
   display: flex;
   flex-direction: column;

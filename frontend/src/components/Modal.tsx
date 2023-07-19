@@ -1,17 +1,27 @@
-import React, { useContext } from "react";
+import React, { useContext, FormEvent, MouseEvent } from "react";
 import ReactDOM from "react-dom";
 import { styled } from "styled-components";
 import ActionButton from "./common/ActionButton.tsx";
 import { ModalContext } from "../context/ModalContext.tsx";
 
 export default function Modal() {
-  const { isModalActive, modalContent, closeModal } = useContext(ModalContext);
+  const { isModalActive, modalContent, closeModal, submitCallback } =
+    useContext(ModalContext);
 
   return ReactDOM.createPortal(
     isModalActive && (
-      <Dim onClick={closeModal}>
+      <Dim
+        onClick={(evt: MouseEvent) => {
+          if (evt.target === evt.currentTarget) {
+            closeModal();
+          }
+        }}>
         <ContentBox>
-          <form>
+          <form
+            onSubmit={(evt: FormEvent) => {
+              submitCallback(evt);
+              closeModal();
+            }}>
             <h3>{modalContent}</h3>
             <ButtonWrapper>
               <ActionButton
