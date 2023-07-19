@@ -67,7 +67,7 @@ public class JdbcHistoryRepository implements HistoryRepository {
 	public Optional<History> findById(Long id) {
 		String sql = "SELECT id, card_title, prev_column, next_Column, created_at, is_deleted, action_name, card_id "
 			+ "FROM history WHERE id = :id";
-		return Optional.ofNullable(jdbcTemplate.queryForObject(sql, Map.of("id", id), historyRowMapper));
+		return jdbcTemplate.query(sql, Map.of("id", id), historyRowMapper).stream().findAny();
 	}
 
 	@Override
