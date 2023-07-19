@@ -155,11 +155,11 @@ class CardRestControllerTest {
 				.content(objectMapper.writeValueAsString(cardMoveRequest))
 				.contentType(MediaType.APPLICATION_JSON_VALUE))
 			.andExpect(status().isOk())
-			.andExpect(jsonPath("$[0].id").value(7))
-			.andExpect(jsonPath("$[0].title").value("제목7"))
-			.andExpect(jsonPath("$[0].content").value("내용7"))
-			.andExpect(jsonPath("$[0].position").value(1536))
-			.andExpect(jsonPath("$[0].columnId").value(2))
+			.andExpect(jsonPath("card.id").value(7))
+			.andExpect(jsonPath("card.title").value("제목7"))
+			.andExpect(jsonPath("card.content").value("내용7"))
+			.andExpect(jsonPath("card.position").value(1536))
+			.andExpect(jsonPath("card.columnId").value(2))
 			.andExpect(jsonPath("success").value(true))
 			.andDo(print());
 	}
