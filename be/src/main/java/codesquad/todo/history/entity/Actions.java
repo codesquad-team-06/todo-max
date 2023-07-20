@@ -1,10 +1,12 @@
 package codesquad.todo.history.entity;
 
+import java.util.Arrays;
+
 public enum Actions {
-	REGISTERED("등록"),
-	DELETED("삭제"),
-	MOVED("이동"),
-	MODIFIED("수정");
+	SAVE("등록"),
+	DELETE("삭제"),
+	MOVE("이동"),
+	MODIFY("수정");
 
 	private final String name;
 
@@ -14,5 +16,13 @@ public enum Actions {
 
 	public String getName() {
 		return name;
+	}
+
+	// todo : 예외 수정
+	public static Actions fromMethodName(String methodName) {
+		return Arrays.stream(Actions.values())
+			.filter(actions -> actions.name().equalsIgnoreCase(methodName.substring(0, methodName.length() - 4)))
+			.findFirst()
+			.orElseThrow(() -> new RuntimeException());
 	}
 }
