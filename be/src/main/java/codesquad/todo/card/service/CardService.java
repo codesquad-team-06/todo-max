@@ -92,11 +92,11 @@ public class CardService {
 			return moveCard(cardMoveRequest);
 		}
 
-		Long prevColumId = cardRepository.findById(cardMoveRequest.getId()).getColumnId();
 		Card moveCard = cardRepository.move(cardMoveRequest.getId(), calculatePosition,
 			cardMoveRequest.getNextColumnId());
 
-		generateHistory(moveCard, Actions.MOVED, List.of(prevColumId, cardMoveRequest.getNextColumnId()));
+		generateHistory(moveCard, Actions.MOVED,
+			List.of(cardMoveRequest.getPrevColumnId(), cardMoveRequest.getNextColumnId()));
 		return CardMoveResponse.from(moveCard);
 	}
 

@@ -36,7 +36,7 @@ public class CardRestController {
 		return cardService.saveCard(cardSaveRequest);
 	}
 
-	@PutMapping
+	@PutMapping("/{cardId}")
 	public CardModifyResponse modifyCard(@Valid @RequestBody CardModifyRequest cardModifyRequest) {
 		return cardService.modifyCard(cardModifyRequest);
 	}

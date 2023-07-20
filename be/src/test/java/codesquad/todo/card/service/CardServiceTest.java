@@ -90,7 +90,7 @@ class CardServiceTest {
 	@DisplayName("카드 이동 실행 시 이동 정보에 대한 히스토리를 생성한다.")
 	public void moveCardTest() {
 		//given
-		CardMoveRequest cardMoveRequest = new CardMoveRequest(3L, 4L, 5L, 2L);
+		CardMoveRequest cardMoveRequest = new CardMoveRequest(3L, 4L, 5L, 1L, 2L);
 
 		//when
 		cardService.moveCard(cardMoveRequest);
