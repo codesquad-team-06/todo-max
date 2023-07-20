@@ -95,7 +95,7 @@ class JdbcHistoryRepositoryTest {
 			.prevColumn("해야할 일")
 			.nextColumn("해야할 일")
 			.cardId(savedCard.getId())
-			.actionName(Actions.REGISTERED.getName())
+			.actionName(Actions.SAVE.getName())
 			.isDeleted(false)
 			.build();
 
