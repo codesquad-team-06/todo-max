@@ -1,3 +1,4 @@
+/* eslint-disable no-alert */
 import React, { useState, useRef, MouseEvent } from "react";
 import { styled } from "styled-components";
 import CardDisplay from "./CardDisplay.tsx";
@@ -15,10 +16,11 @@ export default function Card({
   currCardShadowInsertPosition,
   editCardHandler,
   deleteCardHandler,
+  moveCardHandler,
   updateMouseCoordsHandler,
   dragCardHandler,
   resetCardShadowHandler,
-  blahblah,
+  updateCardShadowPosition,
 }: {
   shadowRef: React.RefObject<HTMLLIElement | null>;
   cardDetails: {
@@ -44,6 +46,7 @@ export default function Card({
     id: number;
     columnId: number;
   }) => void;
+  moveCardHandler: (updatedCard: CardType, prevColumnId: number) => void;
   updateMouseCoordsHandler: (x: number, y: number) => void;
   dragCardHandler: (
     dragCard: {
@@ -57,7 +60,7 @@ export default function Card({
     } | null
   ) => void;
   resetCardShadowHandler: () => void;
-  blahblah: (evt: MouseEvent) => void;
+  updateCardShadowPosition: (x: number, y: number) => void;
 }) {
   const [isEditMode, setIsEditMode] = useState<boolean>(false);
   const cardRef = useRef<HTMLLIElement | null>(null);
@@ -75,9 +78,8 @@ export default function Card({
     // 초기 `currMouseCoords = [0,0]` 깜빡임 방지
     updateMouseCoordsHandler(evt.clientX, evt.clientY);
 
-    // ---- create jansang in place
-    blahblah(evt);
-    // ----
+    // 잔상
+    updateCardShadowPosition(evt.clientX, evt.clientY);
 
     // Drag 시작 (그랩된 카드는 마우스 따라서 드래그 중)
     dragCardHandler({
@@ -135,12 +137,12 @@ export default function Card({
     return [Number(beforeCardId), Number(afterCardId)];
   };
 
-  const mouseUpHandler = (evt: MouseEvent) => {
+  const mouseUpHandler = async (evt: MouseEvent) => {
     if (isEditMode === true || (evt.target as HTMLElement).closest("button")) {
       return;
     }
 
-    const prevColumnId = dragCard?.cardDetails.columnId;
+    const prevColumnId = dragCard?.cardDetails.columnId ?? 0;
     const nextColumnId = Number(
       shadowRef.current?.parentElement?.dataset.columnId ?? 0
     );
@@ -153,43 +155,65 @@ export default function Card({
       shadowRef
     );
 
-    // console.log("beforeCardId: ", beforeCardId);
-    // console.log("afterCardId: ", afterCardId);
-    // console.log("prevColumnId: ", prevColumnId);
-    // console.log("nextColumnId: ", nextColumnId);
-    // console.log("-----");
-
-    // 잔상 처리
+    // `CardShadow` 처리
     dragCardHandler(null);
     resetCardShadowHandler();
 
-    // fetch request
+    // 만약, 위치가 안바꼈으면 요청 안보내기
+    console.log("dragCard: ", dragCard?.cardDetails.id);
+    console.log("cardDetails.id: ", cardDetails.id);
+    if (dragCard?.cardDetails.id === cardDetails.id) {
+      return;
+    }
+
+    try {
+      const updatedCard = await moveCardRequest(
+        beforeCardId,
+        afterCardId,
+        prevColumnId,
+        nextColumnId
+      );
+
+      moveCardHandler(updatedCard, prevColumnId);
+    } catch (error) {
+      alert(error);
+    }
   };
 
-  // const moveCardRequest = async () => {
-  //   const response = await fetch(`/cards/${cardDetails.id}`, {
-  //     method: "PUT",
-  //     headers: {
-  //       "Content-Type": "application/json",
-  //     },
-  //     body: JSON.stringify({
-  //       id: cardDetails.id,
-  //       content: newCardContent,
-  //       columnId: 1,
-  //     }),
-  //   });
+  const moveCardRequest = async (
+    beforeCardId: number,
+    afterCardId: number,
+    prevColumnId: number,
+    nextColumnId: number
+  ) => {
+    const response = await fetch(
+      `${API_URL}/cards/move/${dragCard?.cardDetails.id}`,
+      {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          id: cardDetails.id,
+          prevCardId: beforeCardId,
+          nextCardId: afterCardId,
+          prevColumnId,
+          nextColumnId,
+        }),
+      }
+    );
 
-  //   const data = await response.json();
+    const data = await response.json();
 
-  //   if (data.success) {
-  //     return data.card;
-  //   }
+    if (data.success) {
+      return data.card;
+    }
 
-  //   const {
-  //     errorCode: { status, code, message },
-  //   } = data;
-  //   throw Error(`${status} ${code}: ${message}`);
-  // };
+    const {
+      errorCode: { status, code, message },
+    } = data;
+    throw Error(`${status} ${code}: ${message}`);
+  };
 
   return (
     <>

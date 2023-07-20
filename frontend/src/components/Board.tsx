@@ -1,6 +1,7 @@
 /* eslint-disable no-alert */
 import React, { useState, useEffect, useRef, MouseEvent } from "react";
 import { styled } from "styled-components";
+import cloneDeep from "lodash.clonedeep";
 import Column from "./Column.tsx";
 import { CardType } from "../types.ts";
 import { API_URL } from "../index.tsx";
@@ -35,6 +36,11 @@ export default function Board() {
       try {
         const response = await fetch(`${API_URL}/cards`);
         const boardData = await response.json();
+        boardData.forEach((column: ColumnData) =>
+          column.cards.sort(
+            (a: CardType, b: CardType) => a.position - b.position
+          )
+        );
 
         if (response.status === 200) {
           setBoard(boardData);
@@ -69,10 +75,10 @@ export default function Board() {
     setBoard((prevBoard) => {
       const newBoard = [...prevBoard];
       const columnIndex = updatedCard.columnId - 1;
-      const targetCardIndex = newBoard[columnIndex].cards.findIndex(
+      const staleCardIndex = newBoard[columnIndex].cards.findIndex(
         (card) => card.id === updatedCard.id
       );
-      newBoard[columnIndex].cards[targetCardIndex] = updatedCard;
+      newBoard[columnIndex].cards[staleCardIndex] = updatedCard;
       return newBoard;
     });
   };
@@ -95,6 +101,70 @@ export default function Board() {
     });
   };
 
+  const moveCardHandler = (updatedCard: CardType, prevColumnId: number) => {
+    setBoard((prevBoard) => {
+      const newBoard = cloneDeep(prevBoard);
+      const prevColumnIndex = prevColumnId - 1;
+      const updatedColumnIndex = updatedCard.columnId - 1;
+
+      // 알맞은 위치로 카드를 넣어서 카드 배열 반환
+      const insertCardAtPosition = (cards: CardType[], index: number) => {
+        const updatedCards = [...cards];
+        updatedCards.splice(index, 0, updatedCard);
+        return updatedCards;
+      };
+
+      // 같은 칼럼 내 이동
+      if (updatedColumnIndex === prevColumnIndex) {
+        // 기존 위치에서 제거
+        newBoard[updatedColumnIndex].cards = newBoard[
+          updatedColumnIndex
+        ].cards.filter((card) => card.id !== updatedCard.id);
+
+        // 가야할 위치 확인
+        let updatedCardIndex = newBoard[updatedColumnIndex].cards.findIndex(
+          (card) => card.position > updatedCard.position
+        );
+
+        // 예외처리: 끝에 들어가야할 때
+        updatedCardIndex =
+          updatedCardIndex !== -1
+            ? updatedCardIndex
+            : newBoard[updatedColumnIndex].cards.length;
+
+        // 가야할 위치에 삽입
+        newBoard[updatedColumnIndex].cards = insertCardAtPosition(
+          newBoard[updatedColumnIndex].cards,
+          updatedCardIndex
+        );
+      } else {
+        // 기존 위치에서 제거
+        newBoard[prevColumnIndex].cards = newBoard[
+          prevColumnIndex
+        ].cards.filter((card) => card.id !== updatedCard.id);
+
+        // 가야할 위치 확인 (새로운 칼럼에서의 index)
+        let updatedCardIndex = newBoard[updatedColumnIndex].cards.findIndex(
+          (card) => card.position > updatedCard.position
+        );
+
+        // 예외처리: 끝에 들어가야할 때
+        updatedCardIndex =
+          updatedCardIndex !== -1
+            ? updatedCardIndex
+            : newBoard[updatedColumnIndex].cards.length;
+
+        // 가야할 위치에 삽입
+        newBoard[updatedColumnIndex].cards = insertCardAtPosition(
+          newBoard[updatedColumnIndex].cards,
+          updatedCardIndex
+        );
+      }
+
+      return newBoard;
+    });
+  };
+
   const mouseMoveHandler = (evt: MouseEvent) => {
     if (dragCard?.cardDetails && dragCard?.cardRef) {
       updateMouseCoordsHandler(evt.clientX, evt.clientY);
@@ -104,33 +174,7 @@ export default function Board() {
       dragCard.cardRef.current!.style.pointerEvents = "none";
 
       // 드래그 중 마우스 좌표 밑 카드 확인 (드래그 카드 말고 밑에 있는 카드)
-      const belowCard = getCardFromPoint(evt.clientX, evt.clientY);
-      if (belowCard) {
-        setCurrBelowCardId((prevBelowCardId) => {
-          const newBelowCardId = Number(belowCard?.dataset.id);
-          if (prevBelowCardId !== newBelowCardId) {
-            return newBelowCardId;
-          }
-          return prevBelowCardId;
-        });
-      }
-
-      // `belowCard`의 전/후 위치 판별
-      const cardShadowInsertPosition =
-        (belowCard?.getBoundingClientRect().y ?? 0) +
-          (belowCard?.getBoundingClientRect().height ?? 0) / 2 >
-        evt.clientY
-          ? "before"
-          : "after";
-
-      if (belowCard) {
-        setCurrCardShadowInsertPosition((prevInsertPosition) => {
-          if (prevInsertPosition !== cardShadowInsertPosition) {
-            return cardShadowInsertPosition;
-          }
-          return prevInsertPosition;
-        });
-      }
+      updateCardShadowPosition(evt.clientX, evt.clientY);
 
       dragCard.cardRef.current!.style.pointerEvents = "auto";
     }
@@ -171,8 +215,8 @@ export default function Board() {
     setCurrCardShadowInsertPosition(null);
   };
 
-  const blahblah = (evt: MouseEvent) => {
-    const belowCard = getCardFromPoint(evt.clientX, evt.clientY);
+  const updateCardShadowPosition = (x: number, y: number) => {
+    const belowCard = getCardFromPoint(x, y);
     if (belowCard) {
       setCurrBelowCardId((prevBelowCardId) => {
         const newBelowCardId = Number(belowCard?.dataset.id);
@@ -187,7 +231,7 @@ export default function Board() {
     const cardShadowInsertPosition =
       (belowCard?.getBoundingClientRect().y ?? 0) +
         (belowCard?.getBoundingClientRect().height ?? 0) / 2 >
-      evt.clientY
+      y
         ? "before"
         : "after";
 
@@ -229,10 +273,11 @@ export default function Board() {
               addNewCardHandler,
               editCardHandler,
               deleteCardHandler,
+              moveCardHandler,
               updateMouseCoordsHandler,
               dragCardHandler,
               resetCardShadowHandler,
-              blahblah,
+              updateCardShadowPosition,
             }}
           />
         )

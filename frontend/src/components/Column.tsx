@@ -1,4 +1,4 @@
-import React, { useState, MouseEvent } from "react";
+import React, { useState } from "react";
 import { styled } from "styled-components";
 import Card from "./Card/Card.tsx";
 import NewCard from "./Card/NewCard.tsx";
@@ -19,10 +19,11 @@ export default function Column({
   addNewCardHandler,
   editCardHandler,
   deleteCardHandler,
+  moveCardHandler,
   updateMouseCoordsHandler,
   dragCardHandler,
   resetCardShadowHandler,
-  blahblah,
+  updateCardShadowPosition,
 }: {
   shadowRef: React.RefObject<HTMLLIElement | null>;
   columnId: number;
@@ -46,6 +47,7 @@ export default function Column({
     id: number;
     columnId: number;
   }) => void;
+  moveCardHandler: (updatedCard: CardType, prevColumnId: number) => void;
   updateMouseCoordsHandler: (x: number, y: number) => void;
   dragCardHandler: (
     dragCard: {
@@ -59,7 +61,7 @@ export default function Column({
     } | null
   ) => void;
   resetCardShadowHandler: () => void;
-  blahblah: (evt: MouseEvent) => void;
+  updateCardShadowPosition: (x: number, y: number) => void;
 }) {
   const [isNewCardActive, setIsNewCardActive] = useState(false);
 
@@ -106,10 +108,11 @@ export default function Column({
               currCardShadowInsertPosition,
               editCardHandler,
               deleteCardHandler,
+              moveCardHandler,
               updateMouseCoordsHandler,
               dragCardHandler,
               resetCardShadowHandler,
-              blahblah,
+              updateCardShadowPosition,
             }}
           />
         ))}
