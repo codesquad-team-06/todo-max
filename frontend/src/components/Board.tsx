@@ -1,5 +1,5 @@
 /* eslint-disable no-alert */
-import React, { useState, useEffect, MouseEvent } from "react";
+import React, { useState, useEffect, useRef, MouseEvent } from "react";
 import { styled } from "styled-components";
 import Column from "./Column.tsx";
 import { CardType } from "../types.ts";
@@ -21,11 +21,13 @@ export default function Board() {
       id: number;
       title: string;
       content: string;
+      columnId: number;
     };
   } | null>(null);
   const [currBelowCardId, setCurrBelowCardId] = useState<number | null>(null);
   const [currCardShadowInsertPosition, setCurrCardShadowInsertPosition] =
     useState<"before" | "after" | null>(null);
+  const shadowRef = useRef<HTMLLIElement | null>(null);
 
   useEffect(() => {
     const fetchBoard = async () => {
@@ -156,6 +158,7 @@ export default function Board() {
         id: number;
         title: string;
         content: string;
+        columnId: number;
       };
     } | null
   ) => {
@@ -165,6 +168,36 @@ export default function Board() {
   const resetCardShadowHandler = () => {
     setCurrBelowCardId(null);
     setCurrCardShadowInsertPosition(null);
+  };
+
+  const blahblah = (evt: MouseEvent) => {
+    const belowCard = getCardFromPoint(evt.clientX, evt.clientY);
+    if (belowCard) {
+      setCurrBelowCardId((prevBelowCardId) => {
+        const newBelowCardId = Number(belowCard?.dataset.id);
+        if (prevBelowCardId !== newBelowCardId) {
+          return newBelowCardId;
+        }
+        return prevBelowCardId;
+      });
+    }
+
+    // `belowCard`의 전/후 위치 판별
+    const cardShadowInsertPosition =
+      (belowCard?.getBoundingClientRect().y ?? 0) +
+        (belowCard?.getBoundingClientRect().height ?? 0) / 2 >
+      evt.clientY
+        ? "before"
+        : "after";
+
+    if (belowCard) {
+      setCurrCardShadowInsertPosition((prevInsertPosition) => {
+        if (prevInsertPosition !== cardShadowInsertPosition) {
+          return cardShadowInsertPosition;
+        }
+        return prevInsertPosition;
+      });
+    }
   };
 
   return (
@@ -184,9 +217,11 @@ export default function Board() {
           <Column
             {...{
               key: columnId,
+              shadowRef,
+              columnId,
               name,
               cards,
-              dragCardDetails: dragCard ? dragCard.cardDetails : null,
+              dragCard,
               currBelowCardId,
               currCardShadowInsertPosition,
               currMouseCoords,
@@ -196,6 +231,7 @@ export default function Board() {
               updateMouseCoordsHandler,
               dragCardHandler,
               resetCardShadowHandler,
+              blahblah,
             }}
           />
         )

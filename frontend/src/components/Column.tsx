@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, MouseEvent } from "react";
 import { styled } from "styled-components";
 import Card from "./Card/Card.tsx";
 import NewCard from "./Card/NewCard.tsx";
@@ -8,10 +8,12 @@ import deleteButtonIcon from "../assets/closed.svg";
 import { CardType } from "../types.ts";
 
 export default function Column({
+  shadowRef,
+  columnId,
   name,
   cards,
   currMouseCoords,
-  dragCardDetails,
+  dragCard,
   currBelowCardId,
   currCardShadowInsertPosition,
   addNewCardHandler,
@@ -20,14 +22,21 @@ export default function Column({
   updateMouseCoordsHandler,
   dragCardHandler,
   resetCardShadowHandler,
+  blahblah,
 }: {
+  shadowRef: React.RefObject<HTMLLIElement | null>;
+  columnId: number;
   name: string;
   cards: CardType[];
   currMouseCoords: [number, number];
-  dragCardDetails: {
-    id: number;
-    title: string;
-    content: string;
+  dragCard: {
+    cardRef: React.RefObject<HTMLLIElement>;
+    cardDetails: {
+      id: number;
+      title: string;
+      content: string;
+      columnId: number;
+    };
   } | null;
   currBelowCardId: number | null;
   currCardShadowInsertPosition: "before" | "after" | null;
@@ -45,10 +54,12 @@ export default function Column({
         id: number;
         title: string;
         content: string;
+        columnId: number;
       };
     } | null
   ) => void;
   resetCardShadowHandler: () => void;
+  blahblah: (evt: MouseEvent) => void;
 }) {
   const [isNewCardActive, setIsNewCardActive] = useState(false);
 
@@ -78,7 +89,7 @@ export default function Column({
         </div>
       </Header>
 
-      <ul className="cards-list">
+      <ul className="cards-list" data-column-id={columnId}>
         {isNewCardActive && (
           <NewCard {...{ toggleNewCard, addNewCardHandler }} />
         )}
@@ -87,9 +98,10 @@ export default function Column({
           <Card
             {...{
               key: cardDetails.id,
+              shadowRef,
               cardDetails,
               currMouseCoords,
-              dragCardDetails,
+              dragCard,
               currBelowCardId,
               currCardShadowInsertPosition,
               editCardHandler,
@@ -97,6 +109,7 @@ export default function Column({
               updateMouseCoordsHandler,
               dragCardHandler,
               resetCardShadowHandler,
+              blahblah,
             }}
           />
         ))}

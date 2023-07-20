@@ -89,8 +89,8 @@ export default function CardMode({
       },
       body: JSON.stringify({
         id,
-        title,
-        content,
+        title: newCardTitle,
+        content: newCardContent,
       }),
     });
     const data = await res.json();

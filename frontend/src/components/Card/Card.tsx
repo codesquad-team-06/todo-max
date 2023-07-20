@@ -6,9 +6,10 @@ import CardShadow from "./CardShadow.tsx";
 import { CardType } from "../../types.ts";
 
 export default function Card({
+  shadowRef,
   cardDetails,
   currMouseCoords,
-  dragCardDetails,
+  dragCard,
   currBelowCardId,
   currCardShadowInsertPosition,
   editCardHandler,
@@ -16,17 +17,24 @@ export default function Card({
   updateMouseCoordsHandler,
   dragCardHandler,
   resetCardShadowHandler,
+  blahblah,
 }: {
+  shadowRef: React.RefObject<HTMLLIElement | null>;
   cardDetails: {
     id: number;
     title: string;
     content: string;
+    columnId: number;
   };
   currMouseCoords: [number, number];
-  dragCardDetails: {
-    id: number;
-    title: string;
-    content: string;
+  dragCard: {
+    cardRef: React.RefObject<HTMLLIElement>;
+    cardDetails: {
+      id: number;
+      title: string;
+      content: string;
+      columnId: number;
+    };
   } | null;
   currBelowCardId: number | null;
   currCardShadowInsertPosition: "before" | "after" | null;
@@ -43,10 +51,12 @@ export default function Card({
         id: number;
         title: string;
         content: string;
+        columnId: number;
       };
     } | null
   ) => void;
   resetCardShadowHandler: () => void;
+  blahblah: (evt: MouseEvent) => void;
 }) {
   const [isEditMode, setIsEditMode] = useState<boolean>(false);
   const cardRef = useRef<HTMLLIElement | null>(null);
@@ -64,6 +74,10 @@ export default function Card({
     // 초기 `currMouseCoords = [0,0]` 깜빡임 방지
     updateMouseCoordsHandler(evt.clientX, evt.clientY);
 
+    // ---- create jansang in place
+    blahblah(evt);
+    // ----
+
     // Drag 시작 (그랩된 카드는 마우스 따라서 드래그 중)
     dragCardHandler({
       cardRef,
@@ -71,14 +85,78 @@ export default function Card({
         id: cardDetails.id,
         title: cardDetails.title,
         content: cardDetails.content,
+        columnId: cardDetails.columnId,
       },
     });
+  };
+
+  const determineSiblingCardId = (
+    isSameColumnMove: boolean,
+    currCardShadowInsertPosition: "after" | "before" | null,
+    shadowRef: React.RefObject<HTMLLIElement | null>
+  ) => {
+    // 같은 column으로 이동
+    if (isSameColumnMove) {
+      if (currCardShadowInsertPosition === "before") {
+        const beforeCardId =
+          (shadowRef?.current?.previousElementSibling as HTMLElement)?.dataset
+            .id ?? 0;
+        const afterCardId =
+          (
+            shadowRef.current?.nextElementSibling
+              ?.nextElementSibling as HTMLElement
+          )?.dataset.id ?? 0;
+
+        return [Number(beforeCardId), Number(afterCardId)];
+      }
+
+      if (currCardShadowInsertPosition === "after") {
+        const beforeCardId =
+          (
+            shadowRef.current?.previousElementSibling
+              ?.previousElementSibling as HTMLElement
+          )?.dataset.id ?? 0;
+
+        const afterCardId =
+          (shadowRef.current?.nextElementSibling as HTMLElement)?.dataset.id ??
+          0;
+
+        return [Number(beforeCardId), Number(afterCardId)];
+      }
+    }
+
+    // 다른 column으로 이동
+    const beforeCardId =
+      (shadowRef?.current?.previousElementSibling as HTMLElement)?.dataset.id ??
+      0;
+    const afterCardId =
+      (shadowRef.current?.nextElementSibling as HTMLElement)?.dataset.id ?? 0;
+    return [Number(beforeCardId), Number(afterCardId)];
   };
 
   const mouseUpHandler = (evt: MouseEvent) => {
     if (isEditMode === true || (evt.target as HTMLElement).closest("button")) {
       return;
     }
+
+    const prevColumnId = dragCard?.cardDetails.columnId;
+    const nextColumnId = Number(
+      shadowRef.current?.parentElement?.dataset.columnId ?? 0
+    );
+
+    const isSameColumnMove = prevColumnId === nextColumnId;
+
+    const [beforeCardId, afterCardId] = determineSiblingCardId(
+      isSameColumnMove,
+      currCardShadowInsertPosition,
+      shadowRef
+    );
+
+    // console.log("beforeCardId: ", beforeCardId);
+    // console.log("afterCardId: ", afterCardId);
+    // console.log("prevColumnId: ", prevColumnId);
+    // console.log("nextColumnId: ", nextColumnId);
+    // console.log("-----");
 
     // 잔상 처리
     dragCardHandler(null);
@@ -87,13 +165,39 @@ export default function Card({
     // fetch request
   };
 
+  // const moveCardRequest = async () => {
+  //   const response = await fetch(`/cards/${cardDetails.id}`, {
+  //     method: "PUT",
+  //     headers: {
+  //       "Content-Type": "application/json",
+  //     },
+  //     body: JSON.stringify({
+  //       id: cardDetails.id,
+  //       content: newCardContent,
+  //       columnId: 1,
+  //     }),
+  //   });
+
+  //   const data = await response.json();
+
+  //   if (data.success) {
+  //     return data.card;
+  //   }
+
+  //   const {
+  //     errorCode: { status, code, message },
+  //   } = data;
+  //   throw Error(`${status} ${code}: ${message}`);
+  // };
+
   return (
     <>
       {currBelowCardId === cardDetails.id &&
         currCardShadowInsertPosition === "before" && (
           <CardShadow
-            title={dragCardDetails?.title ?? ""}
-            content={dragCardDetails?.content ?? ""}
+            ref={shadowRef}
+            title={dragCard?.cardDetails.title ?? ""}
+            content={dragCard?.cardDetails.content ?? ""}
             onMouseUp={mouseUpHandler}
           />
         )}
@@ -103,8 +207,8 @@ export default function Card({
         $isEditMode={isEditMode}
         $currCardRef={cardRef}
         $currMouseCoords={currMouseCoords}
-        $dragCardId={dragCardDetails ? dragCardDetails.id : null}
-        $isGrabbed={dragCardDetails?.id === cardDetails.id}
+        $dragCardId={dragCard ? dragCard.cardDetails.id : null}
+        $isGrabbed={dragCard?.cardDetails.id === cardDetails.id}
         onMouseDown={mouseDownHandler}
         onMouseUp={mouseUpHandler}>
         {isEditMode ? (
@@ -129,8 +233,9 @@ export default function Card({
       {currBelowCardId === cardDetails.id &&
         currCardShadowInsertPosition === "after" && (
           <CardShadow
-            title={dragCardDetails?.title ?? ""}
-            content={dragCardDetails?.content ?? ""}
+            ref={shadowRef}
+            title={dragCard?.cardDetails.title ?? ""}
+            content={dragCard?.cardDetails.content ?? ""}
             onMouseUp={mouseUpHandler}
           />
         )}
