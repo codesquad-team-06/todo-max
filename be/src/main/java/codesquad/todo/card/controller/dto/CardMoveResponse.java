@@ -22,5 +22,4 @@ public class CardMoveResponse {
 	public boolean isSuccess() {
 		return success;
 	}
-
 }

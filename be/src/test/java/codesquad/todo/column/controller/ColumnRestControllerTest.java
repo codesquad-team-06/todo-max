@@ -25,6 +25,8 @@ import org.springframework.web.filter.CharacterEncodingFilter;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import codesquad.todo.column.service.ColumnService;
+import codesquad.todo.errors.errorcode.ColumnErrorCode;
+import codesquad.todo.errors.exception.RestApiException;
 import codesquad.todo.errors.handler.GlobalExceptionHandler;
 
 @WebMvcTest(controllers = {ColumnRestController.class})
@@ -170,6 +172,8 @@ class ColumnRestControllerTest {
 			// given
 			String columnId = "9999";
 			// mocking
+			when(columnService.deleteColumn(Long.valueOf(columnId))).thenThrow(
+				new RestApiException(ColumnErrorCode.NOT_FOUND_COLUMN));
 			// when
 			mockMvc.perform(delete("/column/" + columnId))
 				.andExpect(status().isNotFound())
@@ -284,10 +288,9 @@ class ColumnRestControllerTest {
 			// given
 			Long columnId = 9999L;
 			ColumnModifyRequest modifyRequest = new ColumnModifyRequest(columnId, "수정된 제목");
-			ColumnSaveDto columnSaveDto = new ColumnSaveDto(columnId, "수정된 제목");
 			String body = objectMapper.writeValueAsString(modifyRequest);
 			// mocking
-			when(columnService.modifyColumn(any())).thenReturn(columnSaveDto);
+			when(columnService.modifyColumn(any())).thenThrow(new RestApiException(ColumnErrorCode.NOT_FOUND_COLUMN));
 			// when
 			mockMvc.perform(put("/column/" + columnId)
 					.content(body)

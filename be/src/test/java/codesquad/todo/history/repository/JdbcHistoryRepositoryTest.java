@@ -19,6 +19,8 @@ import org.springframework.stereotype.Repository;
 
 import codesquad.todo.card.entity.Card;
 import codesquad.todo.card.repository.CardRepository;
+import codesquad.todo.errors.errorcode.HistoryErrorCode;
+import codesquad.todo.errors.exception.RestApiException;
 import codesquad.todo.history.entity.Actions;
 import codesquad.todo.history.entity.History;
 
@@ -110,5 +112,19 @@ class JdbcHistoryRepositoryTest {
 			() -> assertThat(savedHistory.getActionName()).isEqualTo(history.getActionName()),
 			() -> assertThat(savedHistory.isDeleted()).isEqualTo(history.isDeleted())
 		);
+	}
+
+	@Test
+	@DisplayName("유효하지 않는 id를 전달 받으면 예외를 발생한다")
+	public void findByIdTest() {
+		//given
+		Long id = 100L;
+
+		//when & then
+		RestApiException exception = assertThrows(RestApiException.class, () -> {
+			historyRepository.findById(id);
+		});
+
+		assertEquals(HistoryErrorCode.NOT_FOUND_HISTORY, exception.getErrorCode());
 	}
 }
