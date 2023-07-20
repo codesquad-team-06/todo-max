@@ -3,6 +3,7 @@ package codesquad.todo.card.service;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
@@ -21,6 +22,8 @@ import codesquad.todo.card.entity.Card;
 import codesquad.todo.card.repository.CardRepository;
 import codesquad.todo.column.entity.Column;
 import codesquad.todo.column.repository.ColumnRepository;
+import codesquad.todo.errors.errorcode.ColumnErrorCode;
+import codesquad.todo.errors.exception.RestApiException;
 
 @Service
 public class CardService {
@@ -36,22 +39,35 @@ public class CardService {
 	@Transactional(readOnly = true)
 	public List<CardListResponse> getAllCard() {
 		List<CardListResponse> cardListResponses = new ArrayList<>();
-		// 1. 모든 카드 조회
+		// 1. 모든 컬럼 조회
 		List<Column> columns = columnRepository.findAll();
 
-		for (Column column : columns) {
-			// 2. 컬럼 아이디에 따른 카드 조회
-			List<CardSearchResponse> cards = cardRepository.findAllByColumnId(column.getId())
-				.stream()
+		// 2. 모든 카드 조회
+		List<Card> allCards = cardRepository.findAll();
+
+		// 3. 컬럼 아이디별 카드 리스트로 변환
+		Map<Long, List<Card>> cardsByColumnIdMap = allCards.stream()
+			.collect(Collectors.groupingBy(Card::getColumnId));
+
+		// 4. 컬럼 아이디별 카드 리스트를 DTO 객체로 변환
+		for (Long columnId : cardsByColumnIdMap.keySet()) {
+			String columnName = getColumnName(columns, columnId);
+			List<Card> cardsByColumnId = cardsByColumnIdMap.get(columnId);
+			List<CardSearchResponse> cardSearchResponses = cardsByColumnId.stream()
 				.sorted(Comparator.comparingInt(Card::getPosition).reversed())
 				.map(CardSearchResponse::from)
 				.collect(Collectors.toUnmodifiableList());
-
-			// 3. DTO 객체로 변환하여 결과 리스트에 저장
-			cardListResponses.add(new CardListResponse(column.getId(), column.getName(), cards));
+			cardListResponses.add(new CardListResponse(columnId, columnName, cardSearchResponses));
 		}
-
 		return cardListResponses;
+	}
+
+	private String getColumnName(List<Column> columns, Long columnId) {
+		return columns.stream()
+			.filter(column -> column.getId().equals(columnId))
+			.map(Column::getName)
+			.findAny()
+			.orElseThrow(() -> new RestApiException(ColumnErrorCode.NOT_FOUND_COLUMN));
 	}
 
 	public CardSaveResponse saveCard(CardSaveRequest cardSaveRequest) {
