@@ -18,11 +18,10 @@ public enum Actions {
 		return name;
 	}
 
-	// todo : 예외 수정
 	public static Actions fromMethodName(String methodName) {
 		return Arrays.stream(Actions.values())
 			.filter(actions -> actions.name().equalsIgnoreCase(methodName.substring(0, methodName.length() - 4)))
 			.findFirst()
-			.orElseThrow(() -> new RuntimeException());
+			.orElseThrow(() -> new IllegalArgumentException("Invalid method name: " + methodName));
 	}
 }
