@@ -4,6 +4,7 @@ import { styled, keyframes, css } from "styled-components";
 import ActivityHistoryItem from "./ActivityHistoryItem.tsx";
 import closeButtonIcon from "../../assets/closed.svg";
 import { ModalContext } from "../../context/ModalContext.tsx";
+import { API_URL } from "../../index.tsx";
 
 type History = {
   id: number;
@@ -27,7 +28,7 @@ export default function ActivityHistory({
   useEffect(() => {
     const fetchHistory = async () => {
       try {
-        const response = await fetch("/histories");
+        const response = await fetch(`${API_URL}/histories`);
         const historyData = await response.json();
 
         if (response.status === 200) {
@@ -45,7 +46,7 @@ export default function ActivityHistory({
   }, []);
 
   const deleteHistoryRequest = async () => {
-    const response = await fetch("/histories", {
+    const response = await fetch(`${API_URL}/histories`, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",

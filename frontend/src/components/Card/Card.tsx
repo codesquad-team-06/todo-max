@@ -4,6 +4,7 @@ import CardDisplay from "./CardDisplay.tsx";
 import CardMode from "./CardMode.tsx";
 import CardShadow from "./CardShadow.tsx";
 import { CardType } from "../../types.ts";
+import { API_URL } from "../../index.tsx";
 
 export default function Card({
   shadowRef,
