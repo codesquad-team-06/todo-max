@@ -12,7 +12,7 @@ export default function CardShadow({
   content: string;
 }) {
   return (
-    <StyledCard>
+    <StyledCard className="card-shadow">
       <div className="card-info-container">
         <h3 className="card-title">{title}</h3>
         <p className="card-content">{content}</p>
@@ -78,7 +78,7 @@ const StyledCard = styled.li`
     flex-direction: column;
 
     button {
-      cursor: default;
+      cursor: grabbing;
     }
   }
 `;

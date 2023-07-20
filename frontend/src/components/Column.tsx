@@ -11,17 +11,28 @@ export default function Column({
   name,
   cards,
   currMouseCoords,
-  dragCardId,
+  dragCard,
+  currBelowCardId,
+  currCardShadowInsertPosition,
   addNewCardHandler,
   editCardHandler,
   deleteCardHandler,
   updateMouseCoordsHandler,
-  dragCardIdHandler,
+  dragCardHandler,
 }: {
   name: string;
   cards: CardType[];
   currMouseCoords: [number, number];
-  dragCardId: number | null;
+  dragCard: {
+    cardRef: React.RefObject<HTMLLIElement> | null;
+    cardDetails: {
+      id: number;
+      title: string;
+      content: string;
+    } | null;
+  };
+  currBelowCardId: number | null;
+  currCardShadowInsertPosition: "before" | "after" | null;
   addNewCardHandler: (card: CardType) => void;
   editCardHandler: (card: CardType) => void;
   deleteCardHandler: (deletedCardInfo: {
@@ -29,7 +40,17 @@ export default function Column({
     columnId: number;
   }) => void;
   updateMouseCoordsHandler: (x: number, y: number) => void;
-  dragCardIdHandler: (cardId: number | null) => void;
+  dragCardHandler: ({
+    cardRef,
+    cardDetails,
+  }: {
+    cardRef: React.RefObject<HTMLLIElement> | null;
+    cardDetails: {
+      id: number;
+      title: string;
+      content: string;
+    } | null;
+  }) => void;
 }) {
   const [isNewCardActive, setIsNewCardActive] = useState(false);
 
@@ -70,11 +91,13 @@ export default function Column({
               key: cardDetails.id,
               cardDetails,
               currMouseCoords,
-              dragCardId,
+              dragCard,
+              currBelowCardId,
+              currCardShadowInsertPosition,
               editCardHandler,
               deleteCardHandler,
               updateMouseCoordsHandler,
-              dragCardIdHandler,
+              dragCardHandler,
             }}
           />
         ))}
