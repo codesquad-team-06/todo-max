@@ -82,7 +82,8 @@ public class JdbcCardRepository implements CardRepository {
 
 	@Override
 	public Card findById(Long id) {
-		String sql = "SELECT id,title,content,position,is_deleted,column_id FROM card WHERE id = :id AND is_deleted = FALSE";
+		String sql = "SELECT id,title,content,position,is_deleted,column_id "
+			+ "FROM card WHERE id = :id AND is_deleted = FALSE";
 		return template.query(sql, Map.of("id", id), cardRowMapper).stream()
 			.findAny()
 			.orElseThrow(() -> new RestApiException(CardErrorCode.NOT_FOUND_CARD));
