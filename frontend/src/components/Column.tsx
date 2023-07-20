@@ -11,7 +11,7 @@ export default function Column({
   name,
   cards,
   currMouseCoords,
-  dragCard,
+  dragCardDetails,
   currBelowCardId,
   currCardShadowInsertPosition,
   addNewCardHandler,
@@ -23,14 +23,11 @@ export default function Column({
   name: string;
   cards: CardType[];
   currMouseCoords: [number, number];
-  dragCard: {
-    cardRef: React.RefObject<HTMLLIElement> | null;
-    cardDetails: {
-      id: number;
-      title: string;
-      content: string;
-    } | null;
-  };
+  dragCardDetails: {
+    id: number;
+    title: string;
+    content: string;
+  } | null;
   currBelowCardId: number | null;
   currCardShadowInsertPosition: "before" | "after" | null;
   addNewCardHandler: (card: CardType) => void;
@@ -40,17 +37,16 @@ export default function Column({
     columnId: number;
   }) => void;
   updateMouseCoordsHandler: (x: number, y: number) => void;
-  dragCardHandler: ({
-    cardRef,
-    cardDetails,
-  }: {
-    cardRef: React.RefObject<HTMLLIElement> | null;
-    cardDetails: {
-      id: number;
-      title: string;
-      content: string;
-    } | null;
-  }) => void;
+  dragCardHandler: (
+    dragCard: {
+      cardRef: React.RefObject<HTMLLIElement>;
+      cardDetails: {
+        id: number;
+        title: string;
+        content: string;
+      };
+    } | null
+  ) => void;
 }) {
   const [isNewCardActive, setIsNewCardActive] = useState(false);
 
@@ -91,7 +87,7 @@ export default function Column({
               key: cardDetails.id,
               cardDetails,
               currMouseCoords,
-              dragCard,
+              dragCardDetails,
               currBelowCardId,
               currCardShadowInsertPosition,
               editCardHandler,

@@ -8,7 +8,7 @@ import { CardType } from "../../types.ts";
 export default function Card({
   cardDetails,
   currMouseCoords,
-  dragCard,
+  dragCardDetails,
   currBelowCardId,
   currCardShadowInsertPosition,
   editCardHandler,
@@ -22,14 +22,11 @@ export default function Card({
     content: string;
   };
   currMouseCoords: [number, number];
-  dragCard: {
-    cardRef: React.RefObject<HTMLLIElement> | null;
-    cardDetails: {
-      id: number;
-      title: string;
-      content: string;
-    } | null;
-  };
+  dragCardDetails: {
+    id: number;
+    title: string;
+    content: string;
+  } | null;
   currBelowCardId: number | null;
   currCardShadowInsertPosition: "before" | "after" | null;
   editCardHandler: (card: CardType) => void;
@@ -38,17 +35,16 @@ export default function Card({
     columnId: number;
   }) => void;
   updateMouseCoordsHandler: (x: number, y: number) => void;
-  dragCardHandler: ({
-    cardRef,
-    cardDetails,
-  }: {
-    cardRef: React.RefObject<HTMLLIElement> | null;
-    cardDetails: {
-      id: number;
-      title: string;
-      content: string;
-    } | null;
-  }) => void;
+  dragCardHandler: (
+    dragCard: {
+      cardRef: React.RefObject<HTMLLIElement>;
+      cardDetails: {
+        id: number;
+        title: string;
+        content: string;
+      };
+    } | null
+  ) => void;
 }) {
   const [isEditMode, setIsEditMode] = useState<boolean>(false);
   const cardRef = useRef<HTMLLIElement | null>(null);
@@ -80,7 +76,7 @@ export default function Card({
     if (isEditMode === true || (evt.target as HTMLElement).closest("button"))
       return;
 
-    dragCardHandler({ cardRef: null, cardDetails: null });
+    dragCardHandler(null);
   };
 
   return (
@@ -88,8 +84,8 @@ export default function Card({
       {currBelowCardId === cardDetails.id &&
         currCardShadowInsertPosition === "before" && (
           <CardShadow
-            title={dragCard.cardDetails?.title ?? ""}
-            content={dragCard.cardDetails?.content ?? ""}
+            title={dragCardDetails?.title ?? ""}
+            content={dragCardDetails?.content ?? ""}
           />
         )}
       <StyledCard
@@ -98,8 +94,8 @@ export default function Card({
         $isEditMode={isEditMode}
         $currCardRef={cardRef}
         $currMouseCoords={currMouseCoords}
-        $dragCardId={dragCard.cardDetails ? dragCard.cardDetails.id : null}
-        $isGrabbed={dragCard.cardDetails?.id === cardDetails.id}
+        $dragCardId={dragCardDetails ? dragCardDetails.id : null}
+        $isGrabbed={dragCardDetails?.id === cardDetails.id}
         onMouseDown={mouseDownHandler}
         onMouseUp={mouseUpHandler}>
         {isEditMode ? (
@@ -124,8 +120,8 @@ export default function Card({
       {currBelowCardId === cardDetails.id &&
         currCardShadowInsertPosition === "after" && (
           <CardShadow
-            title={dragCard.cardDetails?.title ?? ""}
-            content={dragCard.cardDetails?.content ?? ""}
+            title={dragCardDetails?.title ?? ""}
+            content={dragCardDetails?.content ?? ""}
           />
         )}
     </>

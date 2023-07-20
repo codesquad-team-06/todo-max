@@ -16,13 +16,13 @@ export default function Board() {
     0, 0,
   ]);
   const [dragCard, setDragCard] = useState<{
-    cardRef: React.RefObject<HTMLLIElement> | null;
+    cardRef: React.RefObject<HTMLLIElement>;
     cardDetails: {
       id: number;
       title: string;
       content: string;
-    } | null;
-  }>({ cardRef: null, cardDetails: null });
+    };
+  } | null>(null);
   const [currBelowCardId, setCurrBelowCardId] = useState<number | null>(null);
   const [currCardShadowInsertPosition, setCurrCardShadowInsertPosition] =
     useState<"before" | "after" | null>(null);
@@ -97,7 +97,7 @@ export default function Board() {
   };
 
   const mouseMoveHandler = (evt: MouseEvent) => {
-    if (dragCard.cardDetails && dragCard.cardRef) {
+    if (dragCard?.cardDetails && dragCard?.cardRef) {
       updateMouseCoordsHandler(evt.clientX, evt.clientY);
 
       // 현재 커서로 잡고 있는 카드의 포인터 이벤트 제거
@@ -149,20 +149,22 @@ export default function Board() {
       : null;
   }
 
-  const dragCardHandler = (dragCard: {
-    cardRef: React.RefObject<HTMLLIElement> | null;
-    cardDetails: {
-      id: number;
-      title: string;
-      content: string;
-    } | null;
-  }) => {
+  const dragCardHandler = (
+    dragCard: {
+      cardRef: React.RefObject<HTMLLIElement>;
+      cardDetails: {
+        id: number;
+        title: string;
+        content: string;
+      };
+    } | null
+  ) => {
     setDragCard(dragCard);
   };
 
   return (
     <StyledBoard
-      $dragCardId={dragCard.cardDetails ? dragCard.cardDetails.id : null}
+      $dragCardId={dragCard ? dragCard.cardDetails.id : null}
       onMouseMove={mouseMoveHandler}>
       {board.map(
         ({
@@ -179,7 +181,7 @@ export default function Board() {
               key: columnId,
               name,
               cards,
-              dragCard,
+              dragCardDetails: dragCard ? dragCard.cardDetails : null,
               currBelowCardId,
               currCardShadowInsertPosition,
               currMouseCoords,
