@@ -79,21 +79,21 @@ public class CardService {
 	@Transactional
 	public CardSaveResponse saveCard(CardSaveRequest cardSaveRequest) {
 		Card card = cardRepository.save(cardSaveRequest.toEntity());
-		generateHistory(card, Actions.REGISTERED, List.of(card.getColumnId()));
+		generateHistory(card, Actions.SAVE, List.of(card.getColumnId()));
 		return CardSaveResponse.from(card);
 	}
 
 	@Transactional
 	public CardModifyResponse modifyCard(CardModifyRequest cardModifyRequest) {
 		Card card = cardRepository.modify(cardModifyRequest.toEntity());
-		generateHistory(card, Actions.MODIFIED, List.of(card.getColumnId()));
+		generateHistory(card, Actions.MODIFY, List.of(card.getColumnId()));
 		return CardModifyResponse.from(card);
 	}
 
 	@Transactional
 	public CardDeleteResponse deleteCard(Long cardId) {
 		Card card = cardRepository.deleteById(cardId);
-		generateHistory(card, Actions.DELETED, List.of(card.getColumnId()));
+		generateHistory(card, Actions.DELETE, List.of(card.getColumnId()));
 		return CardDeleteResponse.from(card);
 	}
 
@@ -111,7 +111,7 @@ public class CardService {
 		Card moveCard = cardRepository.move(cardMoveRequest.getId(), calculatePosition,
 			cardMoveRequest.getNextColumnId());
 
-		generateHistory(moveCard, Actions.MOVED,
+		generateHistory(moveCard, Actions.MOVE,
 			List.of(cardMoveRequest.getPrevColumnId(), cardMoveRequest.getNextColumnId()));
 		return CardMoveResponse.from(moveCard);
 	}
