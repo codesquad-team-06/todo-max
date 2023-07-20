@@ -102,14 +102,10 @@ public class CardService {
 
 	public void generateHistory(Card card, Actions action, List<Long> columnIds) {
 		List<String> columnNames = columnRepository.findAllNameById(columnIds);
-		if (columnIds.size() == 1) {
-			historyService.save(
-				new HistorySaveDto(card.getTitle(), columnNames.get(0), columnNames.get(0), action.getName(),
-					card.getId()));
-		} else {
-			historyService.save(
-				new HistorySaveDto(card.getTitle(), columnNames.get(0), columnNames.get(1), action.getName(),
-					card.getId()));
-		}
+		String prevColumnName = columnNames.get(0);
+		String nextColumnName = columnNames.stream().skip(1).findFirst().orElse(prevColumnName);
+		historyService.save(
+			new HistorySaveDto(card.getTitle(), prevColumnName, nextColumnName, action.getName(), card.getId())
+		);
 	}
 }
