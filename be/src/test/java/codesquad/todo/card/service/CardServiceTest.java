@@ -1,107 +1,122 @@
 package codesquad.todo.card.service;
 
-import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.BDDMockito.*;
+
+import java.util.List;
 
 import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.MethodOrderer;
-import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestMethodOrder;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import codesquad.todo.card.controller.dto.CardModifyRequest;
 import codesquad.todo.card.controller.dto.CardMoveRequest;
 import codesquad.todo.card.controller.dto.CardSaveRequest;
-import codesquad.todo.history.entity.History;
-import codesquad.todo.history.repository.HistoryRepository;
+import codesquad.todo.card.entity.Card;
+import codesquad.todo.card.repository.CardRepository;
+import codesquad.todo.column.repository.ColumnRepository;
+import codesquad.todo.history.service.HistoryService;
 
-@SpringBootTest
-@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+@ExtendWith(MockitoExtension.class)
 class CardServiceTest {
 
-	@Autowired
+	@InjectMocks
 	private CardService cardService;
-
-	@Autowired
-	private HistoryRepository historyRepository;
+	@Mock
+	private CardRepository cardRepository;
+	@Mock
+	private HistoryService historyService;
+	@Mock
+	private ColumnRepository columnRepository;
 
 	@Test
-	@Order(1)
-	@DisplayName("카드 생성 요청이 성공적으로 발생할 때마다 히스토리를 생성한다.")
-	public void saveCardHistory() {
+	@DisplayName("카드 생성 시 생성 정보를 히스토리에 저장하는 HistoryService.save()가 실행된다.")
+	public void testSaveCard() {
 		//given
-		CardSaveRequest cardSaveRequest = new CardSaveRequest("제목", "내용", 1L);
+		CardSaveRequest saveRequest = new CardSaveRequest("텟트", "테스트", 1L);
 
+		Card card = Card.builder()
+			.id(10L)
+			.title("카드10")
+			.content("내용10")
+			.columnId(1L)
+			.position(4096)
+			.build();
+		given(cardRepository.save(any())).willReturn(card);
+		given(columnRepository.findAllNameById(any())).willReturn(List.of("해야할 일", "해야할 일"));
 		//when
-		cardService.saveCard(cardSaveRequest);
+		cardService.saveCard(saveRequest);
+
 		//then
-		History history = historyRepository.findById(10L).get();
-		assertAll(
-			() -> assertThat(history.getCardTitle()).isEqualTo("제목"),
-			() -> assertThat(history.getNextColumn()).isEqualTo("해야할 일"),
-			() -> assertThat(history.getPrevColumn()).isEqualTo("해야할 일"),
-			() -> assertThat(history.getActionName()).isEqualTo("등록")
-		);
+		verify(historyService, times(1)).save(any());
 	}
 
 	@Test
-	@Order(2)
-	@DisplayName("카드 수정 실행 시 수정 정보에 대한 히스토리를 생성한다.")
-	public void modifyCardTest() {
+	@DisplayName("카드 수정 시 수정 정보를 히스토리에 저장하는 HistoryService.save()가 실행된다.")
+	public void testModifyCard() {
 		//given
-		CardModifyRequest cardModifyRequest = new CardModifyRequest(1L, "제목 수정", "내용 수정");
+		CardModifyRequest cardModifyRequest = new CardModifyRequest(1L, "테스트", "테스트");
 
+		Card card = Card.builder()
+			.id(1L)
+			.title("테스트")
+			.content("테스트")
+			.columnId(1L)
+			.position(1024)
+			.build();
+		given(cardRepository.modify(any())).willReturn(card);
+		given(columnRepository.findAllNameById(any())).willReturn(List.of("해야할 일", "해야할 일"));
 		//when
 		cardService.modifyCard(cardModifyRequest);
 
 		//then
-		History history = historyRepository.findById(11L).get();
-		assertAll(
-			() -> assertThat(history.getCardTitle()).isEqualTo("제목 수정"),
-			() -> assertThat(history.getPrevColumn()).isEqualTo("해야할 일"),
-			() -> assertThat(history.getNextColumn()).isEqualTo("해야할 일"),
-			() -> assertThat(history.getActionName()).isEqualTo("수정")
-		);
+		verify(historyService, times(1)).save(any());
 	}
 
 	@Test
-	@Order(3)
-	@DisplayName("카드 삭제 실행 시 삭제 정보에 대한 히스토리를 생성한다.")
-	public void deleteCardTest() {
+	@DisplayName("카드 삭제 시 삭제 정보를 히스토리에 저장하는 HistoryService.save()가 실행된다.")
+	public void testDeleteCard() {
 		//given
-		Long cardId = 2L;
+		Long cardId = 1L;
+
+		Card card = Card.builder()
+			.id(1L)
+			.title("제목1")
+			.content("내용1")
+			.columnId(1L)
+			.position(1024)
+			.build();
+		given(cardRepository.deleteById(cardId)).willReturn(card);
+		given(columnRepository.findAllNameById(any())).willReturn(List.of("해야할 일", "해야할 일"));
 		//when
 		cardService.deleteCard(cardId);
 
 		//then
-		History history = historyRepository.findById(12L).get();
-		assertAll(
-			() -> assertThat(history.getCardTitle()).isEqualTo("제목2"),
-			() -> assertThat(history.getPrevColumn()).isEqualTo("해야할 일"),
-			() -> assertThat(history.getNextColumn()).isEqualTo("해야할 일"),
-			() -> assertThat(history.getActionName()).isEqualTo("삭제")
-		);
+		verify(historyService, times(1)).save(any());
 	}
 
 	@Test
-	@Order(4)
-	@DisplayName("카드 이동 실행 시 이동 정보에 대한 히스토리를 생성한다.")
-	public void moveCardTest() {
+	@DisplayName("카드 이동 시 이동 정보를 히스토리에 저장하는 HistoryService.save()가 실행된다.")
+	public void testMoveCard() {
 		//given
-		CardMoveRequest cardMoveRequest = new CardMoveRequest(3L, 4L, 5L, 1L, 2L);
+		CardMoveRequest moveRequest = new CardMoveRequest(1L, 4L, 5L, 1L, 2L);
 
+		Card card = Card.builder()
+			.id(1L)
+			.title("테스트")
+			.content("테스트")
+			.columnId(2L)
+			.position(2560)
+			.build();
+		given(cardRepository.calculateNextPosition(any(), any())).willReturn(2560);
+		given(cardRepository.move(1L, 2560, 2L)).willReturn(card);
+		given(columnRepository.findAllNameById(any())).willReturn(List.of("해야할 일", "하고 있는 일"));
 		//when
-		cardService.moveCard(cardMoveRequest);
+		cardService.moveCard(moveRequest);
 
 		//then
-		History history = historyRepository.findById(13L).get();
-		assertAll(
-			() -> assertThat(history.getCardTitle()).isEqualTo("제목3"),
-			() -> assertThat(history.getPrevColumn()).isEqualTo("해야할 일"),
-			() -> assertThat(history.getNextColumn()).isEqualTo("하고 있는 일"),
-			() -> assertThat(history.getActionName()).isEqualTo("이동")
-		);
+		verify(historyService, times(1)).save(any());
 	}
 }

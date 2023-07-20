@@ -100,7 +100,7 @@ public class CardService {
 		return CardMoveResponse.from(moveCard);
 	}
 
-	private void generateHistory(Card card, Actions action, List<Long> columnIds) {
+	public void generateHistory(Card card, Actions action, List<Long> columnIds) {
 		List<String> columnNames = columnRepository.findAllNameById(columnIds);
 		if (columnIds.size() == 1) {
 			historyService.save(

@@ -5,7 +5,6 @@ public class CardMoveRequest {
 	private Long prevCardId;
 	private Long nextCardId;
 	private Long prevColumnId;
-
 	private Long nextColumnId;
 
 	public CardMoveRequest() {
@@ -15,8 +14,8 @@ public class CardMoveRequest {
 		this.id = id;
 		this.prevCardId = prevCardId;
 		this.nextCardId = nextCardId;
-		this.nextColumnId = nextColumnId;
 		this.prevColumnId = prevColumnId;
+		this.nextColumnId = nextColumnId;
 	}
 
 	public Long getId() {
