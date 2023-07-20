@@ -1,6 +1,7 @@
 package codesquad.todo.card.controller;
 
 import static org.hamcrest.Matchers.*;
+import static org.mockito.BDDMockito.any;
 import static org.mockito.BDDMockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.*;
@@ -83,7 +84,7 @@ class CardRestControllerTest {
 		given(cardService.modifyCard(any())).willReturn(cardModifyResponse);
 
 		//then
-		mockMvc.perform(put("/cards")
+		mockMvc.perform(put("/cards/1")
 				.content(objectMapper.writeValueAsString(cardModifyRequest))
 				.contentType(MediaType.APPLICATION_JSON_VALUE))
 			.andExpect(status().isOk())
@@ -147,7 +148,7 @@ class CardRestControllerTest {
 	@DisplayName("카드이동 요청을 받아 입력받은 위치로 카드를 이동시킨 후 이동 시킨 카드의 데이터를 반환한다.")
 	public void testMoveCard() throws Exception {
 		// given
-		CardMoveRequest cardMoveRequest = new CardMoveRequest(7L, 5L, 4L, 2L);
+		CardMoveRequest cardMoveRequest = new CardMoveRequest(7L, 5L, 4L, 3L, 2L);
 		CardMoveResponse cardMoveResponse = new CardMoveResponse(new CardResponseDto(7L, "제목7", "내용7", 1536, 2L), true);
 		given(cardService.moveCard(any())).willReturn(cardMoveResponse);
 		// when then
