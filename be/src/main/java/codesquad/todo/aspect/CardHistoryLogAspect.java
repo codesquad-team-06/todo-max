@@ -64,7 +64,7 @@ public class CardHistoryLogAspect {
 		CardMoveRequest cardMoveRequest = (CardMoveRequest)proceedingJoinPoint.getArgs()[0];
 		CardMoveResponse cardMoveResponse = (CardMoveResponse)proceedingJoinPoint.proceed();
 		generateHistory(cardMoveResponse.getCard(), Actions.MOVED,
-			List.of(cardMoveRequest.getPrevCardId(), cardMoveRequest.getNextCardId()));
+			List.of(cardMoveRequest.getPrevColumnId(), cardMoveRequest.getNextColumnId()));
 		return cardMoveResponse;
 	}
 
