@@ -23,7 +23,4 @@ public class CardMoveResponse {
 		return success;
 	}
 
-	public static CardMoveResponse from(Card card) {
-		return new CardMoveResponse(CardResponseDTO.from(card), true);
-	}
 }
