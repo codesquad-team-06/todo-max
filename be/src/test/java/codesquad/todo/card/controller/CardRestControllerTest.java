@@ -83,7 +83,7 @@ class CardRestControllerTest {
 		given(cardService.modifyCard(any())).willReturn(cardModifyResponse);
 
 		//then
-		mockMvc.perform(put("/cards")
+		mockMvc.perform(put("/cards/1")
 				.content(objectMapper.writeValueAsString(cardModifyRequest))
 				.contentType(MediaType.APPLICATION_JSON_VALUE))
 			.andExpect(status().isOk())

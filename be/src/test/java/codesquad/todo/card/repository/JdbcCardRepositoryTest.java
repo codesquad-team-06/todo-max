@@ -18,6 +18,7 @@ import org.springframework.context.annotation.FilterType;
 import org.springframework.stereotype.Repository;
 
 import codesquad.todo.card.entity.Card;
+import codesquad.todo.errors.exception.RestApiException;
 
 // Repository 애노테이션이 붙은 클래스만 빈으로 등록
 @DataJpaTest(includeFilters = @ComponentScan.Filter(type = FilterType.ANNOTATION, classes = Repository.class))
@@ -84,9 +85,13 @@ class JdbcCardRepositoryTest {
 
 		//then
 		assertAll(
-			() -> assertThat(deletedCard.isDeleted()).isTrue(),
-			() -> assertThat(deletedCard.getId()).isEqualTo(cardId)
+			() -> assertThat(deletedCard.isDeleted()).isFalse(),
+			() -> assertThat(deletedCard.getId()).isEqualTo(cardId),
+			() -> assertThrows(RestApiException.class, () -> {
+				cardRepository.findById(cardId);
+			})
 		);
+
 	}
 
 	@Test
