@@ -15,6 +15,7 @@ export default function Card({
   deleteCardHandler,
   updateMouseCoordsHandler,
   dragCardHandler,
+  resetCardShadowHandler,
 }: {
   cardDetails: {
     id: number;
@@ -45,6 +46,7 @@ export default function Card({
       };
     } | null
   ) => void;
+  resetCardShadowHandler: () => void;
 }) {
   const [isEditMode, setIsEditMode] = useState<boolean>(false);
   const cardRef = useRef<HTMLLIElement | null>(null);
@@ -55,8 +57,9 @@ export default function Card({
 
   const mouseDownHandler = (evt: MouseEvent) => {
     // Edge Cases
-    if (isEditMode === true || (evt.target as HTMLElement).closest("button"))
+    if (isEditMode === true || (evt.target as HTMLElement).closest("button")) {
       return;
+    }
 
     // 초기 `currMouseCoords = [0,0]` 깜빡임 방지
     updateMouseCoordsHandler(evt.clientX, evt.clientY);
@@ -73,10 +76,15 @@ export default function Card({
   };
 
   const mouseUpHandler = (evt: MouseEvent) => {
-    if (isEditMode === true || (evt.target as HTMLElement).closest("button"))
+    if (isEditMode === true || (evt.target as HTMLElement).closest("button")) {
       return;
+    }
 
+    // 잔상 처리
     dragCardHandler(null);
+    resetCardShadowHandler();
+
+    // fetch request
   };
 
   return (
@@ -86,6 +94,7 @@ export default function Card({
           <CardShadow
             title={dragCardDetails?.title ?? ""}
             content={dragCardDetails?.content ?? ""}
+            onMouseUp={mouseUpHandler}
           />
         )}
       <StyledCard
@@ -122,6 +131,7 @@ export default function Card({
           <CardShadow
             title={dragCardDetails?.title ?? ""}
             content={dragCardDetails?.content ?? ""}
+            onMouseUp={mouseUpHandler}
           />
         )}
     </>

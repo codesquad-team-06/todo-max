@@ -19,6 +19,7 @@ export default function Column({
   deleteCardHandler,
   updateMouseCoordsHandler,
   dragCardHandler,
+  resetCardShadowHandler,
 }: {
   name: string;
   cards: CardType[];
@@ -47,6 +48,7 @@ export default function Column({
       };
     } | null
   ) => void;
+  resetCardShadowHandler: () => void;
 }) {
   const [isNewCardActive, setIsNewCardActive] = useState(false);
 
@@ -94,6 +96,7 @@ export default function Column({
               deleteCardHandler,
               updateMouseCoordsHandler,
               dragCardHandler,
+              resetCardShadowHandler,
             }}
           />
         ))}

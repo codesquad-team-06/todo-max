@@ -1,4 +1,4 @@
-import React from "react";
+import React, { MouseEvent } from "react";
 import { styled } from "styled-components";
 import IconButton from "../common/IconButton.tsx";
 import deleteButtonIcon from "../../assets/closed.svg";
@@ -7,12 +7,14 @@ import editButtonIcon from "../../assets/edit.svg";
 export default function CardShadow({
   title,
   content,
+  onMouseUp,
 }: {
   title: string;
   content: string;
+  onMouseUp: (evt: MouseEvent) => void;
 }) {
   return (
-    <StyledCard className="card-shadow">
+    <StyledCard className="card-shadow" onMouseUp={onMouseUp}>
       <div className="card-info-container">
         <h3 className="card-title">{title}</h3>
         <p className="card-content">{content}</p>

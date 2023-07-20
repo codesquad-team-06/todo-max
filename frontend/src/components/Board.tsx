@@ -92,10 +92,6 @@ export default function Board() {
     });
   };
 
-  const updateMouseCoordsHandler = (x: number, y: number) => {
-    setCurrMouseCoords([x, y]);
-  };
-
   const mouseMoveHandler = (evt: MouseEvent) => {
     if (dragCard?.cardDetails && dragCard?.cardRef) {
       updateMouseCoordsHandler(evt.clientX, evt.clientY);
@@ -138,7 +134,7 @@ export default function Board() {
   };
 
   // Get the element that is at the specified coordinates.
-  function getCardFromPoint(x: number, y: number): HTMLLIElement | null {
+  const getCardFromPoint = (x: number, y: number): HTMLLIElement | null => {
     const elementBelow = document.elementFromPoint(x, y);
     const card = elementBelow?.closest("li");
 
@@ -147,7 +143,11 @@ export default function Board() {
         ? card
         : null
       : null;
-  }
+  };
+
+  const updateMouseCoordsHandler = (x: number, y: number) => {
+    setCurrMouseCoords([x, y]);
+  };
 
   const dragCardHandler = (
     dragCard: {
@@ -160,6 +160,11 @@ export default function Board() {
     } | null
   ) => {
     setDragCard(dragCard);
+  };
+
+  const resetCardShadowHandler = () => {
+    setCurrBelowCardId(null);
+    setCurrCardShadowInsertPosition(null);
   };
 
   return (
@@ -190,6 +195,7 @@ export default function Board() {
               deleteCardHandler,
               updateMouseCoordsHandler,
               dragCardHandler,
+              resetCardShadowHandler,
             }}
           />
         )
