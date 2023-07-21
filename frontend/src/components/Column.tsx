@@ -133,6 +133,9 @@ const StyledColumn = styled.div`
     flex-grow: 1;
     gap: 10px;
     overflow-y: auto;
+    &::-webkit-scrollbar {
+      display: none;
+    }
   }
 `;
 

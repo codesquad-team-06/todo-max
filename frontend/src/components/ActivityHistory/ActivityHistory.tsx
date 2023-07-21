@@ -193,6 +193,9 @@ const ListContainer = styled.ul`
   flex-direction: column;
   align-items: center;
   overflow-y: auto;
+  &::-webkit-scrollbar {
+    display: none;
+  }
 `;
 
 const ButtonContainer = styled.div`
