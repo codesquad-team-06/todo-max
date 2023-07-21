@@ -1,10 +1,12 @@
 # todo-max
 
+### 💻 [배포 주소](ec2-43-201-104-148.ap-northeast-2.compute.amazonaws.com)
+
 ## 팀원 소개
 
 | <img src="https://avatars.githubusercontent.com/u/33227831?v=4" width="180" height="180"/> | <img src="https://avatars.githubusercontent.com/u/57559288?v=4" width="180" height="180"/> | <img src="https://avatars.githubusercontent.com/u/107015624?v=4" width="180" height="180"/> | <img src="https://avatars.githubusercontent.com/u/103398897?v=4" width="180" height="180"/> | <img src="https://avatars.githubusercontent.com/u/79886384?v=4" width="180" height="180"/> | <img src="https://avatars.githubusercontent.com/u/76121068?v=4" width="180" height="180"/> |
-| :---: | :---: | :---: | :---: | :---: | :---: |
-| [ 네모네모(BE) ](https://github.com/yonghwankim-dev) | [이안 (BE)](https://github.com/othertkfka) | [지구 (BE)](https://github.com/Ojeegu) | [감귤 (BE)](https://github.com/swinb) | [Kakamotobi (FE)](https://github.com/Kakamotobi) | [퓨즈 (FE)](https://github.com/silvertae) |
+|:------------------------------------------------------------------------------------------:|:------------------------------------------------------------------------------------------:|:-------------------------------------------------------------------------------------------:|:-------------------------------------------------------------------------------------------:|:------------------------------------------------------------------------------------------:|:------------------------------------------------------------------------------------------:|
+|                      [ 네모네모(BE) ](https://github.com/yonghwankim-dev)                      |                          [이안 (BE)](https://github.com/othertkfka)                          |                            [지구 (BE)](https://github.com/Ojeegu)                             |                             [감귤 (BE)](https://github.com/swinb)                             |                      [Kakamotobi (FE)](https://github.com/Kakamotobi)                      |                          [퓨즈 (FE)](https://github.com/silvertae)                           |
 
 <br/>
 
@@ -18,11 +20,11 @@
 
 **스크럼 마스터:** 스크럼 진행 및 내용 작성
 
-| 월 | 화 | 수 | 목 | 금 |
-| :---: | :---: | :---: | :---: | :---: |
-| x | 지구 | 감귤 | 네모네모 | 이안 |
-| 월 | 화 | 수 | 목 | 금 |
-| 퓨즈 | 카카모토비 | 지구 | 퓨즈 | 네모네모 |
+|  월  |   화   |  수  |  목   |  금   |
+|:---:|:-----:|:---:|:----:|:----:|
+|  x  |  지구   | 감귤  | 네모네모 |  이안  |
+|  월  |   화   |  수  |  목   |  금   |
+| 퓨즈  | 카카모토비 | 지구  |  퓨즈  | 네모네모 |
 
 <details>
 <summary><b style="color: gray">Details</b></summary>
@@ -86,7 +88,7 @@
     - 회의 진행 전에 슬랙을 통해 회의 안건을 정리해서 올려놓는다.
     - 회의 진행은 그날의 스크럼 마스터가 진행한다.
     - 만약 회의가 길어지는 경우에는 1시간 진행하고 10분 씩 휴식
- 
+
 <br/>
 
 ## 협업 전략 (브랜치 구조와 분업하기, 의존적인 작업하기)
@@ -114,13 +116,22 @@ ex) [BE] PR 제목
 **PR 메세지 템플릿**
 
 ```tsx
-## What is this PR? 👓
+##
+What
+is
+this
+PR ? 👓
 
-## Key changes 🔑
+##
+Key
+changes 🔑
 
-## To reviewers 👋
+##
+To
+reviewers 👋
 
-## Issues
+##
+Issues
 Closes #{이슈번호}
 Closes #{이슈번호}
 
@@ -165,7 +176,7 @@ Closes #{이슈번호}
 - `♻️refactor` : 코드 리팩토링
 - `✅test` : 테스트 코드
 - `📝docs` : 문서 수정
-- `🎨style` : 코드 포맷팅, 세미콜론 누락, 코드 변경이 없는 경우
+- `🎨style` :코드 포맷팅, 세미콜론 누락, 코드 변경이 없는 경우
 - `💄design` : CSS 등 사용자 UI 디자인 변경
 - `🔧chore` : 빌드 업무 수정, 패키지 매니저 수정 → 패키지 설치, 개발 환경 세팅
 - `🔀merge` : merge
@@ -174,6 +185,7 @@ Closes #{이슈번호}
 - `➕add`: 의존성 추가
 
 ### 이슈 템플릿
+
 ```
 ## Feature
 
