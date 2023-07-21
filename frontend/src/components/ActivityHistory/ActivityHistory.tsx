@@ -11,7 +11,7 @@ type History = {
   cardTitle: string;
   prevColumn: string;
   nextColumn: string;
-  timestamp: string;
+  elapsedTime: string;
   actionName: string;
 };
 
@@ -52,7 +52,7 @@ export default function ActivityHistory({
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        historyId: [1, 2, 3, 4, 5],
+        historyId: history.map((historyItem) => historyItem.id),
       }),
     });
 

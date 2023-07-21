@@ -4,15 +4,19 @@ import CardMode from "./CardMode.tsx";
 import { CardType } from "../../types.ts";
 
 export default function NewCard({
+  columnId,
   toggleNewCard,
   addNewCardHandler,
 }: {
+  columnId: number;
   toggleNewCard: () => void;
   addNewCardHandler: (card: CardType) => void;
 }) {
   return (
     <StyledNewCard>
-      <CardMode {...{ mode: "add", toggleNewCard, addNewCardHandler }} />
+      <CardMode
+        {...{ mode: "add", columnId, toggleNewCard, addNewCardHandler }}
+      />
     </StyledNewCard>
   );
 }

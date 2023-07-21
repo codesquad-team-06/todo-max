@@ -93,7 +93,7 @@ export default function Column({
 
       <ul className="cards-list" data-column-id={columnId}>
         {isNewCardActive && (
-          <NewCard {...{ toggleNewCard, addNewCardHandler }} />
+          <NewCard {...{ columnId, toggleNewCard, addNewCardHandler }} />
         )}
 
         {cards.map((cardDetails) => (

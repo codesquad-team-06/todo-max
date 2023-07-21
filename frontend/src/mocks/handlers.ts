@@ -217,7 +217,7 @@ const historyData = [
     cardTitle: "ERD 및 API 설계하기",
     prevColumn: "하고있는 일",
     nextColumn: "하고있는 일",
-    timestamp: "방금 전",
+    elapsedTime: "방금 전",
     actionName: "삭제",
   },
   {
@@ -225,7 +225,7 @@ const historyData = [
     cardTitle: "ERD 및 API 설계하기",
     prevColumn: "하고있는 일",
     nextColumn: "하고있는 일",
-    timestamp: "1분 전",
+    elapsedTime: "1분 전",
     actionName: "삭제",
   },
   {
@@ -233,7 +233,7 @@ const historyData = [
     cardTitle: "ERD 및 API 설계하기",
     prevColumn: "하고있는 일",
     nextColumn: "하고있는 일",
-    timestamp: "1분 전",
+    elapsedTime: "1분 전",
     actionName: "삭제",
   },
   {
@@ -241,7 +241,7 @@ const historyData = [
     cardTitle: "ERD 및 API 설계하기",
     prevColumn: "하고있는 일",
     nextColumn: "하고있는 일",
-    timestamp: "1분 전",
+    elapsedTime: "1분 전",
     actionName: "삭제",
   },
   {
@@ -249,7 +249,7 @@ const historyData = [
     cardTitle: "ERD 설계하기",
     prevColumn: "하고있는 일",
     nextColumn: "하고있는 일",
-    timestamp: "3분 전",
+    elapsedTime: "3분 전",
     actionName: "수정",
   },
   {
@@ -257,7 +257,7 @@ const historyData = [
     cardTitle: "ERD 설계하기",
     prevColumn: "해야할 일",
     nextColumn: "하고있는 일",
-    timestamp: "5분 전",
+    elapsedTime: "5분 전",
     actionName: "이동",
   },
   {
@@ -265,7 +265,7 @@ const historyData = [
     cardTitle: "ERD 설계하기",
     prevColumn: "해야할 일",
     nextColumn: "해야할 일",
-    timestamp: "10분 전",
+    elapsedTime: "10분 전",
     actionName: "등록",
   },
 ];
