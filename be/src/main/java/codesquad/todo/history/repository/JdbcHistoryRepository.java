@@ -12,6 +12,8 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.stereotype.Repository;
 
+import codesquad.todo.errors.errorcode.HistoryErrorCode;
+import codesquad.todo.errors.exception.RestApiException;
 import codesquad.todo.history.entity.History;
 
 @Repository
@@ -60,14 +62,17 @@ public class JdbcHistoryRepository implements HistoryRepository {
 			.addValue("cardId", history.getCardId()), keyHolder);
 		long historyId = Objects.requireNonNull(keyHolder.getKey()).longValue();
 
-		return findById(historyId).orElseThrow();
+		return findById(historyId);
 	}
 
 	@Override
-	public Optional<History> findById(Long id) {
+	public History findById(Long id) {
 		String sql = "SELECT id, card_title, prev_column, next_Column, created_at, is_deleted, action_name, card_id "
 			+ "FROM history WHERE id = :id";
-		return jdbcTemplate.query(sql, Map.of("id", id), historyRowMapper).stream().findAny();
+		return jdbcTemplate.query(sql, Map.of("id", id), historyRowMapper)
+			.stream()
+			.findAny()
+			.orElseThrow(() -> new RestApiException(HistoryErrorCode.NOT_FOUND_HISTORY));
 	}
 
 	@Override

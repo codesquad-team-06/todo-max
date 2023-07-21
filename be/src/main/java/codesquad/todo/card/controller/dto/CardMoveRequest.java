@@ -4,15 +4,17 @@ public class CardMoveRequest {
 	private Long id;
 	private Long prevCardId;
 	private Long nextCardId;
+	private Long prevColumnId;
 	private Long nextColumnId;
 
 	public CardMoveRequest() {
 	}
 
-	public CardMoveRequest(Long id, Long prevCardId, Long nextCardId, Long nextColumnId) {
+	public CardMoveRequest(Long id, Long prevCardId, Long nextCardId, Long prevColumnId, Long nextColumnId) {
 		this.id = id;
 		this.prevCardId = prevCardId;
 		this.nextCardId = nextCardId;
+		this.prevColumnId = prevColumnId;
 		this.nextColumnId = nextColumnId;
 	}
 
@@ -30,5 +32,9 @@ public class CardMoveRequest {
 
 	public Long getNextColumnId() {
 		return nextColumnId;
+	}
+
+	public Long getPrevColumnId() {
+		return prevColumnId;
 	}
 }

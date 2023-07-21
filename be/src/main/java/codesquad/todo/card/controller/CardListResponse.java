@@ -25,4 +25,13 @@ public class CardListResponse {
 	public List<CardSearchResponse> getCards() {
 		return cards;
 	}
+
+	@Override
+	public String toString() {
+		return "CardListResponse{" +
+			"cards=" + cards +
+			", columnId=" + columnId +
+			", name='" + name + '\'' +
+			'}';
+	}
 }

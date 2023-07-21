@@ -3,20 +3,21 @@ package codesquad.todo.card.controller.dto;
 import codesquad.todo.card.entity.Card;
 
 public class CardDeleteResponse {
-	private Long cardId;
+	private CardResponseDto card;
 	private boolean success;
 
-	public CardDeleteResponse(Long cardId, boolean success) {
-		this.cardId = cardId;
+	public CardDeleteResponse(CardResponseDto card, boolean success) {
+		this.card = card;
 		this.success = success;
 	}
 
 	public static CardDeleteResponse from(Card card) {
-		return new CardDeleteResponse(card.getId(), true);
+		return new CardDeleteResponse(new CardResponseDto(card.getId(), card.getTitle(), card.getContent(),
+			card.getPosition(), card.getColumnId()), true);
 	}
 
-	public Long getCardId() {
-		return cardId;
+	public CardResponseDto getCard() {
+		return card;
 	}
 
 	public boolean isSuccess() {
