@@ -36,11 +36,6 @@ export default function Board() {
       try {
         const response = await fetch(`${API_URL}/cards`);
         const boardData = await response.json();
-        boardData.forEach((column: ColumnData) =>
-          column.cards.sort(
-            (a: CardType, b: CardType) => a.position - b.position
-          )
-        );
 
         if (response.status === 200) {
           setBoard(boardData);

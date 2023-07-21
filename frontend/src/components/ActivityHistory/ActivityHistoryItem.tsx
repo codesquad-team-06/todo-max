@@ -2,13 +2,13 @@ import React from "react";
 import { styled } from "styled-components";
 
 export default function ActivityHistoryItem({
-  historyItem: { cardTitle, prevColumn, nextColumn, timestamp, actionName },
+  historyItem: { cardTitle, prevColumn, nextColumn, elapsedTime, actionName },
 }: {
   historyItem: {
     cardTitle: string;
     prevColumn: string;
     nextColumn: string;
-    timestamp: string;
+    elapsedTime: string;
     actionName: string;
   };
 }) {
@@ -24,7 +24,7 @@ export default function ActivityHistoryItem({
           <strong className="history-keyword">{actionName}</strong>
           하였습니다.
         </p>
-        <span className="timestamp">{timestamp}</span>
+        <span className="elapsedTime">{elapsedTime}</span>
       </div>
     </StyledItem>
   );
@@ -59,7 +59,7 @@ const StyledItem = styled.li`
     color: ${({ theme: { colors } }) => colors.grey700};
   }
 
-  .timestamp {
+  .elapsedTime {
     font: ${({ theme: { font } }) => font.displayMD12};
     color: ${({ theme: { colors } }) => colors.grey500};
   }

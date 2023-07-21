@@ -12,6 +12,7 @@ const ModeKR = {
 
 CardMode.defaultProps = {
   cardDetails: {},
+  columnId: undefined,
   toggleEditMode: undefined,
   toggleNewCard: undefined,
   addNewCardHandler: undefined,
@@ -21,6 +22,7 @@ CardMode.defaultProps = {
 export default function CardMode({
   mode,
   cardDetails,
+  columnId,
   toggleEditMode,
   toggleNewCard,
   addNewCardHandler,
@@ -32,6 +34,7 @@ export default function CardMode({
     title: string;
     content: string;
   };
+  columnId?: number;
   toggleEditMode?: () => void;
   toggleNewCard?: () => void;
   addNewCardHandler?: (card: CardType) => void;
@@ -64,7 +67,7 @@ export default function CardMode({
       body: JSON.stringify({
         title: newCardTitle,
         content: newCardContent,
-        columnId: 1,
+        columnId,
       }),
     });
 
@@ -81,15 +84,13 @@ export default function CardMode({
   };
 
   const editCardRequest = async () => {
-    const { id, title, content } = cardDetails!;
-
-    const res = await fetch(`${API_URL}/cards/${id}`, {
+    const res = await fetch(`${API_URL}/cards/${cardDetails?.id}`, {
       method: "PUT",
       headers: {
         "content-type": "application/json",
       },
       body: JSON.stringify({
-        id,
+        id: cardDetails?.id,
         title: newCardTitle,
         content: newCardContent,
       }),
