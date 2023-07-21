@@ -2,7 +2,6 @@ package codesquad.todo.card.controller;
 
 import static org.hamcrest.Matchers.*;
 import static org.mockito.BDDMockito.any;
-import static org.mockito.BDDMockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -13,6 +12,7 @@ import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.mockito.BDDMockito;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -51,15 +51,14 @@ class CardRestControllerTest {
 	void saveCardTest() throws Exception {
 		//given
 		CardSaveRequest cardSaveRequest = new CardSaveRequest("new제목", "new내용", 1L);
-		CardSaveResponse cardSaveResponse = new CardSaveResponse(
-			new CardResponseDto(1L, "new제목", "new내용", 1024, 1L), true);
+		CardSaveResponse cardSaveResponse = new CardSaveResponse(new CardResponseDto(1L, "new제목", "new내용", 1024, 1L),
+			true);
 		String body = objectMapper.writeValueAsString(cardSaveRequest);
 		//when
-		given(cardService.saveCard(any())).willReturn(cardSaveResponse);
+		BDDMockito.given(cardService.saveCard(any())).willReturn(cardSaveResponse);
 
 		//then
-		mockMvc.perform(post("/cards")
-				.content(body)
+		mockMvc.perform(post("/cards").content(body)
 				.contentType(MediaType.APPLICATION_JSON_VALUE)
 				.accept(MediaType.APPLICATION_JSON))
 			.andExpect(status().isOk())
@@ -81,11 +80,10 @@ class CardRestControllerTest {
 			new CardResponseDto(1L, "제목수정", "내용수정", 1024, 1L), true);
 
 		// when
-		given(cardService.modifyCard(any())).willReturn(cardModifyResponse);
+		BDDMockito.given(cardService.modifyCard(any())).willReturn(cardModifyResponse);
 
 		//then
-		mockMvc.perform(put("/cards/1")
-				.content(objectMapper.writeValueAsString(cardModifyRequest))
+		mockMvc.perform(put("/cards/1").content(objectMapper.writeValueAsString(cardModifyRequest))
 				.contentType(MediaType.APPLICATION_JSON_VALUE))
 			.andExpect(status().isOk())
 			.andExpect(jsonPath("card.id").value(1L))
@@ -100,13 +98,17 @@ class CardRestControllerTest {
 	void deleteCard() throws Exception {
 		//given
 		Long cardId = 3L;
-		CardDeleteResponse deletedResponse = new CardDeleteResponse(3L, true);
-		given(cardService.deleteCard(cardId)).willReturn(deletedResponse);
+		CardDeleteResponse deletedResponse = new CardDeleteResponse(new CardResponseDto(3L, "제목3", "내용3", 3072, 1L),
+			true);
+		BDDMockito.given(cardService.deleteCard(cardId)).willReturn(deletedResponse);
 
 		//when then
 		mockMvc.perform(delete("/cards/" + cardId))
 			.andExpect(status().isOk())
-			.andExpect(jsonPath("cardId").value(3L))
+			.andExpect(jsonPath("card.id").value(3L))
+			.andExpect(jsonPath("card.title").value("제목3"))
+			.andExpect(jsonPath("card.content").value("내용3"))
+			.andExpect(jsonPath("card.columnId").value(1))
 			.andExpect(jsonPath("success").value(true))
 			.andDo(print());
 	}
@@ -150,10 +152,9 @@ class CardRestControllerTest {
 		// given
 		CardMoveRequest cardMoveRequest = new CardMoveRequest(7L, 5L, 4L, 3L, 2L);
 		CardMoveResponse cardMoveResponse = new CardMoveResponse(new CardResponseDto(7L, "제목7", "내용7", 1536, 2L), true);
-		given(cardService.moveCard(any())).willReturn(cardMoveResponse);
+		BDDMockito.given(cardService.moveCard(any())).willReturn(cardMoveResponse);
 		// when then
-		mockMvc.perform(put("/cards/move/7")
-				.content(objectMapper.writeValueAsString(cardMoveRequest))
+		mockMvc.perform(put("/cards/move/7").content(objectMapper.writeValueAsString(cardMoveRequest))
 				.contentType(MediaType.APPLICATION_JSON_VALUE))
 			.andExpect(status().isOk())
 			.andExpect(jsonPath("card.id").value(7))
