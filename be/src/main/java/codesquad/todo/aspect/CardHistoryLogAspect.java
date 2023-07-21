@@ -14,8 +14,6 @@ import codesquad.todo.card.controller.dto.CardMoveRequest;
 import codesquad.todo.card.controller.dto.CardMoveResponse;
 import codesquad.todo.card.controller.dto.CardResponseDto;
 import codesquad.todo.card.controller.dto.CardSaveResponse;
-import codesquad.todo.card.entity.Card;
-import codesquad.todo.card.repository.CardRepository;
 import codesquad.todo.column.repository.ColumnRepository;
 import codesquad.todo.history.controller.dto.HistorySaveDto;
 import codesquad.todo.history.entity.Actions;
@@ -25,13 +23,10 @@ import codesquad.todo.history.service.HistoryService;
 @Component
 public class CardHistoryLogAspect {
 	private final HistoryService historyService;
-	private final CardRepository cardRepository;
 	private final ColumnRepository columnRepository;
 
-	public CardHistoryLogAspect(HistoryService historyService, CardRepository cardRepository,
-		ColumnRepository columnRepository) {
+	public CardHistoryLogAspect(HistoryService historyService, ColumnRepository columnRepository) {
 		this.historyService = historyService;
-		this.cardRepository = cardRepository;
 		this.columnRepository = columnRepository;
 	}
 
@@ -49,13 +44,10 @@ public class CardHistoryLogAspect {
 		return cardModifyResponse;
 	}
 
-	@Around("PointCuts.deleteAction()")
-	public CardDeleteResponse logForDelete(ProceedingJoinPoint proceedingJoinPoint) throws Throwable {
-		// deleteCard 메서드 실행 전 매개변수의 첫번째 인자(cardMoveRequest) 추출
-		Long cardId = (Long)proceedingJoinPoint.getArgs()[0];
-		CardResponseDto cardDto = getDto(cardId);
-		CardDeleteResponse cardDeleteResponse = (CardDeleteResponse)proceedingJoinPoint.proceed();
-		generateHistory(cardDto, Actions.DELETED, List.of(cardDto.getColumnId()));
+	@AfterReturning(value = "PointCuts.deleteAction()", returning = "cardDeleteResponse")
+	public CardDeleteResponse logForDelete(CardDeleteResponse cardDeleteResponse) {
+		generateHistory(cardDeleteResponse.getCard(), Actions.DELETED,
+			List.of(cardDeleteResponse.getCard().getColumnId()));
 		return cardDeleteResponse;
 	}
 
@@ -74,11 +66,5 @@ public class CardHistoryLogAspect {
 		String nextColumnName = columnNames.stream().skip(1).findFirst().orElse(prevColumnName);
 		historyService.save(
 			new HistorySaveDto(card.getTitle(), prevColumnName, nextColumnName, action.getName(), card.getId()));
-	}
-
-	private CardResponseDto getDto(Long cardId) {
-		Card card = cardRepository.findById(cardId);
-		return new CardResponseDto(card.getId(), card.getTitle(), card.getContent(), card.getPosition(),
-			card.getColumnId());
 	}
 }
