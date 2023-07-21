@@ -2,6 +2,7 @@ package codesquad.todo.card.service;
 
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -45,15 +46,18 @@ public class CardService {
 	@Transactional(readOnly = true)
 	public List<CardListResponse> getAllCard() {
 		List<CardListResponse> cardListResponses = new ArrayList<>();
+		Map<Long, List<Card>> cardsByColumnIdMap = new HashMap<>();
 		// 1. 모든 컬럼 조회
 		List<Column> columns = columnRepository.findAll();
+		for (Column column : columns) {
+			cardsByColumnIdMap.put(column.getId(), new ArrayList<>());
+		}
 
 		// 2. 모든 카드 조회
 		List<Card> allCards = cardRepository.findAll();
 
-		// 3. 컬럼 아이디별 카드 리스트로 변환
-		Map<Long, List<Card>> cardsByColumnIdMap = allCards.stream()
-			.collect(Collectors.groupingBy(Card::getColumnId));
+		// 3. 컬럼 아이디별 리스트에 카드 추가
+		allCards.forEach(card -> cardsByColumnIdMap.get(card.getColumnId()).add(card));
 
 		// 4. 컬럼 아이디별 카드 리스트를 DTO 객체로 변환
 		for (Long columnId : cardsByColumnIdMap.keySet()) {
