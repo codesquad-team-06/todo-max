@@ -1,41 +1,40 @@
-import React from "react";
+import React, { forwardRef, MouseEvent } from "react";
 import { styled } from "styled-components";
 import IconButton from "../common/IconButton.tsx";
 import deleteButtonIcon from "../../assets/closed.svg";
 import editButtonIcon from "../../assets/edit.svg";
 
-export default function CardShadow({
-  title,
-  content,
-}: {
-  title: string;
-  content: string;
-}) {
-  return (
-    <StyledCard>
-      <div className="card-info-container">
-        <h3 className="card-title">{title}</h3>
-        <p className="card-content">{content}</p>
-        <p className="card-author">author by web</p>
-      </div>
+const CardShadow = forwardRef<
+  HTMLLIElement | null,
+  {
+    title: string;
+    content: string;
+    onMouseUp: (evt: MouseEvent) => void;
+  }
+>(({ title, content, onMouseUp }, ref) => (
+  <StyledCard className="card-shadow" onMouseUp={onMouseUp} ref={ref}>
+    <div className="card-info-container">
+      <h3 className="card-title">{title}</h3>
+      <p className="card-content">{content}</p>
+      <p className="card-author">author by web</p>
+    </div>
 
-      <div className="buttons-container">
-        <IconButton
-          className="delete-button"
-          src={deleteButtonIcon}
-          alt="카드 삭제"
-          disabled
-        />
-        <IconButton
-          className="edit-button"
-          src={editButtonIcon}
-          alt="카드 수정"
-          disabled
-        />
-      </div>
-    </StyledCard>
-  );
-}
+    <div className="buttons-container">
+      <IconButton
+        className="delete-button"
+        src={deleteButtonIcon}
+        alt="카드 삭제"
+        disabled
+      />
+      <IconButton
+        className="edit-button"
+        src={editButtonIcon}
+        alt="카드 수정"
+        disabled
+      />
+    </div>
+  </StyledCard>
+));
 
 const StyledCard = styled.li`
   width: inherit;
@@ -78,7 +77,9 @@ const StyledCard = styled.li`
     flex-direction: column;
 
     button {
-      cursor: default;
+      cursor: grabbing;
     }
   }
 `;
+
+export default CardShadow;

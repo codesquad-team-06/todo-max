@@ -185,7 +185,7 @@ const successSameColumnMove = {
     id: 1,
     title: "blah",
     content: "blah blah blah",
-    position: 2560,
+    position: 5000,
     columnId: 1,
   },
   success: true,
@@ -194,9 +194,9 @@ const successSameColumnMove = {
 const successDiffColumnMove = {
   card: {
     id: 3,
-    title: "식재료 주문하기",
-    content: "blah blah",
-    position: 1536,
+    title: "Issue 생성",
+    content: "Modal 기능 구현 관련 이슈 생성",
+    position: 3000,
     columnId: 2,
   },
   success: true,

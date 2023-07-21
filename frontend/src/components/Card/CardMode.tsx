@@ -2,8 +2,8 @@
 import React, { useState, ChangeEvent, FormEvent } from "react";
 import { styled } from "styled-components";
 import ActionButton from "../common/ActionButton.tsx";
-import { API_URL } from "../../index.tsx";
 import { CardType } from "../../types.ts";
+import { API_URL } from "../../index.tsx";
 
 const ModeKR = {
   add: "등록",
@@ -54,7 +54,7 @@ export default function CardMode({
     setNewCardContent(evt.target.value);
   };
 
-  // TODO: "POST" to "/cards". Request payload: {title, content, column_id}
+  // TODO: "POST" to "/cards". Request payload: {title, content, columnId}
   const addNewCardRequest = async () => {
     const response = await fetch(`${API_URL}/cards`, {
       method: "POST",
@@ -64,7 +64,7 @@ export default function CardMode({
       body: JSON.stringify({
         title: newCardTitle,
         content: newCardContent,
-        column_id: 1,
+        columnId: 1,
       }),
     });
 
@@ -83,15 +83,15 @@ export default function CardMode({
   const editCardRequest = async () => {
     const { id, title, content } = cardDetails!;
 
-    const res = await fetch(`/cards/${id}`, {
+    const res = await fetch(`${API_URL}/cards/${id}`, {
       method: "PUT",
       headers: {
         "content-type": "application/json",
       },
       body: JSON.stringify({
         id,
-        title,
-        content,
+        title: newCardTitle,
+        content: newCardContent,
       }),
     });
     const data = await res.json();
