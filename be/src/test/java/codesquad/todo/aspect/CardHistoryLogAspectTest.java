@@ -20,7 +20,6 @@ import codesquad.todo.card.controller.dto.CardMoveRequest;
 import codesquad.todo.card.controller.dto.CardMoveResponse;
 import codesquad.todo.card.controller.dto.CardSaveResponse;
 import codesquad.todo.card.entity.Card;
-import codesquad.todo.card.repository.CardRepository;
 import codesquad.todo.column.repository.ColumnRepository;
 import codesquad.todo.history.controller.dto.HistorySaveDto;
 import codesquad.todo.history.service.HistoryService;
@@ -30,9 +29,6 @@ public class CardHistoryLogAspectTest {
 
 	@Mock
 	private HistoryService historyService;
-
-	@Mock
-	private CardRepository cardRepository;
 
 	@Mock
 	private ColumnRepository columnRepository;
@@ -78,18 +74,14 @@ public class CardHistoryLogAspectTest {
 
 	@Test
 	@DisplayName("logForDelete()를 실행하면 historyService.save() 메서드가 1번 호출된다.")
-	public void testLogForDelete() throws Throwable {
+	public void testLogForDelete() {
 		//given
-		Long cardId = 1L;
-		CardDeleteResponse cardDeleteResponse = new CardDeleteResponse(cardId, true);
+		CardDeleteResponse cardDeleteResponse = CardDeleteResponse.from(card);
 		List<String> columnNames = Arrays.asList("Column1");
 		when(columnRepository.findAllNameById(anyList())).thenReturn(columnNames);
-		when(proceedingJoinPoint.getArgs()).thenReturn(new Object[] {cardId});
-		when(cardRepository.findById(cardId)).thenReturn(card);
-		when(proceedingJoinPoint.proceed()).thenReturn(cardDeleteResponse);
 
 		//when
-		cardHistoryLogAspect.logForDelete(proceedingJoinPoint);
+		cardHistoryLogAspect.logForDelete(cardDeleteResponse);
 
 		//then
 		verify(historyService, times(1)).save(any(HistorySaveDto.class));
