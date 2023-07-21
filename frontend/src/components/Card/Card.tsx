@@ -159,13 +159,6 @@ export default function Card({
     dragCardHandler(null);
     resetCardShadowHandler();
 
-    // 만약, 위치가 안바꼈으면 요청 안보내기
-    console.log("dragCard: ", dragCard?.cardDetails.id);
-    console.log("cardDetails.id: ", cardDetails.id);
-    if (dragCard?.cardDetails.id === cardDetails.id) {
-      return;
-    }
-
     try {
       const updatedCard = await moveCardRequest(
         beforeCardId,
