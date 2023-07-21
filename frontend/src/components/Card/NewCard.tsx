@@ -1,20 +1,27 @@
 import React from "react";
 import { styled } from "styled-components";
-import ColumnCardMode from "./ColumnCardMode.tsx";
+import CardMode from "./CardMode.tsx";
+import { CardType } from "../../types.ts";
 
-export default function NewColumnCard({
+export default function NewCard({
+  columnId,
   toggleNewCard,
+  addNewCardHandler,
 }: {
+  columnId: number;
   toggleNewCard: () => void;
+  addNewCardHandler: (card: CardType) => void;
 }) {
   return (
-    <StyledNewColumnCard>
-      <ColumnCardMode {...{ mode: "add", toggleNewCard }} />
-    </StyledNewColumnCard>
+    <StyledNewCard>
+      <CardMode
+        {...{ mode: "add", columnId, toggleNewCard, addNewCardHandler }}
+      />
+    </StyledNewCard>
   );
 }
 
-const StyledNewColumnCard = styled.li`
+const StyledNewCard = styled.li`
   width: 100%;
   min-height: 104px;
   padding: 16px;

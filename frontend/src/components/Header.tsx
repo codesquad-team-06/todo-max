@@ -1,19 +1,32 @@
-import React from "react";
+import React, { useState } from "react";
 import { styled } from "styled-components";
+import ActivityHistory from "./ActivityHistory/ActivityHistory.tsx";
 import IconButton from "./common/IconButton.tsx";
 import historyButtonIcon from "../assets/history.svg";
+import AnimationWrapper from "./common/AnimationWrapper.tsx";
 
 export default function Header() {
-  return (
-    <StyledHeader>
-      <H1>Todo List</H1>
+  const [isHistoryActive, setIsHistoryActive] = useState(false);
 
-      <IconButton
-        className="history-button"
-        src={historyButtonIcon}
-        alt="사용자 활동 기록 조회"
-      />
-    </StyledHeader>
+  const toggleHistory = () => {
+    setIsHistoryActive(!isHistoryActive);
+  };
+
+  return (
+    <>
+      <StyledHeader>
+        <H1>Todo List</H1>
+        <IconButton
+          className="history-button"
+          src={historyButtonIcon}
+          alt="사용자 활동 기록 조회"
+          onClick={toggleHistory}
+        />
+      </StyledHeader>
+      <AnimationWrapper isShowing={isHistoryActive}>
+        <ActivityHistory {...{ isHistoryActive, toggleHistory }} />
+      </AnimationWrapper>
+    </>
   );
 }
 

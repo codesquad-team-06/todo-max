@@ -5,25 +5,29 @@ export default function IconButton({
   className,
   src,
   alt,
+  disabled,
   onClick,
 }: {
   className: string;
   src: string;
   alt: string;
+  disabled?: boolean;
   onClick?: (evt: MouseEvent) => void;
 }) {
   return (
-    <StyledIconButton {...{ className, onClick }}>
+    <StyledIconButton
+      {...{ className, disabled, onClick, $disabled: disabled }}>
       <img {...{ src, alt }} />
     </StyledIconButton>
   );
 }
 
 IconButton.defaultProps = {
+  disabled: false,
   onClick: undefined,
 };
 
-const StyledIconButton = styled.button`
+const StyledIconButton = styled.button<{ $disabled: boolean | undefined }>`
   width: 24px;
   height: 24px;
   padding: 0;
@@ -37,10 +41,12 @@ const StyledIconButton = styled.button`
   }
 
   &.add-button:hover {
-    filter: ${({ theme: { filter } }) => filter.blue};
+    filter: ${({ theme: { filter }, $disabled }) =>
+      $disabled ? "" : filter.blue};
   }
 
   &.delete-button:hover {
-    filter: ${({ theme: { filter } }) => filter.red};
+    filter: ${({ theme: { filter }, $disabled }) =>
+      $disabled ? "" : filter.red};
   }
 `;
