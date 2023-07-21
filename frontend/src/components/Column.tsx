@@ -8,28 +8,60 @@ import deleteButtonIcon from "../assets/closed.svg";
 import { CardType } from "../types.ts";
 
 export default function Column({
+  shadowRef,
+  columnId,
   name,
   cards,
   currMouseCoords,
-  dragCardId,
+  dragCard,
+  currBelowCardId,
+  currCardShadowInsertPosition,
   addNewCardHandler,
   editCardHandler,
   deleteCardHandler,
+  moveCardHandler,
   updateMouseCoordsHandler,
-  dragCardIdHandler,
+  dragCardHandler,
+  resetCardShadowHandler,
+  updateCardShadowPosition,
 }: {
+  shadowRef: React.RefObject<HTMLLIElement | null>;
+  columnId: number;
   name: string;
   cards: CardType[];
   currMouseCoords: [number, number];
-  dragCardId: number | null;
+  dragCard: {
+    cardRef: React.RefObject<HTMLLIElement>;
+    cardDetails: {
+      id: number;
+      title: string;
+      content: string;
+      columnId: number;
+    };
+  } | null;
+  currBelowCardId: number | null;
+  currCardShadowInsertPosition: "before" | "after" | null;
   addNewCardHandler: (card: CardType) => void;
   editCardHandler: (card: CardType) => void;
   deleteCardHandler: (deletedCardInfo: {
     id: number;
     columnId: number;
   }) => void;
+  moveCardHandler: (updatedCard: CardType, prevColumnId: number) => void;
   updateMouseCoordsHandler: (x: number, y: number) => void;
-  dragCardIdHandler: (cardId: number | null) => void;
+  dragCardHandler: (
+    dragCard: {
+      cardRef: React.RefObject<HTMLLIElement>;
+      cardDetails: {
+        id: number;
+        title: string;
+        content: string;
+        columnId: number;
+      };
+    } | null
+  ) => void;
+  resetCardShadowHandler: () => void;
+  updateCardShadowPosition: (x: number, y: number) => void;
 }) {
   const [isNewCardActive, setIsNewCardActive] = useState(false);
 
@@ -59,7 +91,7 @@ export default function Column({
         </div>
       </Header>
 
-      <ul className="cards-list">
+      <ul className="cards-list" data-column-id={columnId}>
         {isNewCardActive && (
           <NewCard {...{ toggleNewCard, addNewCardHandler }} />
         )}
@@ -68,13 +100,19 @@ export default function Column({
           <Card
             {...{
               key: cardDetails.id,
+              shadowRef,
               cardDetails,
               currMouseCoords,
-              dragCardId,
+              dragCard,
+              currBelowCardId,
+              currCardShadowInsertPosition,
               editCardHandler,
               deleteCardHandler,
+              moveCardHandler,
               updateMouseCoordsHandler,
-              dragCardIdHandler,
+              dragCardHandler,
+              resetCardShadowHandler,
+              updateCardShadowPosition,
             }}
           />
         ))}

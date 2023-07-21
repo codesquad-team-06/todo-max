@@ -2,9 +2,9 @@
 import React, { useEffect, useState, useContext, FormEvent } from "react";
 import { styled, keyframes, css } from "styled-components";
 import ActivityHistoryItem from "./ActivityHistoryItem.tsx";
+import closeButtonIcon from "../../assets/closed.svg";
 import { ModalContext } from "../../context/ModalContext.tsx";
 import { API_URL } from "../../index.tsx";
-import closeButtonIcon from "../../assets/closed.svg";
 
 type History = {
   id: number;
@@ -46,7 +46,7 @@ export default function ActivityHistory({
   }, []);
 
   const deleteHistoryRequest = async () => {
-    const response = await fetch("/histories", {
+    const response = await fetch(`${API_URL}/histories`, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
