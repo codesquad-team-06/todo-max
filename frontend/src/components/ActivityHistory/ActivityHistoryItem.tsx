@@ -67,7 +67,14 @@ export default function ActivityHistoryItem({
       <img src={defaultUserImg} alt="사용자 이미지" />
       <div className="history-content-container">
         <span>@anonymous</span>
-        <p>{setHistoryItemTemplate(cardTitle, prevColumn, nextColumn, actionName)}</p>
+        <p>
+          {setHistoryItemTemplate(
+            cardTitle,
+            prevColumn,
+            nextColumn,
+            actionName
+          )}
+        </p>
         <span className="elapsedTime">{elapsedTime}</span>
       </div>
     </StyledItem>
