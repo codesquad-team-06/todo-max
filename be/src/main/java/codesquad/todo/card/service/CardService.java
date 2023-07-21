@@ -25,22 +25,16 @@ import codesquad.todo.column.entity.Column;
 import codesquad.todo.column.repository.ColumnRepository;
 import codesquad.todo.errors.errorcode.ColumnErrorCode;
 import codesquad.todo.errors.exception.RestApiException;
-import codesquad.todo.history.controller.dto.HistorySaveDto;
-import codesquad.todo.history.entity.Actions;
-import codesquad.todo.history.service.HistoryService;
 
 @Service
 public class CardService {
 
 	private final CardRepository cardRepository;
 	private final ColumnRepository columnRepository;
-	private final HistoryService historyService;
 
-	public CardService(CardRepository cardRepository, ColumnRepository columnRepository,
-		HistoryService historyService) {
+	public CardService(CardRepository cardRepository, ColumnRepository columnRepository) {
 		this.cardRepository = cardRepository;
 		this.columnRepository = columnRepository;
-		this.historyService = historyService;
 	}
 
 	@Transactional(readOnly = true)
@@ -83,21 +77,18 @@ public class CardService {
 	@Transactional
 	public CardSaveResponse saveCard(CardSaveRequest cardSaveRequest) {
 		Card card = cardRepository.save(cardSaveRequest.toEntity());
-		generateHistory(card, Actions.REGISTERED, List.of(card.getColumnId()));
 		return CardSaveResponse.from(card);
 	}
 
 	@Transactional
 	public CardModifyResponse modifyCard(CardModifyRequest cardModifyRequest) {
 		Card card = cardRepository.modify(cardModifyRequest.toEntity());
-		generateHistory(card, Actions.MODIFIED, List.of(card.getColumnId()));
 		return CardModifyResponse.from(card);
 	}
 
 	@Transactional
 	public CardDeleteResponse deleteCard(Long cardId) {
 		Card card = cardRepository.deleteById(cardId);
-		generateHistory(card, Actions.DELETED, List.of(card.getColumnId()));
 		return CardDeleteResponse.from(card);
 	}
 
@@ -115,17 +106,6 @@ public class CardService {
 		Card moveCard = cardRepository.move(cardMoveRequest.getId(), calculatePosition,
 			cardMoveRequest.getNextColumnId());
 
-		generateHistory(moveCard, Actions.MOVED,
-			List.of(cardMoveRequest.getPrevColumnId(), cardMoveRequest.getNextColumnId()));
 		return CardMoveResponse.from(moveCard);
-	}
-
-	public void generateHistory(Card card, Actions action, List<Long> columnIds) {
-		List<String> columnNames = columnRepository.findAllNameById(columnIds);
-		String prevColumnName = columnNames.get(0);
-		String nextColumnName = columnNames.stream().skip(1).findFirst().orElse(prevColumnName);
-		historyService.save(
-			new HistorySaveDto(card.getTitle(), prevColumnName, nextColumnName, action.getName(), card.getId())
-		);
 	}
 }
