@@ -1,5 +1,6 @@
 import React from "react";
 import { styled } from "styled-components";
+import defaultUserImg from "../../assets/default.jpeg";
 
 export default function ActivityHistoryItem({
   historyItem: { cardTitle, prevColumn, nextColumn, elapsedTime, actionName },
@@ -63,9 +64,9 @@ export default function ActivityHistoryItem({
 
   return (
     <StyledItem>
-      <img src="" alt="사용자 이미지" />
+      <img src={defaultUserImg} alt="사용자 이미지" />
       <div className="history-content-container">
-        <span>UserName</span>
+        <span>@anonymous</span>
         {sethistoryItemTemplate(cardTitle, prevColumn, nextColumn, actionName)}
         <span className="elapsedTime">{elapsedTime}</span>
       </div>
