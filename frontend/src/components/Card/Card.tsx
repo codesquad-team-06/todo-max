@@ -194,7 +194,7 @@ export default function Card({
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          id: cardDetails.id,
+          id: dragCard?.cardDetails.id,
           prevCardId: beforeCardId,
           nextCardId: afterCardId,
           prevColumnId,
