@@ -6,14 +6,16 @@ import java.time.temporal.ChronoUnit;
 import codesquad.todo.history.entity.History;
 
 public class HistoryFindAllResponse {
+	private final Long id;
 	private final String cardTitle;
 	private final String prevColumn;
 	private final String nextColumn;
 	private final String elapsedTime;
 	private final String actionName;
 
-	public HistoryFindAllResponse(String cardTitle, String prevColumn, String nextColumn, String elapsedTime,
+	public HistoryFindAllResponse(Long id, String cardTitle, String prevColumn, String nextColumn, String elapsedTime,
 		String actionName) {
+		this.id = id;
 		this.cardTitle = cardTitle;
 		this.prevColumn = prevColumn;
 		this.nextColumn = nextColumn;
@@ -23,11 +25,12 @@ public class HistoryFindAllResponse {
 
 	public static HistoryFindAllResponse from(History history) {
 		return new HistoryFindAllResponse(
+			history.getId(),
 			history.getCardTitle(),
 			history.getPrevColumn(),
 			history.getNextColumn(),
 			calculateElapsedTime(history.getCreatedAt()),
-			history.getAction().getName());
+			history.getActionName());
 	}
 
 	public static String calculateElapsedTime(LocalDateTime start) {
@@ -50,6 +53,10 @@ public class HistoryFindAllResponse {
 
 		long weeksDiff = daysDiff / 7;
 		return weeksDiff + "주 전";
+	}
+
+	public Long getId() {
+		return id;
 	}
 
 	public String getCardTitle() {

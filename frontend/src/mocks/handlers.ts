@@ -3,7 +3,7 @@ import { rest } from "msw";
 export const handlers = [
   // TODO: 카드 목록 불러오기
   rest.get("/cards", (req, res, ctx) => {
-    return res(ctx.status(200), ctx.json(allData));
+    return res(ctx.status(200), ctx.json(board));
   }),
   // 새로운 카드 추가
   rest.post("/cards", async (req, res, ctx) => {
@@ -36,9 +36,9 @@ export const handlers = [
 ];
 
 // 초기 데이터
-const allData = [
+const board = [
   {
-    column_id: 1,
+    columnId: 1,
     name: "해야할 일",
     cards: [
       {
@@ -46,75 +46,75 @@ const allData = [
         title: "ERD 설계하기",
         content: "팀원들과 회의를 통해 ERD 설계를 완성하기",
         position: 1024,
-        column_id: 1,
+        columnId: 1,
       },
       {
         id: 2,
-        title: "ERD 설계하기",
-        content: "팀원들과 회의를 통해 ERD 설계를 완성하기",
+        title: "Git 공부하기",
+        content: "Git 명령어들에 대해 학습하기",
         position: 2048,
-        column_id: 1,
+        columnId: 1,
       },
       {
         id: 3,
-        title: "ERD 설계하기",
-        content: "팀원들과 회의를 통해 ERD 설계를 완성하기",
+        title: "issue 생성",
+        content: "Modal 기능 구현 관련 이슈 생성",
         position: 4096,
-        column_id: 1,
+        columnId: 1,
       },
     ],
   },
   {
-    column_id: 2,
+    columnId: 2,
     name: "하고있는 일",
     cards: [
       {
         id: 4,
-        title: "ERD 설계하기",
-        content: "팀원들과 회의를 통해 ERD 설계를 완성하기",
+        title: "Drag & Drop 관련 아이디어 회의",
+        content: "팀원들과 회의를 통해 Drag & Drop 관련 아이디어 회의하기",
         position: 1024,
-        column_id: 2,
+        columnId: 2,
       },
       {
         id: 5,
-        title: "ERD 설계하기",
-        content: "팀원들과 회의를 통해 ERD 설계를 완성하기",
+        title: "아웃스탠딩 구독 갱신하기",
+        content: "아웃스탠딩 구독 갱신",
         position: 2048,
-        column_id: 2,
+        columnId: 2,
       },
       {
         id: 6,
-        title: "ERD 설계하기",
-        content: "팀원들과 회의를 통해 ERD 설계를 완성하기",
+        title: "미니 세미나 준비",
+        content: "주제 정해서 미니 세미나 준비하기",
         position: 4096,
-        column_id: 2,
+        columnId: 2,
       },
     ],
   },
   {
-    column_id: 3,
+    columnId: 3,
     name: "완료한 일",
     cards: [
       {
         id: 7,
-        title: "ERD 설계하기",
-        content: "팀원들과 회의를 통해 ERD 설계를 완성하기",
+        title: "인디아나 존스 관람",
+        content: "조조영화 관람하기",
         position: 1024,
-        column_id: 3,
+        columnId: 3,
       },
       {
         id: 8,
-        title: "ERD 설계하기",
-        content: "팀원들과 회의를 통해 ERD 설계를 완성하기",
+        title: "Disco Elysium",
+        content: "Disco Elysium 게임 완료",
         position: 2048,
-        column_id: 3,
+        columnId: 3,
       },
       {
         id: 9,
-        title: "ERD 설계하기",
-        content: "팀원들과 회의를 통해 ERD 설계를 완성하기",
+        title: "Dave the Diver",
+        content: "투토리얼 해보기",
         position: 4096,
-        column_id: 3,
+        columnId: 3,
       },
     ],
   },
@@ -122,11 +122,11 @@ const allData = [
 // 추가 요청 성공
 const successCardAdd = {
   card: {
-    id: 1,
-    title: "ERD 설계하기",
-    content: "팀원들과 협업하여 ERD 설계 완성하기",
+    id: 10,
+    title: "식재료 주문하기",
+    content: "쿠팡에서 필요한 것들 주문",
     position: 1024,
-    column_id: 1,
+    columnId: 1,
   },
   success: true,
 };
@@ -143,8 +143,10 @@ const failedCardAdd = {
 const successCardUpdate = {
   card: {
     id: 1,
-    title: "ERD 및 API 설계하기",
-    content: "팀원들과 협업하여 ERD 및 API 설계 완성하기",
+    title: "Updated Title!",
+    content: "Updated Content!",
+    position: 1024,
+    columnId: 1,
   },
   success: true,
 };
@@ -161,7 +163,10 @@ const failedCardUpdate = {
 const successCardDelete = {
   card: {
     id: 1,
-    is_deleted: true,
+    title: "ERD 설계하기",
+    content: "팀원들과 협업하여 ERD 설계 완성하기",
+    position: 1024,
+    columnId: 1,
   },
   success: true,
 };
@@ -178,8 +183,10 @@ const failedCardDelete = {
 const successSameColumnMove = {
   card: {
     id: 1,
-    position: 2560,
-    column_id: 1,
+    title: "blah",
+    content: "blah blah blah",
+    position: 5000,
+    columnId: 1,
   },
   success: true,
 };
@@ -187,8 +194,10 @@ const successSameColumnMove = {
 const successDiffColumnMove = {
   card: {
     id: 3,
-    position: 1536,
-    column_id: 2,
+    title: "Issue 생성",
+    content: "Modal 기능 구현 관련 이슈 생성",
+    position: 3000,
+    columnId: 2,
   },
   success: true,
 };
@@ -204,36 +213,60 @@ const failedMove = {
 // History 불러오기
 const historyData = [
   {
+    id: 7,
+    cardTitle: "ERD 및 API 설계하기",
+    prevColumn: "하고있는 일",
+    nextColumn: "하고있는 일",
+    elapsedTime: "방금 전",
+    actionName: "삭제",
+  },
+  {
+    id: 6,
+    cardTitle: "ERD 및 API 설계하기",
+    prevColumn: "하고있는 일",
+    nextColumn: "하고있는 일",
+    elapsedTime: "1분 전",
+    actionName: "삭제",
+  },
+  {
+    id: 5,
+    cardTitle: "ERD 및 API 설계하기",
+    prevColumn: "하고있는 일",
+    nextColumn: "하고있는 일",
+    elapsedTime: "1분 전",
+    actionName: "삭제",
+  },
+  {
     id: 4,
-    card_title: "ERD 및 API 설계하기",
-    prev_column: "하고있는 일",
-    next_column: "하고있는 일",
-    timestamp: "1분 전",
-    action_name: "삭제",
+    cardTitle: "ERD 및 API 설계하기",
+    prevColumn: "하고있는 일",
+    nextColumn: "하고있는 일",
+    elapsedTime: "1분 전",
+    actionName: "삭제",
   },
   {
     id: 3,
-    card_title: "ERD 설계하기",
-    prev_column: "하고있는 일",
-    next_column: "하고있는 일",
-    timestamp: "3분 전",
-    action_name: "수정",
+    cardTitle: "ERD 설계하기",
+    prevColumn: "하고있는 일",
+    nextColumn: "하고있는 일",
+    elapsedTime: "3분 전",
+    actionName: "수정",
   },
   {
     id: 2,
-    card_title: "ERD 설계하기",
-    prev_column: "해야할 일",
-    next_column: "하고있는 일",
-    timestamp: "5분 전",
-    action_name: "이동",
+    cardTitle: "ERD 설계하기",
+    prevColumn: "해야할 일",
+    nextColumn: "하고있는 일",
+    elapsedTime: "5분 전",
+    actionName: "이동",
   },
   {
     id: 1,
-    card_title: "ERD 설계하기",
-    prev_column: "해야할 일",
-    next_column: "해야할 일",
-    timestamp: "10분 전",
-    action_name: "등록",
+    cardTitle: "ERD 설계하기",
+    prevColumn: "해야할 일",
+    nextColumn: "해야할 일",
+    elapsedTime: "10분 전",
+    actionName: "등록",
   },
 ];
 // Activity History 삭제

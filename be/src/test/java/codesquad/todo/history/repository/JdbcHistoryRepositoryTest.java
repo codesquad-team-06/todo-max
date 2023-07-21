@@ -1,5 +1,8 @@
 package codesquad.todo.history.repository;
 
+import static org.assertj.core.api.AssertionsForClassTypes.*;
+import static org.junit.jupiter.api.Assertions.*;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -14,12 +17,20 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
 import org.springframework.stereotype.Repository;
 
+import codesquad.todo.card.entity.Card;
+import codesquad.todo.card.repository.CardRepository;
+import codesquad.todo.errors.errorcode.HistoryErrorCode;
+import codesquad.todo.errors.exception.RestApiException;
+import codesquad.todo.history.entity.Actions;
 import codesquad.todo.history.entity.History;
 
 @DataJpaTest(includeFilters = @ComponentScan.Filter(type = FilterType.ANNOTATION,
 	classes = Repository.class))
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 class JdbcHistoryRepositoryTest {
+
+	@Autowired
+	private CardRepository cardRepository;
 	@Autowired
 	private HistoryRepository historyRepository;
 
@@ -33,7 +44,7 @@ class JdbcHistoryRepositoryTest {
 
 		//then
 		SoftAssertions.assertSoftly(softAssertions -> {
-			softAssertions.assertThat(historyList.size()).isEqualTo(7);
+			softAssertions.assertThat(historyList.size()).isEqualTo(9);
 		});
 	}
 
@@ -65,5 +76,55 @@ class JdbcHistoryRepositoryTest {
 		SoftAssertions.assertSoftly(softAssertions -> {
 			softAssertions.assertThat(deletedHistories).isEqualTo(3);
 		});
+	}
+
+	@Test
+	@DisplayName("카드를 등록하면 해당 활동 기록을 히스토리에 저장한다")
+	public void testSave() {
+		//given
+		Card card = Card.builder()
+			.title("카드제목")
+			.content("카드내용")
+			.columnId(1L)
+			.build();
+
+		Card savedCard = cardRepository.save(card);
+
+		History history = History.builder()
+			.cardTitle(savedCard.getTitle())
+			.prevColumn("해야할 일")
+			.nextColumn("해야할 일")
+			.cardId(savedCard.getId())
+			.actionName(Actions.REGISTERED.getName())
+			.isDeleted(false)
+			.build();
+
+		//when
+		History savedHistory = historyRepository.save(history);
+
+		//then
+		assertAll(
+			() -> assertThat(savedHistory.getCardTitle()).isEqualTo(history.getCardTitle()),
+			() -> assertThat(savedHistory.getPrevColumn()).isEqualTo(history.getPrevColumn()),
+			() -> assertThat(savedHistory.getNextColumn()).isEqualTo(history.getNextColumn()),
+			() -> assertThat(savedHistory.getCardId()).isEqualTo(history.getCardId()),
+			() -> assertThat(savedHistory.getCardTitle()).isEqualTo(history.getCardTitle()),
+			() -> assertThat(savedHistory.getActionName()).isEqualTo(history.getActionName()),
+			() -> assertThat(savedHistory.isDeleted()).isEqualTo(history.isDeleted())
+		);
+	}
+
+	@Test
+	@DisplayName("유효하지 않는 id를 전달 받으면 예외를 발생한다")
+	public void findByIdTest() {
+		//given
+		Long id = 100L;
+
+		//when & then
+		RestApiException exception = assertThrows(RestApiException.class, () -> {
+			historyRepository.findById(id);
+		});
+
+		assertEquals(HistoryErrorCode.NOT_FOUND_HISTORY, exception.getErrorCode());
 	}
 }

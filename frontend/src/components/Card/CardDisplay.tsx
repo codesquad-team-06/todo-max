@@ -1,26 +1,65 @@
-import React, { useContext } from "react";
+/* eslint-disable no-alert */
+import React, { FormEvent, useContext } from "react";
 import { styled } from "styled-components";
 import IconButton from "../common/IconButton.tsx";
 import deleteButtonIcon from "../../assets/closed.svg";
 import editButtonIcon from "../../assets/edit.svg";
 import { ModalContext } from "../../context/ModalContext.tsx";
+import { API_URL } from "../../index.tsx";
 
-export default function ColumnCardDisplay({
-  cardTitle,
-  cardContent,
+export default function CardDisplay({
+  cardDetails,
   toggleEditMode,
+  deleteCardHandler,
 }: {
-  cardTitle: string;
-  cardContent: string;
+  cardDetails: { id: number; title: string; content: string };
   toggleEditMode: () => void;
+  deleteCardHandler: (deletedCardInfo: {
+    id: number;
+    columnId: number;
+  }) => void;
 }) {
   const { openModal } = useContext(ModalContext);
 
+  const deleteCardRequest = async () => {
+    const response = await fetch(`${API_URL}/cards/${cardDetails.id}`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    const data = await response.json();
+
+    if (data.success) {
+      const {
+        card: { id, columnId },
+      } = data;
+      return { id, columnId };
+    }
+
+    const {
+      errorCode: { status, code, message },
+    } = data;
+    throw Error(`${status} ${code}: ${message}`);
+  };
+
+  const handleSubmit = async (evt: FormEvent) => {
+    evt.preventDefault();
+
+    try {
+      const deletedCardInfo = await deleteCardRequest();
+      deleteCardHandler(deletedCardInfo);
+    } catch (error) {
+      alert(error);
+    }
+  };
+
   return (
-    <StyledColumnCardDisplay>
+    <StyledCardDisplay>
       <div className="card-info-container">
-        <h3 className="card-title">{cardTitle}</h3>
-        <p className="card-content">{cardContent}</p>
+        <h3 className="card-title">{cardDetails.title}</h3>
+        <p className="card-content">{cardDetails.content}</p>
         <p className="card-author">author by web</p>
       </div>
 
@@ -29,7 +68,7 @@ export default function ColumnCardDisplay({
           className="delete-button"
           src={deleteButtonIcon}
           alt="카드 삭제"
-          onClick={() => openModal("선택한 카드를 삭제할까요?")}
+          onClick={() => openModal("선택한 카드를 삭제할까요?", handleSubmit)}
         />
         <IconButton
           className="edit-button"
@@ -38,11 +77,11 @@ export default function ColumnCardDisplay({
           onClick={toggleEditMode}
         />
       </div>
-    </StyledColumnCardDisplay>
+    </StyledCardDisplay>
   );
 }
 
-const StyledColumnCardDisplay = styled.div`
+const StyledCardDisplay = styled.div`
   width: 100%;
   height: 100%;
   display: flex;

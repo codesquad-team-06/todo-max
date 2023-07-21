@@ -15,6 +15,7 @@ module.exports = {
     "react/jsx-filename-extension": ["warn", { extensions: [".tsx"] }],
     "@typescript-eslint/no-non-null-assertion": "off",
     "no-shadow": "off",
+    "no-nested-ternary": "off",
     "quotes": ["error", "double"],
   },
   ignorePatterns: ["mocks/"],

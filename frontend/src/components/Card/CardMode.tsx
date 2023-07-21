@@ -2,38 +2,49 @@
 import React, { useState, ChangeEvent, FormEvent } from "react";
 import { styled } from "styled-components";
 import ActionButton from "../common/ActionButton.tsx";
+import { CardType } from "../../types.ts";
+import { API_URL } from "../../index.tsx";
 
 const ModeKR = {
   add: "등록",
   edit: "저장",
 };
 
-ColumnCardMode.defaultProps = {
+CardMode.defaultProps = {
+  cardDetails: {},
+  columnId: undefined,
   toggleEditMode: undefined,
   toggleNewCard: undefined,
-  cardDetails: {},
+  addNewCardHandler: undefined,
+  editCardHandler: undefined,
 };
 
-export default function ColumnCardMode({
+export default function CardMode({
   mode,
   cardDetails,
+  columnId,
   toggleEditMode,
   toggleNewCard,
+  addNewCardHandler,
+  editCardHandler,
 }: {
   mode: "add" | "edit";
   cardDetails?: {
-    cardId: number;
-    cardTitle: string;
-    cardContent: string;
+    id: number;
+    title: string;
+    content: string;
   };
+  columnId?: number;
   toggleEditMode?: () => void;
   toggleNewCard?: () => void;
+  addNewCardHandler?: (card: CardType) => void;
+  editCardHandler?: (card: CardType) => void;
 }) {
   const [newCardTitle, setNewCardTitle] = useState(
-    mode === "add" ? "" : cardDetails?.cardTitle
+    mode === "add" ? "" : cardDetails?.title
   );
   const [newCardContent, setNewCardContent] = useState(
-    mode === "add" ? "" : cardDetails?.cardContent
+    mode === "add" ? "" : cardDetails?.content
   );
 
   const handleNewCardTitleChange = (evt: ChangeEvent<HTMLInputElement>) => {
@@ -46,9 +57,9 @@ export default function ColumnCardMode({
     setNewCardContent(evt.target.value);
   };
 
-  // TODO: "POST" to "/cards". Request payload: {title, content, column_id}
+  // TODO: "POST" to "/cards". Request payload: {title, content, columnId}
   const addNewCardRequest = async () => {
-    const response = await fetch("/cards", {
+    const response = await fetch(`${API_URL}/cards`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -56,7 +67,7 @@ export default function ColumnCardMode({
       body: JSON.stringify({
         title: newCardTitle,
         content: newCardContent,
-        column_id: 1,
+        columnId,
       }),
     });
 
@@ -73,17 +84,15 @@ export default function ColumnCardMode({
   };
 
   const editCardRequest = async () => {
-    const { cardId, cardTitle, cardContent } = cardDetails!;
-
-    const res = await fetch(`/cards/${cardId}`, {
+    const res = await fetch(`${API_URL}/cards/${cardDetails?.id}`, {
       method: "PUT",
       headers: {
         "content-type": "application/json",
       },
       body: JSON.stringify({
-        id: cardId,
-        title: cardTitle,
-        content: cardContent,
+        id: cardDetails?.id,
+        title: newCardTitle,
+        content: newCardContent,
       }),
     });
     const data = await res.json();
@@ -103,13 +112,12 @@ export default function ColumnCardMode({
 
     try {
       if (mode === "add") {
-        const { id, title, content, position, columnId } =
-          await addNewCardRequest();
-        // TODO: Update cards context
+        const newCard = await addNewCardRequest();
+        addNewCardHandler && addNewCardHandler(newCard);
         toggleNewCard && toggleNewCard();
       } else if (mode === "edit") {
-        const { id, title, content } = await editCardRequest();
-        // TODO: Update cards context
+        const updatedCard = await editCardRequest();
+        editCardHandler && editCardHandler(updatedCard);
         toggleEditMode && toggleEditMode();
       }
     } catch (error) {
@@ -125,7 +133,7 @@ export default function ColumnCardMode({
   };
 
   return (
-    <StyledColumnCardMode onSubmit={handleSubmit}>
+    <StyledCardMode onSubmit={handleSubmit}>
       <div className="card-info-container">
         <input
           className="card-title"
@@ -163,11 +171,11 @@ export default function ColumnCardMode({
           disabled={!newCardTitle || !newCardContent}
         />
       </div>
-    </StyledColumnCardMode>
+    </StyledCardMode>
   );
 }
 
-const StyledColumnCardMode = styled.form`
+const StyledCardMode = styled.form`
   width: 100%;
   height: 100%;
 

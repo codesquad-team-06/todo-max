@@ -9,21 +9,21 @@ public class History {
 	private String nextColumn;
 	private LocalDateTime createdAt;
 	private boolean isDeleted;
-	private Action action;
+	private String actionName;
 	private Long cardId;
 
 	public History() {
 	}
 
 	public History(Long id, String cardTitle, String prevColumn, String nextColumn, LocalDateTime createdAt,
-		boolean isDeleted, Action action, Long cardId) {
+		boolean isDeleted, String actionName, Long cardId) {
 		this.id = id;
 		this.cardTitle = cardTitle;
 		this.prevColumn = prevColumn;
 		this.nextColumn = nextColumn;
 		this.createdAt = createdAt;
 		this.isDeleted = isDeleted;
-		this.action = action;
+		this.actionName = actionName;
 		this.cardId = cardId;
 	}
 
@@ -55,8 +55,8 @@ public class History {
 		return isDeleted;
 	}
 
-	public Action getAction() {
-		return action;
+	public String getActionName() {
+		return actionName;
 	}
 
 	public Long getCardId() {
@@ -72,7 +72,7 @@ public class History {
 			+ ", nextColumn='" + nextColumn + '\''
 			+ ", createdAt=" + createdAt
 			+ ", isDeleted=" + isDeleted
-			+ ", action=" + action
+			+ ", actionName=" + actionName
 			+ ", cardId=" + cardId
 			+ '}';
 	}
@@ -84,7 +84,7 @@ public class History {
 		private String nextColumn;
 		private LocalDateTime createdAt;
 		private boolean isDeleted;
-		private Action action;
+		private String actionName;
 		private Long cardId;
 
 		public Builder id(Long id) {
@@ -117,8 +117,8 @@ public class History {
 			return this;
 		}
 
-		public Builder action(Action action) {
-			this.action = action;
+		public Builder actionName(String actionName) {
+			this.actionName = actionName;
 			return this;
 		}
 
@@ -128,7 +128,7 @@ public class History {
 		}
 
 		public History build() {
-			return new History(id, cardTitle, prevColumn, nextColumn, createdAt, isDeleted, action, cardId);
+			return new History(id, cardTitle, prevColumn, nextColumn, createdAt, isDeleted, actionName, cardId);
 		}
 	}
 }

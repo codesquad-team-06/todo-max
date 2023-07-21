@@ -3,23 +3,23 @@ package codesquad.todo.card.controller.dto;
 import codesquad.todo.card.entity.Card;
 
 public class CardModifyResponse {
-	private CardModifyDTO card;
+	private CardResponseDto card;
 	private boolean success;
 
-	public CardModifyResponse(CardModifyDTO cardModifyDTO, boolean success) {
-		this.card = cardModifyDTO;
+	public CardModifyResponse(CardResponseDto cardResponseDtO, boolean success) {
+		this.card = cardResponseDtO;
 		this.success = success;
 	}
 
-	public CardModifyDTO getCard() {
+	public static CardModifyResponse from(Card card) {
+		return new CardModifyResponse(CardResponseDto.from(card), true);
+	}
+
+	public CardResponseDto getCard() {
 		return card;
 	}
 
 	public boolean isSuccess() {
 		return success;
-	}
-
-	public static CardModifyResponse from(Card card) {
-		return new CardModifyResponse(CardModifyDTO.from(card), true);
 	}
 }
