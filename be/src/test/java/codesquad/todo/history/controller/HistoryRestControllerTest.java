@@ -39,8 +39,8 @@ class HistoryRestControllerTest {
 	@DisplayName("활동 기록 목록을 불러오고 Json 타입으로 데이터를 반환한다.")
 	public void shouldReturnAllHistories() throws Exception {
 		//given
-		HistoryFindAllResponse history1 = new HistoryFindAllResponse("Card Title 5", "3", "3", "5일 전", "수정");
-		HistoryFindAllResponse history2 = new HistoryFindAllResponse("Card Title 4", "1", "2", "1주 전", "이동");
+		HistoryFindAllResponse history1 = new HistoryFindAllResponse(1L, "Card Title 5", "3", "3", "5일 전", "수정");
+		HistoryFindAllResponse history2 = new HistoryFindAllResponse(2L, "Card Title 4", "1", "2", "1주 전", "이동");
 		List<HistoryFindAllResponse> histories = Arrays.asList(history1, history2);
 		given(historyService.getAll()).willReturn(histories);
 
