@@ -1,5 +1,6 @@
 import React from "react";
 import { styled } from "styled-components";
+import defaultUserImg from "../../assets/default.jpeg";
 
 export default function ActivityHistoryItem({
   historyItem: { cardTitle, prevColumn, nextColumn, elapsedTime, actionName },
@@ -12,18 +13,61 @@ export default function ActivityHistoryItem({
     actionName: string;
   };
 }) {
+  const setHistoryItemTemplate = (
+    title: string,
+    column1: string,
+    column2: string,
+    action: string
+  ) => {
+    switch (actionName) {
+      case "등록":
+        return (
+          <>
+            <strong className="history-keyword">{title}</strong>을(를){" "}
+            <strong className="history-keyword">{column1}</strong>에서{" "}
+            <strong className="history-keyword">{action}</strong>
+            하였습니다.
+          </>
+        );
+
+      case "수정":
+        return (
+          <>
+            <strong className="history-keyword">{title}</strong>을(를){" "}
+            <strong className="history-keyword">{action}</strong>
+            하였습니다.
+          </>
+        );
+      case "이동":
+        return (
+          <>
+            <strong className="history-keyword">{title}</strong>을(를){" "}
+            <strong className="history-keyword">{column1}</strong>에서{" "}
+            <strong className="history-keyword">{column2}</strong>으로{" "}
+            <strong className="history-keyword">{action}</strong>
+            하였습니다.
+          </>
+        );
+      case "삭제":
+        return (
+          <>
+            <strong className="history-keyword">{title}</strong>을(를){" "}
+            <strong className="history-keyword">{column1}</strong>에서{" "}
+            <strong className="history-keyword">{action}</strong>
+            하였습니다.
+          </>
+        );
+      default:
+        return "해당하는 액션이 존재하지 않습니다.";
+    }
+  };
+
   return (
     <StyledItem>
-      <img src="" alt="사용자 이미지" />
+      <img src={defaultUserImg} alt="사용자 이미지" />
       <div className="history-content-container">
-        <span>UserName</span>
-        <p>
-          <strong className="history-keyword">{cardTitle}</strong>을(를){" "}
-          <strong className="history-keyword">{prevColumn}</strong>에서{" "}
-          <strong className="history-keyword">{nextColumn}</strong>으로{" "}
-          <strong className="history-keyword">{actionName}</strong>
-          하였습니다.
-        </p>
+        <span>@anonymous</span>
+        <p>{setHistoryItemTemplate(cardTitle, prevColumn, nextColumn, actionName)}</p>
         <span className="elapsedTime">{elapsedTime}</span>
       </div>
     </StyledItem>

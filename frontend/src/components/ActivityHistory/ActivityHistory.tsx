@@ -143,7 +143,7 @@ const Layer = styled.div<{ $isHistoryActive: boolean }>`
   padding: 8px;
   position: absolute;
   top: ${({ $isHistoryActive }) => ($isHistoryActive ? "60px" : "-500px")};
-  right: 50px;
+  right: 10px;
   background-color: ${({ theme: { colors } }) => colors.grey50};
   border-radius: ${({ theme: { objectStyles } }) => objectStyles.radius.m};
   box-shadow: ${({ theme: { objectStyles } }) =>
@@ -193,6 +193,9 @@ const ListContainer = styled.ul`
   flex-direction: column;
   align-items: center;
   overflow-y: auto;
+  &::-webkit-scrollbar {
+    display: none;
+  }
 `;
 
 const ButtonContainer = styled.div`

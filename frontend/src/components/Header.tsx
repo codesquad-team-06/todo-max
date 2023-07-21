@@ -13,28 +13,32 @@ export default function Header() {
   };
 
   return (
-    <>
-      <StyledHeader>
-        <H1>Todo List</H1>
-        <IconButton
-          className="history-button"
-          src={historyButtonIcon}
-          alt="사용자 활동 기록 조회"
-          onClick={toggleHistory}
-        />
-      </StyledHeader>
+    <StyledHeader>
+      <H1>Todo List</H1>
+      <IconButton
+        className="history-button"
+        src={historyButtonIcon}
+        alt="사용자 활동 기록 조회"
+        onClick={toggleHistory}
+      />
       <AnimationWrapper isShowing={isHistoryActive}>
         <ActivityHistory {...{ isHistoryActive, toggleHistory }} />
       </AnimationWrapper>
-    </>
+    </StyledHeader>
   );
 }
 
 const StyledHeader = styled.header`
   width: 100%;
-  padding: 18px 0;
+  padding: 18px;
   display: flex;
   justify-content: space-between;
+  position: relative;
+
+  .history-button {
+    position: absolute;
+    right: 18px;
+  }
 `;
 
 const H1 = styled.h1`
