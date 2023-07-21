@@ -12,18 +12,61 @@ export default function ActivityHistoryItem({
     actionName: string;
   };
 }) {
+  const sethistoryItemTemplate = (
+    title: string,
+    column1: string,
+    column2: string,
+    action: string
+  ) => {
+    switch (actionName) {
+      case "등록":
+        return (
+          <p>
+            <strong className="history-keyword">{title}</strong>을(를){" "}
+            <strong className="history-keyword">{column1}</strong>에서{" "}
+            <strong className="history-keyword">{action}</strong>
+            하였습니다.
+          </p>
+        );
+
+      case "수정":
+        return (
+          <p>
+            <strong className="history-keyword">{title}</strong>을(를){" "}
+            <strong className="history-keyword">{action}</strong>
+            하였습니다.
+          </p>
+        );
+      case "이동":
+        return (
+          <p>
+            <strong className="history-keyword">{title}</strong>을(를){" "}
+            <strong className="history-keyword">{column1}</strong>에서{" "}
+            <strong className="history-keyword">{column2}</strong>으로{" "}
+            <strong className="history-keyword">{action}</strong>
+            하였습니다.
+          </p>
+        );
+      case "삭제":
+        return (
+          <p>
+            <strong className="history-keyword">{title}</strong>을(를){" "}
+            <strong className="history-keyword">{column1}</strong>에서{" "}
+            <strong className="history-keyword">{action}</strong>
+            하였습니다.
+          </p>
+        );
+      default:
+        return <p>해당하는 액션이 존재하지 않습니다.</p>;
+    }
+  };
+
   return (
     <StyledItem>
       <img src="" alt="사용자 이미지" />
       <div className="history-content-container">
         <span>UserName</span>
-        <p>
-          <strong className="history-keyword">{cardTitle}</strong>을(를){" "}
-          <strong className="history-keyword">{prevColumn}</strong>에서{" "}
-          <strong className="history-keyword">{nextColumn}</strong>으로{" "}
-          <strong className="history-keyword">{actionName}</strong>
-          하였습니다.
-        </p>
+        {sethistoryItemTemplate(cardTitle, prevColumn, nextColumn, actionName)}
         <span className="elapsedTime">{elapsedTime}</span>
       </div>
     </StyledItem>
