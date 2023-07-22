@@ -102,59 +102,42 @@ export default function Board() {
       const prevColumnIndex = prevColumnId - 1;
       const updatedColumnIndex = updatedCard.columnId - 1;
 
-      // 알맞은 위치로 카드를 넣어서 카드 배열 반환
-      const insertCardAtPosition = (cards: CardType[], index: number) => {
-        const updatedCards = [...cards];
-        updatedCards.splice(index, 0, updatedCard);
-        return updatedCards;
-      };
-
-      // 같은 칼럼 내 이동
-      if (updatedColumnIndex === prevColumnIndex) {
-        // 기존 위치에서 제거
-        newBoard[updatedColumnIndex].cards = newBoard[
-          updatedColumnIndex
-        ].cards.filter((card) => card.id !== updatedCard.id);
-
-        // 가야할 위치 확인
-        let updatedCardIndex = newBoard[updatedColumnIndex].cards.findIndex(
-          (card) => card.position > updatedCard.position
-        );
-
-        // 예외처리: 끝에 들어가야할 때
-        updatedCardIndex =
-          updatedCardIndex !== -1
-            ? updatedCardIndex
-            : newBoard[updatedColumnIndex].cards.length;
-
-        // 가야할 위치에 삽입
-        newBoard[updatedColumnIndex].cards = insertCardAtPosition(
-          newBoard[updatedColumnIndex].cards,
-          updatedCardIndex
-        );
-      } else {
-        // 기존 위치에서 제거
+      const removeCardFromPrevColumn = () => {
         newBoard[prevColumnIndex].cards = newBoard[
           prevColumnIndex
         ].cards.filter((card) => card.id !== updatedCard.id);
+      };
 
-        // 가야할 위치 확인 (새로운 칼럼에서의 index)
-        let updatedCardIndex = newBoard[updatedColumnIndex].cards.findIndex(
-          (card) => card.position > updatedCard.position
-        );
+      const insertCardAtPosition = (
+        cards: CardType[],
+        index: number,
+        cardToInsert: CardType
+      ) => {
+        const updatedCards = [...cards];
+        updatedCards.splice(index, 0, cardToInsert);
+        return updatedCards;
+      };
 
-        // 예외처리: 끝에 들어가야할 때
-        updatedCardIndex =
-          updatedCardIndex !== -1
-            ? updatedCardIndex
-            : newBoard[updatedColumnIndex].cards.length;
+      // Remove card from previous column
+      removeCardFromPrevColumn();
 
-        // 가야할 위치에 삽입
-        newBoard[updatedColumnIndex].cards = insertCardAtPosition(
-          newBoard[updatedColumnIndex].cards,
-          updatedCardIndex
-        );
-      }
+      // Determine the index where the card should be inserted
+      let updatedCardIndex = newBoard[updatedColumnIndex].cards.findIndex(
+        (card) => card.position < updatedCard.position
+      );
+
+      // Exception handling: When the card should be inserted at the end
+      updatedCardIndex =
+        updatedCardIndex !== -1
+          ? updatedCardIndex
+          : newBoard[updatedColumnIndex].cards.length;
+
+      // Insert the card into the new column at the determined index
+      newBoard[updatedColumnIndex].cards = insertCardAtPosition(
+        newBoard[updatedColumnIndex].cards,
+        updatedCardIndex,
+        updatedCard
+      );
 
       return newBoard;
     });

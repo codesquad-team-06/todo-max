@@ -19,11 +19,17 @@ export const handlers = [
   }),
   // 같은 칼럼 내 카드 이동
   rest.put("/cards/move/1", async (req, res, ctx) => {
-    return res(ctx.status(200), ctx.json(successSameColumnMove)); // or failedMove
+    return res(ctx.status(200), ctx.json(successSameColumnMove1)); // or failedMove
+  }),
+  rest.put("/cards/move/2", async (req, res, ctx) => {
+    return res(ctx.status(200), ctx.json(successSameColumnMove2)); // or failedMove
   }),
   // 다른 칼럼 내 카드 이동
   rest.put("/cards/move/3", async (req, res, ctx) => {
-    return res(ctx.status(200), ctx.json(successDiffColumnMove)); // or failedMove
+    return res(ctx.status(200), ctx.json(successDiffColumnMove1)); // or failedMove
+  }),
+  rest.put("/cards/move/5", async (req, res, ctx) => {
+    return res(ctx.status(200), ctx.json(successDiffColumnMove2)); // or failedMove
   }),
   // History 목록 불러오기
   rest.get("/histories", async (req, res, ctx) => {
@@ -45,7 +51,7 @@ const board = [
         id: 1,
         title: "ERD 설계하기",
         content: "팀원들과 회의를 통해 ERD 설계를 완성하기",
-        position: 1024,
+        position: 4096,
         columnId: 1,
       },
       {
@@ -59,7 +65,7 @@ const board = [
         id: 3,
         title: "issue 생성",
         content: "Modal 기능 구현 관련 이슈 생성",
-        position: 4096,
+        position: 1024,
         columnId: 1,
       },
     ],
@@ -72,7 +78,7 @@ const board = [
         id: 4,
         title: "Drag & Drop 관련 아이디어 회의",
         content: "팀원들과 회의를 통해 Drag & Drop 관련 아이디어 회의하기",
-        position: 1024,
+        position: 4096,
         columnId: 2,
       },
       {
@@ -86,7 +92,7 @@ const board = [
         id: 6,
         title: "미니 세미나 준비",
         content: "주제 정해서 미니 세미나 준비하기",
-        position: 4096,
+        position: 1024,
         columnId: 2,
       },
     ],
@@ -99,7 +105,7 @@ const board = [
         id: 7,
         title: "인디아나 존스 관람",
         content: "조조영화 관람하기",
-        position: 1024,
+        position: 4096,
         columnId: 3,
       },
       {
@@ -113,92 +119,7 @@ const board = [
         id: 9,
         title: "Dave the Diver",
         content: "투토리얼 해보기",
-        position: 4096,
-        columnId: 3,
-      },
-      {
-        id: 10,
-        title: "인디아나 존스 관람",
-        content: "조조영화 관람하기",
         position: 1024,
-        columnId: 3,
-      },
-      {
-        id: 11,
-        title: "Disco Elysium",
-        content: "Disco Elysium 게임 완료",
-        position: 2048,
-        columnId: 3,
-      },
-      {
-        id: 12,
-        title: "Dave the Diver",
-        content: "투토리얼 해보기",
-        position: 4096,
-        columnId: 3,
-      },
-      {
-        id: 13,
-        title: "인디아나 존스 관람",
-        content: "조조영화 관람하기",
-        position: 1024,
-        columnId: 3,
-      },
-      {
-        id: 14,
-        title: "Disco Elysium",
-        content: "Disco Elysium 게임 완료",
-        position: 2048,
-        columnId: 3,
-      },
-      {
-        id: 15,
-        title: "Dave the Diver",
-        content: "투토리얼 해보기",
-        position: 4096,
-        columnId: 3,
-      },
-
-      {
-        id: 16,
-        title: "인디아나 존스 관람",
-        content: "조조영화 관람하기",
-        position: 1024,
-        columnId: 3,
-      },
-      {
-        id: 17,
-        title: "Disco Elysium",
-        content: "Disco Elysium 게임 완료",
-        position: 2048,
-        columnId: 3,
-      },
-      {
-        id: 18,
-        title: "Dave the Diver",
-        content: "투토리얼 해보기",
-        position: 4096,
-        columnId: 3,
-      },
-      {
-        id: 19,
-        title: "인디아나 존스 관람",
-        content: "조조영화 관람하기",
-        position: 1024,
-        columnId: 3,
-      },
-      {
-        id: 20,
-        title: "Disco Elysium",
-        content: "Disco Elysium 게임 완료",
-        position: 2048,
-        columnId: 3,
-      },
-      {
-        id: 21,
-        title: "Dave the Diver",
-        content: "투토리얼 해보기",
-        position: 4096,
         columnId: 3,
       },
     ],
@@ -265,24 +186,44 @@ const failedCardDelete = {
   },
 };
 // Todo 같은 칼럼 카드 이동
-const successSameColumnMove = {
+const successSameColumnMove1 = {
   card: {
     id: 1,
-    title: "blah",
-    content: "blah blah blah",
+    title: "ERD 설계하기",
+    content: "팀원들과 회의를 통해 ERD 설계를 완성하기",
+    position: 512,
+    columnId: 1,
+  },
+  success: true,
+};
+const successSameColumnMove2 = {
+  card: {
+    id: 2,
+    title: "Git 공부하기",
+    content: "Git 명령어들에 대해 학습하기  ",
     position: 5000,
     columnId: 1,
   },
   success: true,
 };
 // Todo 다른 칼럼 카드 이동
-const successDiffColumnMove = {
+const successDiffColumnMove1 = {
   card: {
     id: 3,
     title: "Issue 생성",
     content: "Modal 기능 구현 관련 이슈 생성",
-    position: 3000,
+    position: 1500,
     columnId: 2,
+  },
+  success: true,
+};
+const successDiffColumnMove2 = {
+  card: {
+    id: 5,
+    title: "아웃스탠딩 구독 갱신하기",
+    content: "아웃스탠딩 구독 갱신",
+    position: 6000,
+    columnId: 3,
   },
   success: true,
 };
